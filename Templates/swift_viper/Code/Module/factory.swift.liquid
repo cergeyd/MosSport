@@ -1,0 +1,27 @@
+//
+//  {{ prefix }}{{ module_info.name }}{{ module_info.file_name }}
+//  {{ module_info.project_name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright © {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import Swinject
+
+class {{ module_info.name }}Factory {
+
+    private weak var container: Container?
+
+    public init(container: Container?) {
+        self.container = container
+    }
+
+    func instantiateModule() -> UIViewController {
+
+        guard let controller = container?.resolve({{ module_info.name }}ViewController.self) else {
+            fatalError()
+        }
+
+        return controller
+    }
+}

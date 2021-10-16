@@ -1,0 +1,42 @@
+//
+//  {{ prefix }}{{ module_info.name }}{{ module_info.file_name }}
+//  {{ module_info.project_name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright © {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import UIKit
+import Swinject
+
+class {{ module_info.name }}Module: Assembly {
+
+    func assemble(container: Container) {
+
+        container.register({{ module_info.name }}Factory.self) { r in
+            return {{ module_info.name }}Factory(container: container)
+        }
+
+        container.register({{ module_info.name }}ViewController.self) { r in
+            return {{ module_info.name }}ViewController()
+        }.initCompleted { (r, viewController) in
+            viewController.output = r.resolve({{ module_info.name }}Presenter.self)!
+        }
+
+        container.register({{ module_info.name }}Router.self) { r in
+            {{ module_info.name }}Router(viewController: r.resolve({{ module_info.name }}ViewController.self)!)
+        }
+
+        container.register({{ module_info.name }}Presenter.self) { _ in {{ module_info.name }}Presenter() }
+            .initCompleted { (r, presenter) in
+                presenter.router = r.resolve({{ module_info.name }}Router.self)!
+                presenter.interactor = r.resolve({{ module_info.name }}Interactor.self)!
+                presenter.view = r.resolve({{ module_info.name }}ViewController.self)!
+        }
+
+        container.register({{ module_info.name }}Interactor.self) { _ in {{ module_info.name }}Interactor() }
+            .initCompleted { (r, interactor) in
+                interactor.output = r.resolve({{ module_info.name }}Presenter.self)!
+        }
+    }
+}

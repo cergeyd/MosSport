@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="CalculatedAreaCell" rowHeight="729" id="qML-jR-9jq" customClass="CalculatedAreaCell" customModule="MosSportMap" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="543" height="729"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="qML-jR-9jq" id="YZ7-nW-J2M">
+                <rect key="frame" x="0.0" y="0.0" width="543" height="729"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Выбранная территория:" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bUh-lv-a5B">
+                        <rect key="frame" x="16" y="16" width="515" height="19.5"/>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n5s-Xn-ZbJ">
+                        <rect key="frame" x="16" y="268" width="511" height="1"/>
+                        <color key="backgroundColor" red="0.92143100499999997" green="0.92145264149999995" blue="0.92144101860000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="KZ5-kk-7X4"/>
+                        </constraints>
+                    </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="249" verticalCompressionResistancePriority="751" text="Выберите на карте район, для которого необходимо произвести расчёт." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uD8-zK-rVP">
+                        <rect key="frame" x="16" y="117.5" width="511" height="138.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                        <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hCY-fE-7Z5" customClass="ActivityButton" customModule="MosSportMap" customModuleProvider="target">
+                        <rect key="frame" x="16" y="663" width="511" height="50"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="50" id="TCi-f6-SWt"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                        <state key="normal" title="Подробнее">
+                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </state>
+                        <connections>
+                            <action selector="didTapCalculatingWithSender:" destination="qML-jR-9jq" eventType="touchUpInside" id="IM3-L1-YBZ"/>
+                        </connections>
+                    </button>
+                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xyo-MQ-Ron">
+                        <rect key="frame" x="16" y="51.5" width="511" height="50"/>
+                        <color key="backgroundColor" red="0.96006384659999999" green="0.95542585700000005" blue="0.96470183620000005" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="50" id="eLl-tL-qL3"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
+                        <state key="normal" title="Граница района">
+                            <color key="titleColor" systemColor="systemPinkColor"/>
+                        </state>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                <integer key="value" value="6"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </button>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Количество спортивных объектов в регионе:" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ja5-EI-pvg">
+                        <rect key="frame" x="16" y="499" width="515" height="18"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" red="0.37055522200000002" green="0.37056469920000001" blue="0.37055957319999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lna-rR-JEL">
+                        <rect key="frame" x="16" y="560.5" width="527" height="1"/>
+                        <color key="backgroundColor" red="0.92143100499999997" green="0.92145264149999995" blue="0.92144101860000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="new-AX-SqK"/>
+                        </constraints>
+                    </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YX3-gL-GV0">
+                        <rect key="frame" x="16" y="529" width="515" height="19.5"/>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Общая площадь спортивных объектов:" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vha-G9-ZEg">
+                        <rect key="frame" x="16" y="573.5" width="515" height="18"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" red="0.37055522200000002" green="0.37056469920000001" blue="0.37055957319999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fw0-iQ-QJr">
+                        <rect key="frame" x="16" y="603.5" width="40.5" height="19.5"/>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Площадь спортивных зон на одного человека на выбранной территории:" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c2N-cq-5ce">
+                        <rect key="frame" x="16" y="330" width="515" height="36"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" red="0.37055522200000002" green="0.37056469920000001" blue="0.37055957319999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ELg-Sv-gng">
+                        <rect key="frame" x="16" y="411.5" width="527" height="1"/>
+                        <color key="backgroundColor" red="0.92143100499999997" green="0.92145264149999995" blue="0.92144101860000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="Rra-VG-vLv"/>
+                        </constraints>
+                    </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yCN-dA-rIB">
+                        <rect key="frame" x="16" y="378" width="515" height="21.5"/>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Данные:" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wOV-HB-oRT">
+                        <rect key="frame" x="16" y="285" width="511" height="29"/>
+                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="24"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Количество спортивных объектов в регионе:" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LGg-XE-G62">
+                        <rect key="frame" x="16" y="424.5" width="515" height="18"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" red="0.37055522200000002" green="0.37056469920000001" blue="0.37055957319999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GlM-bG-Vay">
+                        <rect key="frame" x="16" y="486" width="527" height="1"/>
+                        <color key="backgroundColor" red="0.92143100499999997" green="0.92145264149999995" blue="0.92144101860000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="uc3-wa-oME"/>
+                        </constraints>
+                    </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pjr-cz-ipR">
+                        <rect key="frame" x="16" y="454.5" width="40.5" height="19.5"/>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="ELg-Sv-gng" secondAttribute="trailing" id="01C-oU-paq"/>
+                    <constraint firstAttribute="trailing" secondItem="YX3-gL-GV0" secondAttribute="trailing" constant="12" id="2YJ-i8-mwr"/>
+                    <constraint firstAttribute="bottom" secondItem="hCY-fE-7Z5" secondAttribute="bottom" constant="16" id="36J-y1-SaE"/>
+                    <constraint firstItem="c2N-cq-5ce" firstAttribute="leading" secondItem="uD8-zK-rVP" secondAttribute="leading" id="4qb-Dd-3Hf"/>
+                    <constraint firstAttribute="trailing" secondItem="uD8-zK-rVP" secondAttribute="trailing" constant="16" id="AFd-w4-5qH"/>
+                    <constraint firstAttribute="trailing" secondItem="bUh-lv-a5B" secondAttribute="trailing" constant="12" id="AeJ-MT-mG7"/>
+                    <constraint firstItem="GlM-bG-Vay" firstAttribute="top" secondItem="pjr-cz-ipR" secondAttribute="bottom" constant="12" id="CI8-gr-GRk"/>
+                    <constraint firstItem="ja5-EI-pvg" firstAttribute="top" secondItem="GlM-bG-Vay" secondAttribute="bottom" constant="12" id="Ca9-6U-fbN"/>
+                    <constraint firstAttribute="trailing" secondItem="yCN-dA-rIB" secondAttribute="trailing" constant="12" id="Cmx-Gp-2nS"/>
+                    <constraint firstItem="YX3-gL-GV0" firstAttribute="leading" secondItem="ja5-EI-pvg" secondAttribute="leading" id="Dbv-DA-vC9"/>
+                    <constraint firstItem="n5s-Xn-ZbJ" firstAttribute="leading" secondItem="uD8-zK-rVP" secondAttribute="leading" id="Dg4-Ft-NJb"/>
+                    <constraint firstItem="fw0-iQ-QJr" firstAttribute="leading" secondItem="vha-G9-ZEg" secondAttribute="leading" id="FWA-sg-uFs"/>
+                    <constraint firstItem="hCY-fE-7Z5" firstAttribute="top" secondItem="fw0-iQ-QJr" secondAttribute="bottom" constant="40" id="FcN-V7-3O5"/>
+                    <constraint firstItem="hCY-fE-7Z5" firstAttribute="leading" secondItem="bUh-lv-a5B" secondAttribute="leading" id="Fz6-Db-atm"/>
+                    <constraint firstAttribute="trailing" secondItem="c2N-cq-5ce" secondAttribute="trailing" constant="12" id="GhO-et-o6g"/>
+                    <constraint firstItem="ja5-EI-pvg" firstAttribute="trailing" secondItem="LGg-XE-G62" secondAttribute="trailing" id="Io6-kv-h7O"/>
+                    <constraint firstItem="wOV-HB-oRT" firstAttribute="top" secondItem="n5s-Xn-ZbJ" secondAttribute="bottom" constant="16" id="JIv-fG-yCg"/>
+                    <constraint firstItem="LGg-XE-G62" firstAttribute="top" secondItem="ELg-Sv-gng" secondAttribute="bottom" constant="12" id="L3o-L0-cl5"/>
+                    <constraint firstItem="wOV-HB-oRT" firstAttribute="leading" secondItem="bUh-lv-a5B" secondAttribute="leading" id="L9E-Zh-olz"/>
+                    <constraint firstItem="bUh-lv-a5B" firstAttribute="leading" secondItem="YZ7-nW-J2M" secondAttribute="leading" constant="16" id="LWS-Ja-Gb4"/>
+                    <constraint firstItem="xyo-MQ-Ron" firstAttribute="leading" secondItem="bUh-lv-a5B" secondAttribute="leading" id="Odi-z4-WYE"/>
+                    <constraint firstAttribute="trailing" secondItem="hCY-fE-7Z5" secondAttribute="trailing" constant="16" id="QUU-92-udB"/>
+                    <constraint firstItem="pjr-cz-ipR" firstAttribute="top" secondItem="LGg-XE-G62" secondAttribute="bottom" constant="12" id="R1G-vZ-V9C"/>
+                    <constraint firstAttribute="trailing" secondItem="n5s-Xn-ZbJ" secondAttribute="trailing" constant="16" id="Uqg-s2-vGL"/>
+                    <constraint firstItem="ja5-EI-pvg" firstAttribute="leading" secondItem="uD8-zK-rVP" secondAttribute="leading" id="VYv-9C-WJr"/>
+                    <constraint firstItem="pjr-cz-ipR" firstAttribute="leading" secondItem="LGg-XE-G62" secondAttribute="leading" id="VzK-jx-Rmn"/>
+                    <constraint firstItem="ELg-Sv-gng" firstAttribute="top" secondItem="yCN-dA-rIB" secondAttribute="bottom" constant="12" id="XvM-Bj-4u0"/>
+                    <constraint firstItem="lna-rR-JEL" firstAttribute="leading" secondItem="ja5-EI-pvg" secondAttribute="leading" id="YWg-07-z36"/>
+                    <constraint firstItem="YX3-gL-GV0" firstAttribute="top" secondItem="ja5-EI-pvg" secondAttribute="bottom" constant="12" id="aMn-Rr-xM3"/>
+                    <constraint firstItem="xyo-MQ-Ron" firstAttribute="top" secondItem="bUh-lv-a5B" secondAttribute="bottom" constant="16" id="ajd-vp-Iyg"/>
+                    <constraint firstItem="fw0-iQ-QJr" firstAttribute="top" secondItem="vha-G9-ZEg" secondAttribute="bottom" constant="12" id="cTG-pC-6FL"/>
+                    <constraint firstItem="GlM-bG-Vay" firstAttribute="leading" secondItem="LGg-XE-G62" secondAttribute="leading" id="cXE-os-UuI"/>
+                    <constraint firstItem="yCN-dA-rIB" firstAttribute="top" secondItem="c2N-cq-5ce" secondAttribute="bottom" constant="12" id="dx7-eK-gcY"/>
+                    <constraint firstItem="ELg-Sv-gng" firstAttribute="leading" secondItem="c2N-cq-5ce" secondAttribute="leading" id="eYR-3q-wbq"/>
+                    <constraint firstItem="vha-G9-ZEg" firstAttribute="top" secondItem="lna-rR-JEL" secondAttribute="bottom" constant="12" id="eaP-6K-6Vn"/>
+                    <constraint firstItem="LGg-XE-G62" firstAttribute="leading" secondItem="c2N-cq-5ce" secondAttribute="leading" id="eho-eV-jY7"/>
+                    <constraint firstItem="c2N-cq-5ce" firstAttribute="top" secondItem="wOV-HB-oRT" secondAttribute="bottom" constant="16" id="fWR-SA-ehN"/>
+                    <constraint firstAttribute="trailing" secondItem="lna-rR-JEL" secondAttribute="trailing" id="fpR-hc-rcq"/>
+                    <constraint firstAttribute="trailing" secondItem="xyo-MQ-Ron" secondAttribute="trailing" constant="16" id="gHp-Sm-Mzq"/>
+                    <constraint firstAttribute="trailing" secondItem="wOV-HB-oRT" secondAttribute="trailing" constant="16" id="jH5-CS-1K5"/>
+                    <constraint firstItem="bUh-lv-a5B" firstAttribute="top" secondItem="YZ7-nW-J2M" secondAttribute="top" constant="16" id="kZK-45-9QT"/>
+                    <constraint firstItem="n5s-Xn-ZbJ" firstAttribute="top" secondItem="uD8-zK-rVP" secondAttribute="bottom" constant="12" id="pDF-te-N1Z"/>
+                    <constraint firstItem="uD8-zK-rVP" firstAttribute="top" secondItem="xyo-MQ-Ron" secondAttribute="bottom" constant="16" id="pm3-SH-fRb"/>
+                    <constraint firstAttribute="trailing" secondItem="GlM-bG-Vay" secondAttribute="trailing" id="rBO-av-rlP"/>
+                    <constraint firstItem="uD8-zK-rVP" firstAttribute="leading" secondItem="bUh-lv-a5B" secondAttribute="leading" id="uHb-j3-0nv"/>
+                    <constraint firstItem="lna-rR-JEL" firstAttribute="top" secondItem="YX3-gL-GV0" secondAttribute="bottom" constant="12" id="uWo-Co-xEa"/>
+                    <constraint firstItem="vha-G9-ZEg" firstAttribute="trailing" secondItem="ja5-EI-pvg" secondAttribute="trailing" id="yJZ-eJ-15S"/>
+                    <constraint firstItem="LGg-XE-G62" firstAttribute="trailing" secondItem="c2N-cq-5ce" secondAttribute="trailing" id="ySD-3C-eRd"/>
+                    <constraint firstItem="vha-G9-ZEg" firstAttribute="leading" secondItem="ja5-EI-pvg" secondAttribute="leading" id="z3w-6J-hJR"/>
+                    <constraint firstItem="yCN-dA-rIB" firstAttribute="leading" secondItem="c2N-cq-5ce" secondAttribute="leading" id="zJ5-iQ-bsx"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="areaButton" destination="xyo-MQ-Ron" id="JiZ-0i-cjz"/>
+                <outlet property="calculateButton" destination="hCY-fE-7Z5" id="AM9-dM-9uN"/>
+                <outlet property="descriptionLabel" destination="uD8-zK-rVP" id="TCQ-ZB-h1E"/>
+                <outlet property="firstValue" destination="yCN-dA-rIB" id="zWk-qm-E7x"/>
+                <outlet property="firstValueDescription" destination="c2N-cq-5ce" id="PBI-fn-Ruw"/>
+                <outlet property="fourthValue" destination="fw0-iQ-QJr" id="IiN-NE-Nxu"/>
+                <outlet property="fourthValueDescription" destination="vha-G9-ZEg" id="5DO-BR-qL1"/>
+                <outlet property="headerLabel" destination="bUh-lv-a5B" id="ZbC-1c-j03"/>
+                <outlet property="secondValue" destination="pjr-cz-ipR" id="hDx-U7-hgh"/>
+                <outlet property="secondValueDescription" destination="LGg-XE-G62" id="SjS-0M-rdI"/>
+                <outlet property="thirdValue" destination="YX3-gL-GV0" id="uGS-d5-CGW"/>
+                <outlet property="thirdValueDescription" destination="ja5-EI-pvg" id="fHQ-eU-uns"/>
+            </connections>
+            <point key="canvasLocation" x="4" y="57"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <systemColor name="systemPinkColor">
+            <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

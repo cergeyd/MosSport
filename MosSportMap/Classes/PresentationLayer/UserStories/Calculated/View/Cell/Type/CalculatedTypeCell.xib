@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="CalculatedTypeCell" rowHeight="172" id="zxa-RD-alm" customClass="CalculatedTypeCell" customModule="MosSportMap" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="442" height="172"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="zxa-RD-alm" id="Beb-fs-ma1">
+                <rect key="frame" x="0.0" y="0.0" width="442" height="172"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cпособ выбора территории" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DZw-7r-Nme">
+                        <rect key="frame" x="16" y="16" width="414" height="19.5"/>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="499-ty-eWI">
+                        <rect key="frame" x="16" y="51.5" width="199" height="50"/>
+                        <color key="backgroundColor" red="0.96006384659999999" green="0.95542585700000005" blue="0.96470183620000005" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="50" id="bAk-U9-NRC"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
+                        <state key="normal" title="Граница района">
+                            <color key="titleColor" systemColor="systemPinkColor"/>
+                        </state>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                <integer key="value" value="6"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                        <connections>
+                            <action selector="didSelectTypeWithSender:" destination="zxa-RD-alm" eventType="touchUpInside" id="WTl-KH-g0e"/>
+                        </connections>
+                    </button>
+                    <button opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tns-gy-4yd">
+                        <rect key="frame" x="227" y="51.5" width="199" height="50"/>
+                        <color key="backgroundColor" systemColor="systemPinkColor"/>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
+                        <state key="normal" title="Вручную">
+                            <color key="titleColor" red="0.96006384659999999" green="0.95542585700000005" blue="0.96470183620000005" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        </state>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                <integer key="value" value="6"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                        <connections>
+                            <action selector="didSelectTypeWithSender:" destination="zxa-RD-alm" eventType="touchUpInside" id="Q3K-Gv-Qir"/>
+                        </connections>
+                    </button>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="249" verticalCompressionResistancePriority="751" text="Выберите на карте район, для которого необходимо произвести расчёт." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CLV-dG-7z2">
+                        <rect key="frame" x="16" y="117.5" width="410" height="38.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <color key="textColor" red="0.37055522200000002" green="0.37056469920000001" blue="0.37055957319999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="Tns-gy-4yd" firstAttribute="width" secondItem="499-ty-eWI" secondAttribute="width" id="Bf8-lP-IiU"/>
+                    <constraint firstAttribute="trailing" secondItem="CLV-dG-7z2" secondAttribute="trailing" constant="16" id="G2X-Jx-DyT"/>
+                    <constraint firstItem="CLV-dG-7z2" firstAttribute="top" secondItem="499-ty-eWI" secondAttribute="bottom" constant="16" id="M0Q-4J-nb6"/>
+                    <constraint firstItem="Tns-gy-4yd" firstAttribute="centerY" secondItem="499-ty-eWI" secondAttribute="centerY" id="Sif-20-QpL"/>
+                    <constraint firstAttribute="bottom" secondItem="CLV-dG-7z2" secondAttribute="bottom" constant="16" id="VpC-2L-4fM"/>
+                    <constraint firstItem="CLV-dG-7z2" firstAttribute="leading" secondItem="499-ty-eWI" secondAttribute="leading" id="aiL-Ka-peb"/>
+                    <constraint firstItem="DZw-7r-Nme" firstAttribute="leading" secondItem="Beb-fs-ma1" secondAttribute="leading" constant="16" id="bCD-79-K8B"/>
+                    <constraint firstItem="499-ty-eWI" firstAttribute="width" secondItem="Beb-fs-ma1" secondAttribute="width" multiplier="0.45" id="f2V-az-O7J"/>
+                    <constraint firstItem="499-ty-eWI" firstAttribute="top" secondItem="DZw-7r-Nme" secondAttribute="bottom" constant="16" id="gaI-Ha-mtH"/>
+                    <constraint firstAttribute="trailing" secondItem="Tns-gy-4yd" secondAttribute="trailing" constant="16" id="hGo-jY-qYa"/>
+                    <constraint firstItem="499-ty-eWI" firstAttribute="leading" secondItem="DZw-7r-Nme" secondAttribute="leading" id="hf3-P0-rCN"/>
+                    <constraint firstAttribute="trailing" secondItem="DZw-7r-Nme" secondAttribute="trailing" constant="12" id="hwi-HM-uDW"/>
+                    <constraint firstItem="Tns-gy-4yd" firstAttribute="height" secondItem="499-ty-eWI" secondAttribute="height" id="hzG-zL-Ek1"/>
+                    <constraint firstItem="DZw-7r-Nme" firstAttribute="top" secondItem="Beb-fs-ma1" secondAttribute="top" constant="16" id="kPq-bE-uu4"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="typeDescription" destination="CLV-dG-7z2" id="AUM-QL-Zz3"/>
+                <outletCollection property="typeButtons" destination="499-ty-eWI" collectionClass="NSMutableArray" id="XUH-sy-tYX"/>
+                <outletCollection property="typeButtons" destination="Tns-gy-4yd" collectionClass="NSMutableArray" id="TXF-2K-WlO"/>
+            </connections>
+            <point key="canvasLocation" x="33.333333333333336" y="-20.089285714285712"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <systemColor name="systemPinkColor">
+            <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>
