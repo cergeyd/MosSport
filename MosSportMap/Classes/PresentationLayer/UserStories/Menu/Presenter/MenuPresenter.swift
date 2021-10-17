@@ -21,6 +21,10 @@ extension MenuPresenter: MenuViewOutput {
     func calculatedViewController() -> CalculatedViewController {
         return self.router.calculatedViewController()
     }
+    
+    func didTapShowDepartments()  {
+        return self.router.didTapShowDepartments()
+    }
 }
 
 extension MenuPresenter: MenuInteractorOutput {

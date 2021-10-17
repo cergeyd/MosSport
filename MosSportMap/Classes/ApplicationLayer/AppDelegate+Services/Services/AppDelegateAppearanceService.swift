@@ -12,6 +12,15 @@ class AppDelegateAppearanceService: AppDelegateService {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?, window: UIWindow) {
         UINavigationBar.appearance().prefersLargeTitles = true
+        
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithTransparentBackground()
+        appearance.backgroundColor = .clear
+        appearance.backgroundEffect = UIBlurEffect(style: .light) // or dark
+        UINavigationBar.appearance().barTintColor = AppStyle.color(for: .title)
         UINavigationBar.appearance().tintColor = AppStyle.color(for: .coloured)
+        UINavigationBar.appearance().standardAppearance = appearance
+        UINavigationBar.appearance().scrollEdgeAppearance = appearance
+        UINavigationBar.appearance().compactAppearance = appearance
     }
 }

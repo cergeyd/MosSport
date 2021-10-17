@@ -28,7 +28,7 @@ class LocalService {
             return result
         }
     }
-    
+
     func loadPopulation() -> Observable<PopulationResponse> {
         return self.localeJSONHelper
             .loadJson(with: self.fileNamePopulation)
@@ -37,7 +37,7 @@ class LocalService {
             return result
         }
     }
-    
+
     func loadSportTypes() -> Observable<SportTypeResponse> {
         return self.localeJSONHelper
             .loadJson(with: self.fileNameSportTypes)
@@ -46,7 +46,7 @@ class LocalService {
             return result
         }
     }
-    
+
     func loadDepartments() -> Observable<DepartmentResponse> {
         return self.localeJSONHelper
             .loadJson(with: self.fileNameDepartments)

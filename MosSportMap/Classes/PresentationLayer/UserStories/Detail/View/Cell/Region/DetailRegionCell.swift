@@ -17,6 +17,6 @@ class DetailRegionCell: TableViewCell {
     func configure(with report: SquareReport) {
         self.regionTitle.setTitle(report.population.area, for: .normal)
         self.regionPeopes.text = report.population.population.formattedWithSeparator
-        self.regionSquare.text = report.square?.formattedWithSeparator ?? "Не указана"
+        self.regionSquare.text = report.population.square.formattedWithSeparator 
     }
 }

@@ -18,8 +18,8 @@ extension DetailPresenter: DetailViewOutput {
         self.view.setupInitialState()
     }
 
-    func didTapShow(detail: Detail) {
-        self.router.didTapShow(detail: detail)
+    func didTapShow(detail: Detail, report: SquareReport) {
+        self.router.didTapShow(detail: detail, report: report)
     }
 }
 

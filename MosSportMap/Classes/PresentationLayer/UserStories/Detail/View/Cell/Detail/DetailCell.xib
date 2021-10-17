@@ -62,7 +62,7 @@
                 <outlet property="detailSubtitle" destination="WSY-eY-vqO" id="G5z-zB-yx9"/>
                 <outlet property="detailTitle" destination="1Mk-Md-FAe" id="K1U-2z-OFS"/>
             </connections>
-            <point key="canvasLocation" x="-107.97101449275362" y="152.00892857142856"/>
+            <point key="canvasLocation" x="-47" y="36"/>
         </tableViewCell>
     </objects>
 </document>

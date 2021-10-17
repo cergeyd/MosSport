@@ -31,16 +31,16 @@ class MosDataProcessing {
         self.loadSportObjects()
         self.loadPopulation()
     }
-    
+
     /// Численность населения Москвы
     func loadPopulation() {
         self.localService
             .loadPopulation()
             .subscribe(onNext: { response in
-                populationResponse = PopulationResponse(populations: response.populations.sorted(by: { $0.population > $1.population }))
+            populationResponse = PopulationResponse(populations: response.populations.sorted(by: { $0.population > $1.population }))
         }).disposed(by: self.disposeBag)
     }
-    
+
     /// Виды спорта
     func loadSportTypes() {
         self.localService
@@ -49,7 +49,7 @@ class MosDataProcessing {
             sportTypes = response
         }).disposed(by: self.disposeBag)
     }
-    
+
     /// Департаменты
     func loadDepartments() {
         self.localService
@@ -58,7 +58,7 @@ class MosDataProcessing {
             departmentResponse = response
         }).disposed(by: self.disposeBag)
     }
-    
+
     /// Спортивные объекты
     func loadSportObjects() {
         self.localService
@@ -66,5 +66,23 @@ class MosDataProcessing {
             .subscribe(onNext: { response in
             sportObjectResponse = response
         }).disposed(by: self.disposeBag)
+    }
+    
+    func save<T: Codable>(object: T, filename: String) {
+        let filePath = self.getDocumentsDirectoryUrl().appendingPathComponent(filename)
+        print(filePath)
+        do {
+            let jsonData = try JSONEncoder().encode(object)
+            try jsonData.write(to: filePath)
+        } catch {
+            print("Error writing to JSON file: \(error)")
+        }
+    }
+
+    /// Директория
+    private func getDocumentsDirectoryUrl() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let documentsDirectory = paths[0]
+        return documentsDirectory
     }
 }

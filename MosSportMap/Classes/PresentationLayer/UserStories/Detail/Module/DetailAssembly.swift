@@ -21,7 +21,7 @@ class DetailModule: Assembly {
             viewController.output = r.resolve(DetailPresenter.self)!
         }
         container.register(DetailRouter.self) { r in
-            DetailRouter(viewController: r.resolve(DetailViewController.self)!)
+            DetailRouter(viewController: r.resolve(DetailViewController.self)!, listInitialFactory: r.resolve(ListInitialFactory.self)!)
         }
         container.register(DetailPresenter.self) { _ in DetailPresenter() }
             .initCompleted { (r, presenter) in

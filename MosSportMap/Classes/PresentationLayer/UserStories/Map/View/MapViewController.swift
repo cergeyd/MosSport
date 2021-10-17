@@ -106,24 +106,32 @@ class MapViewController: UIViewController {
 
     /// Границы Москвы
     private func makeBorders(hidden: Bool) {
+       // var qwe: Set<PopulationSquares> = []
+
         if (hidden) {
             self.render.clear()
         } else {
             let mapOverlays = self.render.mapOverlays() ?? []
             if (mapOverlays.isEmpty) {
                 self.render.render()
-                Dispatch.main {
+              //  Dispatch.main {
                     for overlay in self.render.mapOverlays() as! [GMSPolygon] {
                         let populationColor = SharedManager.shared.calculateColor(for: overlay.title)
+
+//                        if let pop = SharedManager.shared.population(by: overlay.title!) {
+//                            qwe.insert(PopulationSquares(area: pop.area, population: pop.population, square: overlay.area()!))
+//                        }
+                      
                         overlay.fillColor = populationColor
-                        overlay.strokeColor = AppStyle.color(for: .coloured)
+                        overlay.strokeColor = .black
                         overlay.strokeWidth = 1.0
                     }
-                }
+              //  }
             }
         }
+       // self.save(object: qwe.sorted(by: { $0.population > $1.population }), filename: "populationss")
     }
-
+    
     /// Спортивные объекты на карте
     private func makeClusters(hidden: Bool) {
         if (hidden) {
@@ -241,34 +249,33 @@ extension MapViewController: GMSMapViewDelegate {
     }
 
     func mapView(_ mapView: GMSMapView, didTap overlay: GMSOverlay) {
-        if let calculateAreaType = self.calculateAreaType {
-            Hud.show()
-            print(overlay)
-            Dispatch.global {
-                if let polygon = overlay as? GMSPolygon, let title = overlay.title {
-                    Dispatch.main {
-                        let populationColor = SharedManager.shared.calculateColor(for: self.lastSelectedPolygon?.title)
-                        self.lastSelectedPolygon?.fillColor = populationColor
-                        self.lastSelectedPolygon?.strokeWidth = 1.0
+        print(overlay)
+        // Dispatch.global {
+        if let polygon = overlay as? GMSPolygon, let title = overlay.title {
+            //Dispatch.main {
+            let populationColor = SharedManager.shared.calculateColor(for: self.lastSelectedPolygon?.title)
+            self.lastSelectedPolygon?.fillColor = populationColor
+            self.lastSelectedPolygon?.strokeWidth = 3.0
 
-                        self.lastSelectedPolygon = polygon
-                        polygon.fillColor = .orange.withAlphaComponent(0.8)
-                        polygon.strokeColor = .red
-                        polygon.strokeWidth = 3.0
+            self.lastSelectedPolygon = polygon
+            polygon.fillColor = AppStyle.color(for: .coloured)
+            polygon.strokeColor = .black
+            polygon.strokeWidth = 5.0
+            //  }
+            if let population = SharedManager.shared.population(by: title) {
+                let report = SharedManager.shared.calculateSportSquare(for: population, polygon: polygon, allPolygons: self.render.mapOverlays() as! [GMSPolygon])
+                /// Если нужно для экрана калькуляции
+                if let _ = self.calculateAreaType {
+                    for dataSource in self.dataSources {
+                        // Dispatch.main {
+                        dataSource.didCalculated(report: report)
+                        // }
                     }
-
-                    if let population = SharedManager.shared.population(by: title) {
-                        let report = SharedManager.shared.calculateSportSquare(for: population, polygon: polygon)
-                        for dataSource in self.dataSources {
-                            Dispatch.main {
-                                dataSource.didCalculated(report: report)
-                            }
-                        }
-                    }
+                } else { /// Информация по выбранной границе
+                    self.output.didTapShow(detail: report)
                 }
             }
-        } else {
-            
+            //    }
         }
     }
 }

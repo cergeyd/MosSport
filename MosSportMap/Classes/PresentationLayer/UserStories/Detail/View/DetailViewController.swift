@@ -22,7 +22,16 @@ struct Detail {
 
 enum DetailType {
     case region
+    case square
+    case department
+    case sportTypes
     case population
+    case sportObjects
+    case sportSquare
+    case squareForOne
+    case objectForOne
+    case sportTypeForOne
+    case filter
 }
 
 class DetailViewController: UITableViewController {
@@ -37,9 +46,24 @@ class DetailViewController: UITableViewController {
         self.output.didLoadView()
         self.configureSection()
         self.configureTableView()
+        self.rightNavigationBar()
     }
     
     //MARK: Private func
+    private func rightNavigationBar(isLoading: Bool = false) {
+        if (isLoading) {
+            self.navigationActivity()
+        } else {
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.up"), style: .plain, target: self, action: #selector(didTapExport))
+        }
+    }
+    
+    @objc private func didTapExport() {
+        self.rightNavigationBar(isLoading: true)
+        Dispatch.after(2.0, completion: { self.rightNavigationBar(isLoading: false) })
+        self.pdfDataWithTableView(name: "Hello321", sourceView: self.view)
+    }
+    
     private func configureTableView() {
         self.tableView = UITableView(frame: .zero, style: .insetGrouped)
         self.tableView.register(UINib(nibName: DetailRegionCell.identifier, bundle: nil), forCellReuseIdentifier: DetailRegionCell.identifier)
@@ -48,13 +72,38 @@ class DetailViewController: UITableViewController {
 
     private func configureSection() {
         let region = Detail(type: .region, title: self.report.population.area, place: "", subtitle: "Данные о районе")
-        let rq = DetailSection(title: "Район 1", details: [region])
-        self.sections.append(rq)
+        let area = DetailSection(title: "Район", details: [region])
+        self.sections.append(area)
 
-        let population = Detail(type: .population, title: self.report.population.population.formattedWithSeparator, place: "21 место по Москве", subtitle: "Плотность населения на квадратный километр:")
-        let r = DetailSection(title: "Район", details: [population])
+        /// Плотность населения
+        let population = Detail(type: .population, title: self.report.population.population.formattedWithSeparator, place: "\(self.report.placeBySquare) место по Москве", subtitle: "Плотность населения на квадратный километр:")
+        let populationSection = DetailSection(title: "Население", details: [population])
 
-        self.sections.append(r)
+        /// Площадат района
+        let square = Detail(type: .square, title: self.report.population.square.formattedWithSeparator, place: "\(self.report.placeBySquare) место по Москве", subtitle: "Площадь района:")
+        let squareSportObjects = Detail(type: .sportSquare, title: self.report.allSquare.formattedWithSeparator, place: "\(self.report.placeBySquare) место по Москве", subtitle: "Площадь спортивных объектов:")
+        let squareForOne = Detail(type: .squareForOne, title: self.report.squareForOne.formattedWithSeparator, place: "\(self.report.placeBySquare) место по Москве", subtitle: "Площадь спортивных объектов на человека:")
+        let objectForOne = Detail(type: .objectForOne, title: self.report.squareForOne.formattedWithSeparator, place: "\(self.report.placeBySquare) место по Москве", subtitle: "Спортивные объекты для одного человека:")
+        let sportTypeForOne = Detail(type: .sportTypeForOne, title: self.report.sportTypeForOne.formattedWithSeparator, place: "\(self.report.placeBySquare) место по Москве", subtitle: "Типы спорта для одного человека:")
+
+        let sqareSection = DetailSection(title: "Площадь", details: [square, squareSportObjects, squareForOne, objectForOne, sportTypeForOne])
+        
+        /// Департаменты района
+        let departments = Detail(type: .department, title: "\(self.report.departments.count) Департмента", place: "\(self.report.placeBySquare) место по Москве", subtitle: "Департаменты района:")
+        let departmentsSection = DetailSection(title: "Департаменты", details: [departments])
+        
+        /// Виды спортивных площадок
+        let sportTypes = Detail(type: .sportTypes, title: "\(self.report.sportTypes.count) Вида игр", place: "\(self.report.placeBySquare) место по Москве", subtitle: "Типы спортивных объектов:")
+        
+        /// Cпортивные площадки в районе
+        let sports = Detail(type: .sportObjects, title: "\(self.report.objects.count) Площадок", place: "\(self.report.placeBySquare) место по Москве", subtitle: "Типы спортивных объектов:")
+        let sportsSection = DetailSection(title: "Спортивные объекты", details: [sportTypes, sports])
+        
+        self.sections.append(populationSection)
+        self.sections.append(sqareSection)
+        self.sections.append(departmentsSection)
+        self.sections.append(sportsSection)
+
     }
 }
 
@@ -67,6 +116,7 @@ extension DetailViewController: DetailViewInput {
 
 //MARK: TableView
 extension DetailViewController {
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return self.sections.count
     }
@@ -90,17 +140,16 @@ extension DetailViewController {
             return cell
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: DetailCell.identifier, for: indexPath) as! DetailCell
-            cell.accessoryType = .disclosureIndicator
             cell.configure(with: detail)
             return cell
         }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if (indexPath.section == 1) {
+        if (indexPath.section > 0) {
             let section = self.sections[indexPath.section]
             let detail = section.details[indexPath.row]
-            self.output.didTapShow(detail: detail)
+            self.output.didTapShow(detail: detail, report: self.report)
         }
     }
 }

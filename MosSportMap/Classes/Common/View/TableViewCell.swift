@@ -22,7 +22,7 @@ class TableViewCell: UITableViewCell {
         view.backgroundColor = #colorLiteral(red: 0.9102228284, green: 0.9129777551, blue: 0.947078526, alpha: 1)
         return view
     }()
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
         self.selectionStyle = .none
@@ -46,13 +46,13 @@ class TableViewCell: UITableViewCell {
         self.contentView.backgroundColor = .white
         self.backgroundColor = .white
     }
-    
+
 //    override func draw(_ rect: CGRect) {
 //        super.draw(rect)
 //        self.contentView.backgroundColor = .white
 //        self.backgroundColor = .white
 //    }
-    
+
     open func setUpLayout() {
 
     }

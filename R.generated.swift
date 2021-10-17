@@ -236,7 +236,7 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
 
-  /// This `R.nib` struct is generated, and contains static references to 4 nibs.
+  /// This `R.nib` struct is generated, and contains static references to 6 nibs.
   struct nib {
     /// Nib `CalculatedAreaCell`.
     static let calculatedAreaCell = _R.nib._CalculatedAreaCell()
@@ -246,6 +246,10 @@ struct R: Rswift.Validatable {
     static let detailCell = _R.nib._DetailCell()
     /// Nib `DetailRegionCell`.
     static let detailRegionCell = _R.nib._DetailRegionCell()
+    /// Nib `SearchHeaderView`.
+    static let searchHeaderView = _R.nib._SearchHeaderView()
+    /// Nib `SportObjectCell`.
+    static let sportObjectCell = _R.nib._SportObjectCell()
 
     #if os(iOS) || os(tvOS)
     /// `UINib(name: "CalculatedAreaCell", in: bundle)`
@@ -279,6 +283,22 @@ struct R: Rswift.Validatable {
     }
     #endif
 
+    #if os(iOS) || os(tvOS)
+    /// `UINib(name: "SearchHeaderView", in: bundle)`
+    @available(*, deprecated, message: "Use UINib(resource: R.nib.searchHeaderView) instead")
+    static func searchHeaderView(_: Void = ()) -> UIKit.UINib {
+      return UIKit.UINib(resource: R.nib.searchHeaderView)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UINib(name: "SportObjectCell", in: bundle)`
+    @available(*, deprecated, message: "Use UINib(resource: R.nib.sportObjectCell) instead")
+    static func sportObjectCell(_: Void = ()) -> UIKit.UINib {
+      return UIKit.UINib(resource: R.nib.sportObjectCell)
+    }
+    #endif
+
     static func calculatedAreaCell(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> CalculatedAreaCell? {
       return R.nib.calculatedAreaCell.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? CalculatedAreaCell
     }
@@ -295,10 +315,18 @@ struct R: Rswift.Validatable {
       return R.nib.detailRegionCell.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? DetailRegionCell
     }
 
+    static func searchHeaderView(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> UIKit.UIView? {
+      return R.nib.searchHeaderView.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
+    }
+
+    static func sportObjectCell(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> SportObjectCell? {
+      return R.nib.sportObjectCell.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? SportObjectCell
+    }
+
     fileprivate init() {}
   }
 
-  /// This `R.reuseIdentifier` struct is generated, and contains static references to 4 reuse identifiers.
+  /// This `R.reuseIdentifier` struct is generated, and contains static references to 5 reuse identifiers.
   struct reuseIdentifier {
     /// Reuse identifier `CalculatedAreaCell`.
     static let calculatedAreaCell: Rswift.ReuseIdentifier<CalculatedAreaCell> = Rswift.ReuseIdentifier(identifier: "CalculatedAreaCell")
@@ -308,6 +336,8 @@ struct R: Rswift.Validatable {
     static let detailCell: Rswift.ReuseIdentifier<DetailCell> = Rswift.ReuseIdentifier(identifier: "DetailCell")
     /// Reuse identifier `DetailRegionCell`.
     static let detailRegionCell: Rswift.ReuseIdentifier<DetailRegionCell> = Rswift.ReuseIdentifier(identifier: "DetailRegionCell")
+    /// Reuse identifier `SportObjectCell`.
+    static let sportObjectCell: Rswift.ReuseIdentifier<SportObjectCell> = Rswift.ReuseIdentifier(identifier: "SportObjectCell")
 
     fileprivate init() {}
   }
@@ -426,6 +456,31 @@ struct _R: Rswift.Validatable {
 
       func firstView(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> DetailRegionCell? {
         return instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? DetailRegionCell
+      }
+
+      fileprivate init() {}
+    }
+
+    struct _SearchHeaderView: Rswift.NibResourceType {
+      let bundle = R.hostingBundle
+      let name = "SearchHeaderView"
+
+      func firstView(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> UIKit.UIView? {
+        return instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
+      }
+
+      fileprivate init() {}
+    }
+
+    struct _SportObjectCell: Rswift.NibResourceType, Rswift.ReuseIdentifierType {
+      typealias ReusableType = SportObjectCell
+
+      let bundle = R.hostingBundle
+      let identifier = "SportObjectCell"
+      let name = "SportObjectCell"
+
+      func firstView(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> SportObjectCell? {
+        return instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? SportObjectCell
       }
 
       fileprivate init() {}

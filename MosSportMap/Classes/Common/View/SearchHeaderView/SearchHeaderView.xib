@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SearchHeaderView" customModule="MosSportMap" customModuleProvider="target">
+            <connections>
+                <outlet property="searchBar" destination="0BG-bP-Aob" id="RCc-FI-ghG"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Glw-uL-Y3O">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="56"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Поиск по названию" translatesAutoresizingMaskIntoConstraints="NO" id="0BG-bP-Aob">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="56"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" priority="750" constant="56" id="kj7-Cm-c66"/>
+                    </constraints>
+                    <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="barTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <textInputTraits key="textInputTraits"/>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="3uw-lU-PAc"/>
+                    </connections>
+                </searchBar>
+                <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="nB7-SW-tr6">
+                    <rect key="frame" x="0.0" y="55.5" width="375" height="0.5"/>
+                    <color key="backgroundColor" red="0.96186471949999997" green="0.95721803009999995" blue="0.96651140899999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="0.5" id="Qhk-Qv-mK9"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="nne-zf-lbe"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="0BG-bP-Aob" secondAttribute="trailing" id="8i8-eT-Ddr"/>
+                <constraint firstAttribute="bottom" secondItem="nB7-SW-tr6" secondAttribute="bottom" id="GPV-wO-IMa"/>
+                <constraint firstAttribute="bottom" secondItem="0BG-bP-Aob" secondAttribute="bottom" id="JYh-gE-4G4"/>
+                <constraint firstAttribute="trailing" secondItem="nB7-SW-tr6" secondAttribute="trailing" id="kRl-pF-w7r"/>
+                <constraint firstItem="0BG-bP-Aob" firstAttribute="leading" secondItem="Glw-uL-Y3O" secondAttribute="leading" id="mW4-fe-ecr"/>
+                <constraint firstItem="nB7-SW-tr6" firstAttribute="leading" secondItem="Glw-uL-Y3O" secondAttribute="leading" id="pmO-af-wCP"/>
+                <constraint firstItem="0BG-bP-Aob" firstAttribute="top" secondItem="Glw-uL-Y3O" secondAttribute="top" id="zJx-UI-xP6"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="136.80000000000001" y="153.82308845577214"/>
+        </view>
+    </objects>
+</document>

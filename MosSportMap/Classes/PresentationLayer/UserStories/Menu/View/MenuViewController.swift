@@ -30,6 +30,7 @@ enum MenuType: Int {
     case calculateSportCount = 11
     case calculateSportType = 12
 
+    case filterDepartments = 20
 }
 
 protocol MenuDelegate: AnyObject {
@@ -62,6 +63,11 @@ class MenuViewController: UITableViewController {
             ]),
         MenuSection(title: "Расчёты", items: [
             MenuItem(title: "Площадь спортивных зон", subtitle: "Расчет площади спортивных зон на одного человека на выбранной территории", isDetailed: true, type: .calculateSportSquare),
+            MenuItem(title: "Количества спортивных зон", subtitle: "Расчет количества спортивных зон на одного человека на выбранной территории", isDetailed: true, type: .calculateSportCount),
+            MenuItem(title: "Количества видов спортивных услуг", subtitle: "расчет количества видов спортивных услуг на одного человека на выбранной территории", isDetailed: true, type: .calculateSportType)
+            ]),
+        MenuSection(title: "Фильтр", items: [
+            MenuItem(title: "Департаменты", subtitle: "Расчет площади спортивных зон на одного человека на выбранной территории", isDetailed: true, type: .filterDepartments),
             MenuItem(title: "Количества спортивных зон", subtitle: "Расчет количества спортивных зон на одного человека на выбранной территории", isDetailed: true, type: .calculateSportCount),
             MenuItem(title: "Количества видов спортивных услуг", subtitle: "расчет количества видов спортивных услуг на одного человека на выбранной территории", isDetailed: true, type: .calculateSportType)
             ])
@@ -144,7 +150,7 @@ extension MenuViewController {
             self.calculatedViewController.type = type
             self.push(self.calculatedViewController)
         default:
-            break
+            self.output.didTapShowDepartments()
         }
          // let controller = UIViewController()
          // self.showDetailViewController(UINavigationController(rootViewController: controller), sender: nil)

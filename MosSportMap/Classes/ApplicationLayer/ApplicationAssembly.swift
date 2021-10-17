@@ -19,6 +19,8 @@ let applicationAssembler = Assembler([
     MapModule(),
     CalculatedModule(),
     DetailModule(),
+    ListModule(),
+    ListInitialModule(),
     MenuModule()
     ])
 
