@@ -31,6 +31,8 @@ enum MenuType: Int {
     case calculateSportType = 12
 
     case filterDepartments = 20
+    case filterAreas = 21
+    case filterObjects = 22
 }
 
 protocol MenuDelegate: AnyObject {
@@ -38,6 +40,8 @@ protocol MenuDelegate: AnyObject {
     func didUpdate(map type: MenuType)
     func didSelect(calculated type: CalculateAreaType?)
     func didTapShow(detail report: SquareReport)
+    func didSelect(population: Population)
+    func didSelect(department: Department)
 }
 
 class MenuViewController: UITableViewController {
@@ -68,8 +72,8 @@ class MenuViewController: UITableViewController {
             ]),
         MenuSection(title: "Фильтр", items: [
             MenuItem(title: "Департаменты", subtitle: "Расчет площади спортивных зон на одного человека на выбранной территории", isDetailed: true, type: .filterDepartments),
-            MenuItem(title: "Количества спортивных зон", subtitle: "Расчет количества спортивных зон на одного человека на выбранной территории", isDetailed: true, type: .calculateSportCount),
-            MenuItem(title: "Количества видов спортивных услуг", subtitle: "расчет количества видов спортивных услуг на одного человека на выбранной территории", isDetailed: true, type: .calculateSportType)
+            MenuItem(title: "Районы", subtitle: "Расчет количества спортивных зон на одного человека на выбранной территории", isDetailed: true, type: .filterAreas),
+            MenuItem(title: "Спортивные объекты", subtitle: "расчет количества видов спортивных услуг на одного человека на выбранной территории", isDetailed: true, type: .filterObjects)
             ])
     ]
     
@@ -150,14 +154,22 @@ extension MenuViewController {
             self.calculatedViewController.type = type
             self.push(self.calculatedViewController)
         default:
-            self.output.didTapShowDepartments()
+            self.output.didTapShow(listType: type)
         }
          // let controller = UIViewController()
          // self.showDetailViewController(UINavigationController(rootViewController: controller), sender: nil)
     }
 }
 
-extension MenuViewController: CalculatedDelegate {
+extension MenuViewController: CalculatedDelegate, ListViewDelegate {
+    
+    func didSelect(department: Department) {
+        self.delegate?.didSelect(department: department)
+    }
+    
+    func didSelect(population: Population) {
+        self.delegate?.didSelect(population: population)
+    }
     
     func didTapShow(detail report: SquareReport) {
         self.delegate?.didTapShow(detail: report)

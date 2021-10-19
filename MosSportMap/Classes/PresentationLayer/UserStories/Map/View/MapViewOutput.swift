@@ -9,4 +9,6 @@
 protocol MapViewOutput {
     func didLoadView()
     func didTapShow(detail report: SquareReport)
+    func didTapShow(sportObjects: [SportObject], department: Department)
+    func didTapShow(sport object: SportObject)
 }

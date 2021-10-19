@@ -14,9 +14,11 @@ class ListInitialViewController: PageboyViewController, SegmentProtocol {
     var output: ListInitialViewOutput!
     var type: ListType!
     var isExist = true
-
-    lazy var listViewController: ListViewController = { return self.output.listViewController(type: self.type, isExist: true) }()
-    lazy var listNonExistViewController: ListViewController = { return self.output.listViewController(type: self.type, isExist: false) }()
+    var listViewDelegate: ListViewDelegate?
+    lazy var listViewController: ListViewController = { return self.output.listViewController(type: self.type, index: 0) }()
+    lazy var listViewController1: ListViewController = { return self.output.listViewController(type: self.type, index: 1) }()
+    lazy var listViewController2: ListViewController = { return self.output.listViewController(type: self.type, index: 2) }()
+    lazy var listViewController3: ListViewController = { return self.output.listViewController(type: self.type, index: 3) }()
     lazy var viewControllers: [UIViewController] = {
         switch self.type! {
         case .details(detail: let detail, report: let report):
@@ -25,14 +27,15 @@ class ListInitialViewController: PageboyViewController, SegmentProtocol {
                 self.title = "Департаменты"
             case .sportTypes:
                 self.title = "Типы спортивных объектов"
-                return [self.listViewController, self.listNonExistViewController]
+                return [self.listViewController, self.listViewController1]
             default:
                 return [self.listViewController]
             }
         case .sport(object: let object):
             self.title = "Спортивный объект"
-        case .filterDepartments:
-            self.title = "Департаменты"
+        case .sportObjectsAround:
+            return [self.listViewController, self.listViewController1, listViewController2, listViewController3]
+        default: break
         }
         return [self.listViewController]
     }()
@@ -43,7 +46,15 @@ class ListInitialViewController: PageboyViewController, SegmentProtocol {
         super.viewDidLoad()
         self.output.didLoadView()
         self.configureElements()
-        self.isModalInPresentation = true
+        //self.isModalInPresentation = true
+        for controller in self.viewControllers as! [ListViewController] {
+            controller.delegate = self.listViewDelegate
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.prefersLargeTitles = false
     }
 
     //MARK: Private func
@@ -60,11 +71,16 @@ class ListInitialViewController: PageboyViewController, SegmentProtocol {
 
     private func configureElements() {
         if (self.viewControllers.count > 1) {
-            self.segment = self.configureControl(with: ["Присутствуют", "Отсутствуют"], selector: #selector(ListInitialViewController.controlValueChanged(segment:)), isNeedAddToSuperView: false, size: CGSize(width: 100.0, height: 37.0))
+            switch self.type! {
+            case .sportObjectsAround:
+                self.segment = self.configureControl(with: ["Шаговая", "Районное", "Окружное", "Городское"], selector: #selector(ListInitialViewController.controlValueChanged(segment:)), isNeedAddToSuperView: false, size: CGSize(width: 100.0, height: 37.0))
+            default:
+                self.segment = self.configureControl(with: ["Присутствуют", "Отсутствуют"], selector: #selector(ListInitialViewController.controlValueChanged(segment:)), isNeedAddToSuperView: false, size: CGSize(width: 100.0, height: 37.0))
+            }
             self.navigationItem.titleView = self.segment
         }
         self.configurePageboy()
-        //  self.isScrollEnabled = false
+        self.isScrollEnabled = false
     }
 }
 

@@ -21,7 +21,7 @@ class MapModule: Assembly {
             viewController.output = r.resolve(MapPresenter.self)!
         }
         container.register(MapRouter.self) { r in
-            MapRouter(viewController: r.resolve(MapViewController.self)!, detailFactory: r.resolve(DetailFactory.self)!)
+            MapRouter(viewController: r.resolve(MapViewController.self)!, detailFactory: r.resolve(DetailFactory.self)!, listInitialFactory: r.resolve(ListInitialFactory.self)!)
         }
         container.register(MapPresenter.self) { _ in MapPresenter() }
             .initCompleted { (r, presenter) in

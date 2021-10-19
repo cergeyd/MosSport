@@ -88,7 +88,6 @@
 		08A1E9B9271B5CF7004C5C43 /* SharedManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A1E9B8271B5CF6004C5C43 /* SharedManager.swift */; };
 		08A1E9BC271B5E0A004C5C43 /* SquareReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A1E9BB271B5E0A004C5C43 /* SquareReport.swift */; };
 		08A1E9BE271B6998004C5C43 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A1E9BD271B6998004C5C43 /* TableViewCell.swift */; };
-		08A1E9C2271B6E95004C5C43 /* ListqViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A1E9C1271B6E95004C5C43 /* ListqViewController.swift */; };
 		08A1E9C6271B6EF9004C5C43 /* Numeric+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A1E9C5271B6EF9004C5C43 /* Numeric+Extension.swift */; };
 		09CEFA240CCF2328A779FC05 /* ListInteractorInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D5B37F30F8CCBD3B55C7B2 /* ListInteractorInput.swift */; };
 		0CC3DBA5D04974DA98E7CA86 /* MenuInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1683A40CF971C152B5C0019 /* MenuInteractor.swift */; };
@@ -240,7 +239,6 @@
 		08A1E9B8271B5CF6004C5C43 /* SharedManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedManager.swift; sourceTree = "<group>"; };
 		08A1E9BB271B5E0A004C5C43 /* SquareReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquareReport.swift; sourceTree = "<group>"; };
 		08A1E9BD271B6998004C5C43 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
-		08A1E9C1271B6E95004C5C43 /* ListqViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListqViewController.swift; sourceTree = "<group>"; };
 		08A1E9C5271B6EF9004C5C43 /* Numeric+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Numeric+Extension.swift"; sourceTree = "<group>"; };
 		0F9E9A8F22D835491C7A3D1C /* MenuInteractorOutput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MenuInteractorOutput.swift; sourceTree = "<group>"; };
 		157F087AC75FD9C4EE3D318B /* Pods_MosSportMap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MosSportMap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -661,7 +659,6 @@
 				08A1E991271B42C6004C5C43 /* Banners */,
 				085896CF2719C23D004C6663 /* ActivityButton.swift */,
 				08A1E9BD271B6998004C5C43 /* TableViewCell.swift */,
-				08A1E9C1271B6E95004C5C43 /* ListqViewController.swift */,
 				08424E89271CCB5200B6DE98 /* LoadXibByClass.swift */,
 			);
 			path = View;
@@ -1369,7 +1366,6 @@
 				919B48C9240F52D11D4D10CF /* CalculatedViewInput.swift in Sources */,
 				5A49218026C172744EB94CAA /* CalculatedViewOutput.swift in Sources */,
 				94A6DB549DC6CE5E8E8B4FBE /* CalculatedPresenter.swift in Sources */,
-				08A1E9C2271B6E95004C5C43 /* ListqViewController.swift in Sources */,
 				7301F9B1E01249E4575FA415 /* CalculatedInteractor.swift in Sources */,
 				3FF96780DA6A88FD4D95E4E5 /* CalculatedInteractorInput.swift in Sources */,
 				C3B3974E841D7DB27F22BA83 /* CalculatedInteractorOutput.swift in Sources */,

@@ -5,7 +5,7 @@
 //  Created by Sergeyd on 15.10.2021.
 //
 
-import SnapKit
+import UIKit
 
 class MenuCell: TableViewCell {
 

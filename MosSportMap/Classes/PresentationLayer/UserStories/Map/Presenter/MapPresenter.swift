@@ -21,11 +21,19 @@ extension MapPresenter: MapViewOutput {
     func didTapShow(detail report: SquareReport) {
         self.router.didTapShow(detail: report)
     }
+    
+    func didTapShow(sportObjects: [SportObject], department: Department) {
+        self.router.didTapShow(sportObjects: sportObjects, department: department)
+    }
+    
+    func didTapShow(sport object: SportObject) {
+        self.router.didTapShow(sport: object)
+    }
 }
 
 extension MapPresenter: MapInteractorOutput {
 
     func response(error: Error) {
-        self.view.response(error: error)
+
     }
 }

@@ -8,5 +8,4 @@
 
 protocol MapViewInput: AnyObject {
     func setupInitialState()
-    func response(error: Error)
 }

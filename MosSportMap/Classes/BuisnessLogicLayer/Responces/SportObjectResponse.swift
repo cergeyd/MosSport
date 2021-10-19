@@ -16,9 +16,9 @@ struct SportObjectResponse: CodableMappable {
 struct SportObject: CodableMappable {
 
     enum AvailabilityType: String, Codable {
-        case area = "Окружное"
-        case district = "Районное"
         case walking = "Шаговая доступность"
+        case district = "Районное"
+        case area = "Окружное"
         case city = "Городское"
     }
 

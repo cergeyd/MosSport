@@ -8,5 +8,5 @@
 
 protocol ListInitialViewOutput {
     func didLoadView()
-    func listViewController(type: ListType, isExist: Bool) -> ListViewController
+    func listViewController(type: ListType, index: Int) -> ListViewController
 }

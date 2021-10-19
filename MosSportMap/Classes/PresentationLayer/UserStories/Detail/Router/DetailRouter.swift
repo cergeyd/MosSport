@@ -9,10 +9,10 @@
 import UIKit
 
 class DetailRouter {
-    private weak var viewController: UIViewController?
+    private weak var viewController: DetailViewController?
     private let listInitialFactory: ListInitialFactory
     
-    init(viewController: UIViewController, listInitialFactory: ListInitialFactory) {
+    init(viewController: DetailViewController, listInitialFactory: ListInitialFactory) {
         self.viewController = viewController
         self.listInitialFactory = listInitialFactory
     }
@@ -20,6 +20,12 @@ class DetailRouter {
     func didTapShow(detail: Detail, report: SquareReport) {
         let controller = self.listInitialFactory.instantiateModule()
         controller.type = .details(detail: detail, report: report)
+        self.viewController?.push(controller)
+    }
+    
+    func didTapShow(detail sportObject: SportObject) {
+        let controller = self.listInitialFactory.instantiateModule()
+        controller.type = .sport(object: sportObject)
         self.viewController?.push(controller)
     }
 }

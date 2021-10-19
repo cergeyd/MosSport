@@ -22,8 +22,8 @@ extension MenuPresenter: MenuViewOutput {
         return self.router.calculatedViewController()
     }
     
-    func didTapShowDepartments()  {
-        return self.router.didTapShowDepartments()
+    func didTapShow(listType: MenuType)  {
+        return self.router.didTapShow(listType: listType)
     }
 }
 

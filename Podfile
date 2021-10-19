@@ -11,7 +11,6 @@ target 'MosSportMap' do
 
   #Networking
   pod 'Alamofire'
-  pod 'AlamofireImage'
   
   #Reactivex
   pod 'RxSwift'
@@ -21,24 +20,14 @@ target 'MosSportMap' do
   pod 'BusyNavigationBar'
   pod 'Pageboy'
   pod 'SwipeCellKit'
-  pod 'SideMenu'
   pod 'Bulletin'
-  pod 'BulletinBoard'
   pod 'SPAlert'
-  pod 'OpenLocationCode'
-  pod 'FloatingPanel'
-  pod 'ParallaxHeader'
   pod 'Squircle'
-  pod 'KafkaRefresh'
-  pod 'SkeletonView'
   pod 'collection-view-layouts/TagsLayout'
-  pod 'MIBlurPopup'
-  pod 'Cosmos'
   pod 'Google-Maps-iOS-Utils'
-  pod 'SnapKit'
+  
   #DI
   pod 'Swinject'
-  pod 'Repeat'
 
   #Code generation (resources)
   pod 'R.swift'

@@ -21,6 +21,10 @@ extension DetailPresenter: DetailViewOutput {
     func didTapShow(detail: Detail, report: SquareReport) {
         self.router.didTapShow(detail: detail, report: report)
     }
+    
+    func didTapShow(detail sportObject: SportObject) {
+        self.router.didTapShow(detail: sportObject)
+    }
 }
 
 extension DetailPresenter: DetailInteractorOutput {

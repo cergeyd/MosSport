@@ -17,10 +17,10 @@ class ListInitialRouter {
         self.listFactory = listFactory
     }
 
-    func listViewController(type: ListType, isExist: Bool) -> ListViewController {
+    func listViewController(type: ListType, index: Int) -> ListViewController {
         let controller = self.listFactory.instantiateModule()
         controller.type = type
-        controller.isExist = isExist
+        controller.index = index
         return controller
     }
 }

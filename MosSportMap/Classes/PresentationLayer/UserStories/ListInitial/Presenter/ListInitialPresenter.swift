@@ -18,8 +18,8 @@ extension ListInitialPresenter: ListInitialViewOutput {
         self.view.setupInitialState()
     }
     
-    func listViewController(type: ListType, isExist: Bool) -> ListViewController {
-        return self.router.listViewController(type: type, isExist: isExist)
+    func listViewController(type: ListType, index: Int) -> ListViewController {
+        return self.router.listViewController(type: type, index: index)
     }
 }
 

@@ -399,12 +399,19 @@ struct R: Rswift.Validatable {
 struct _R: Rswift.Validatable {
   static func validate() throws {
     #if os(iOS) || os(tvOS)
+    try nib.validate()
+    #endif
+    #if os(iOS) || os(tvOS)
     try storyboard.validate()
     #endif
   }
 
   #if os(iOS) || os(tvOS)
-  struct nib {
+  struct nib: Rswift.Validatable {
+    static func validate() throws {
+      try _SportObjectCell.validate()
+    }
+
     struct _CalculatedAreaCell: Rswift.NibResourceType, Rswift.ReuseIdentifierType {
       typealias ReusableType = CalculatedAreaCell
 
@@ -472,7 +479,7 @@ struct _R: Rswift.Validatable {
       fileprivate init() {}
     }
 
-    struct _SportObjectCell: Rswift.NibResourceType, Rswift.ReuseIdentifierType {
+    struct _SportObjectCell: Rswift.NibResourceType, Rswift.ReuseIdentifierType, Rswift.Validatable {
       typealias ReusableType = SportObjectCell
 
       let bundle = R.hostingBundle
@@ -481,6 +488,12 @@ struct _R: Rswift.Validatable {
 
       func firstView(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> SportObjectCell? {
         return instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? SportObjectCell
+      }
+
+      static func validate() throws {
+        if UIKit.UIImage(named: "arrow-icon", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'arrow-icon' is used in nib 'SportObjectCell', but couldn't be loaded.") }
+        if #available(iOS 11.0, tvOS 11.0, *) {
+        }
       }
 
       fileprivate init() {}

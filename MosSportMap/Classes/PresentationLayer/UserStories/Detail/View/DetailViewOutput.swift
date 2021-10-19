@@ -9,4 +9,5 @@
 protocol DetailViewOutput {
     func didLoadView()
     func didTapShow(detail: Detail, report: SquareReport)
+    func didTapShow(detail sportObject: SportObject)
 }

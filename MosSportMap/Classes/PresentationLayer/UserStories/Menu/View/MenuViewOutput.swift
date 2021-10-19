@@ -9,5 +9,5 @@
 protocol MenuViewOutput {
     func didLoadView()
     func calculatedViewController() -> CalculatedViewController
-    func didTapShowDepartments() 
+    func didTapShow(listType: MenuType)
 }

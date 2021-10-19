@@ -18,16 +18,22 @@ class MenuRouter {
         self.calculatedFactory = calculatedFactory
         self.listFactory = listFactory
     }
-    
+
     func calculatedViewController() -> CalculatedViewController {
         let controller = self.calculatedFactory.instantiateModule()
         controller.delegate = self.viewController
         return controller
     }
-    
-    func didTapShowDepartments()  {
+
+    func didTapShow(listType: MenuType) {
         let controller = self.listFactory.instantiateModule()
-        controller.type = .filterDepartments
+        controller.delegate = self.viewController
+        switch listType {
+        case .filterAreas:
+            controller.type = .filterAreas
+        default:
+            controller.type = .filterDepartments
+        }
         self.viewController?.push(controller)
     }
 }

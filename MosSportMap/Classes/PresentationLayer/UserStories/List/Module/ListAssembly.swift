@@ -21,7 +21,7 @@ class ListModule: Assembly {
             viewController.output = r.resolve(ListPresenter.self)!
         }
         container.register(ListRouter.self) { r in
-            ListRouter(viewController: r.resolve(ListViewController.self)!, listFactory: r.resolve(ListFactory.self)!)
+            ListRouter(viewController: r.resolve(ListViewController.self)!, listFactory: r.resolve(ListFactory.self)!, listInitialFactory: r.resolve(ListInitialFactory.self)!)
         }
         container.register(ListPresenter.self) { _ in ListPresenter() }
             .initCompleted { (r, presenter) in

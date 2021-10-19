@@ -9,17 +9,30 @@
 import UIKit
 
 class MapRouter {
-    private weak var viewController: UIViewController?
+    private weak var viewController: MapViewController?
     private let detailFactory: DetailFactory
+    private let listInitialFactory: ListInitialFactory
 
-    init(viewController: UIViewController, detailFactory: DetailFactory) {
+    init(viewController: MapViewController, detailFactory: DetailFactory, listInitialFactory: ListInitialFactory) {
         self.viewController = viewController
         self.detailFactory = detailFactory
+        self.listInitialFactory = listInitialFactory
     }
 
     func didTapShow(detail report: SquareReport) {
         let detailController = self.detailFactory.instantiateModule()
         detailController.report = report
+        self.show(detailController: detailController)
+    }
+
+    func didTapShow(sportObjects: [SportObject], department: Department) {
+        let detailController = self.detailFactory.instantiateModule()
+        detailController.section = DepartmentSection(sportObjects: sportObjects, department: department)
+        detailController.delegate = self.viewController
+        self.show(detailController: detailController)
+    }
+
+    private func show(detailController: UIViewController) {
         if let sheetController = detailController.sheetPresentationController {
             sheetController.detents = [.medium(), .large()]
             sheetController.largestUndimmedDetentIdentifier = .medium
@@ -27,5 +40,13 @@ class MapRouter {
             sheetController.preferredCornerRadius = 22
         }
         self.viewController?.present(UINavigationController(rootViewController: detailController), animated: true)
+    }
+
+    func didTapShow(sport object: SportObject) {
+        let controller = self.listInitialFactory.instantiateModule()
+        controller.type = .sport(object: object)
+        controller.listViewDelegate = self.viewController
+        self.show(detailController: controller)
+       // self.viewController?.push(controller)
     }
 }

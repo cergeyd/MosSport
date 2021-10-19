@@ -1,15 +1,11 @@
 PODS:
   - Alamofire (5.4.4)
-  - AlamofireImage (4.2.0):
-    - Alamofire (~> 5.4)
   - Bulletin (1.3.0):
     - Espresso (~> 2.2.0)
-  - BulletinBoard (5.0.0)
   - BusyNavigationBar (2.0.0)
   - collection-view-layouts/Core (0.2.2)
   - collection-view-layouts/TagsLayout (0.2.2):
     - collection-view-layouts/Core
-  - Cosmos (23.0.0)
   - Device (3.2.1)
   - Director (1.0.6):
     - Director/Core (= 1.0.6)
@@ -19,7 +15,6 @@ PODS:
   - Espresso/Core (2.2.4):
     - Director (~> 1.0.0)
     - SnapKit (~> 5.0.0)
-  - FloatingPanel (2.5.0)
   - Google-Maps-iOS-Utils (4.0.0):
     - Google-Maps-iOS-Utils/Clustering (= 4.0.0)
     - Google-Maps-iOS-Utils/Geometry (= 4.0.0)
@@ -44,58 +39,17 @@ PODS:
   - GoogleMaps/Base (5.1.0)
   - GoogleMaps/Maps (5.1.0):
     - GoogleMaps/Base
-  - KafkaRefresh (1.5.0):
-    - KafkaRefresh/Category (= 1.5.0)
-    - KafkaRefresh/Configuration (= 1.5.0)
-    - KafkaRefresh/Core (= 1.5.0)
-    - KafkaRefresh/Default (= 1.5.0)
-    - KafkaRefresh/Style (= 1.5.0)
-    - KafkaRefresh/UIKit (= 1.5.0)
-  - KafkaRefresh/Category (1.5.0)
-  - KafkaRefresh/Configuration (1.5.0):
-    - KafkaRefresh/UIKit/FootKit
-    - KafkaRefresh/UIKit/HeadKit
-  - KafkaRefresh/Core (1.5.0):
-    - KafkaRefresh/Category
-  - KafkaRefresh/Default (1.5.0):
-    - KafkaRefresh/Style
-  - KafkaRefresh/Style (1.5.0)
-  - KafkaRefresh/UIKit (1.5.0):
-    - KafkaRefresh/UIKit/FootKit (= 1.5.0)
-    - KafkaRefresh/UIKit/HeadKit (= 1.5.0)
-    - KafkaRefresh/UIKit/LayerKit (= 1.5.0)
-  - KafkaRefresh/UIKit/FootKit (1.5.0):
-    - KafkaRefresh/Category
-    - KafkaRefresh/Core
-    - KafkaRefresh/Default
-    - KafkaRefresh/Style
-    - KafkaRefresh/UIKit/LayerKit
-  - KafkaRefresh/UIKit/HeadKit (1.5.0):
-    - KafkaRefresh/Category
-    - KafkaRefresh/Core
-    - KafkaRefresh/Default
-    - KafkaRefresh/Style
-    - KafkaRefresh/UIKit/LayerKit
-  - KafkaRefresh/UIKit/LayerKit (1.5.0):
-    - KafkaRefresh/Category
-    - KafkaRefresh/Default
   - KeychainAccess (4.2.2)
-  - MIBlurPopup (1.0.0)
-  - OpenLocationCode (0.0.5.5)
   - Pageboy (3.6.2)
-  - ParallaxHeader (3.0.0)
   - R.swift (5.4.0):
     - R.swift.Library (~> 5.3.0)
   - R.swift.Library (5.3.0)
-  - Repeat (0.6.0)
   - RxCocoa (6.2.0):
     - RxRelay (= 6.2.0)
     - RxSwift (= 6.2.0)
   - RxRelay (6.2.0):
     - RxSwift (= 6.2.0)
   - RxSwift (6.2.0)
-  - SideMenu (6.5.0)
-  - SkeletonView (1.25.1)
   - SnapKit (5.0.1)
   - SPAlert (3.4.1)
   - Squircle (2.2.0)
@@ -104,28 +58,16 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire
-  - AlamofireImage
   - Bulletin
-  - BulletinBoard
   - BusyNavigationBar
   - collection-view-layouts/TagsLayout
-  - Cosmos
   - Device
-  - FloatingPanel
   - Google-Maps-iOS-Utils
-  - KafkaRefresh
   - KeychainAccess
-  - MIBlurPopup
-  - OpenLocationCode
   - Pageboy
-  - ParallaxHeader
   - R.swift
-  - Repeat
   - RxCocoa
   - RxSwift
-  - SideMenu
-  - SkeletonView
-  - SnapKit
   - SPAlert
   - Squircle
   - Swinject
@@ -134,32 +76,21 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - Alamofire
-    - AlamofireImage
     - Bulletin
-    - BulletinBoard
     - BusyNavigationBar
     - collection-view-layouts
-    - Cosmos
     - Device
     - Director
     - Espresso
-    - FloatingPanel
     - Google-Maps-iOS-Utils
     - GoogleMaps
-    - KafkaRefresh
     - KeychainAccess
-    - MIBlurPopup
-    - OpenLocationCode
     - Pageboy
-    - ParallaxHeader
     - R.swift
     - R.swift.Library
-    - Repeat
     - RxCocoa
     - RxRelay
     - RxSwift
-    - SideMenu
-    - SkeletonView
     - SnapKit
     - SPAlert
     - Squircle
@@ -168,38 +99,27 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   Alamofire: f3b09a368f1582ab751b3fff5460276e0d2cf5c9
-  AlamofireImage: 34a2d90b0e5fe6a5605f85ae4b7b01e784c60192
   Bulletin: eceb668260e34931808a2f1cea1aaf3f4dfa3fa4
-  BulletinBoard: dba77053c2a7b64953f63073f7534165af2edd21
   BusyNavigationBar: b73fd434b95f6198809dcf048b0245ad89ec1b37
   collection-view-layouts: 474ec4cce601a26247737227a97fa6a4eb30213f
-  Cosmos: b5c6a9a637e28a061b54c8f8b1d8529d7d4db73f
   Device: 0738862dd8a30856b4bd9e21cb9b728873d21392
   Director: ed6f4d3b2bc404ff16b83816daf81b18126b6892
   Espresso: a1c57cdd3556ed6fd69e086e8c9682e4c561231d
-  FloatingPanel: ddb1c8cbbacd164cfee651c449febe867a28e2cb
   Google-Maps-iOS-Utils: a06cb5c3a0e5b2a505fed82d936ba1b935f8971f
   GoogleMaps: 086ae1dab659eaa7339bdb30fc88e2f44e7c597c
-  KafkaRefresh: 01645b1509b8647809f6bb666629c80855bd3fdd
   KeychainAccess: c0c4f7f38f6fc7bbe58f5702e25f7bd2f65abf51
-  MIBlurPopup: 7e855df6a79d13bc0840519c2ec9bac50b1ac01a
-  OpenLocationCode: 624607781cd4f91b6015882d752884d6a6017166
   Pageboy: cf121b9dd48c63f3f281b2a9ec93d02e0f23879b
-  ParallaxHeader: a343f55eb38f52a89c5820a77e14cf975b84e6aa
   R.swift: c533450b0f7dc494e0993f5f1a1db925d84c3006
   R.swift.Library: 0fc583cb55a99e28901299cc451614cad1161962
-  Repeat: fd80848f4b3d6f133b18fdee04fd193aff6b31ff
   RxCocoa: 4baf94bb35f2c0ab31bc0cb9f1900155f646ba42
   RxRelay: e72dbfd157807478401ef1982e1c61c945c94b2f
   RxSwift: d356ab7bee873611322f134c5f9ef379fa183d8f
-  SideMenu: f583187d21c5b1dd04c72002be544b555a2627a2
-  SkeletonView: 77079530e1348a72f48b79ae30dcb966c1b18b6a
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   SPAlert: 5738ac9368870ada154af03ce70d0542b80c676e
   Squircle: 94bae5770fc84e16b8cf66f3630a563b39ee2544
   Swinject: 97112918bd7e0785dc2df7036213f3c8cbba6586
   SwipeCellKit: 3972254a826da74609926daf59b08d6c72e619ea
 
-PODFILE CHECKSUM: 6d1cbd2fce1b040308b342bacc7e8aeaea45217b
+PODFILE CHECKSUM: bf26c6419c555044705f26dfbd67b64e2b3e7f2c
 
 COCOAPODS: 1.10.0

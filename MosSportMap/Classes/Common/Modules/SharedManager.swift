@@ -37,6 +37,19 @@ class SharedManager {
         }
         return color.withAlphaComponent(0.1)
     }
+    
+    func meters(for availability: SportObject.AvailabilityType) -> Double {
+        switch availability {
+        case .walking:
+            return 500.0
+        case .district:
+            return 1000.0
+        case .area:
+            return 3000.0
+        case .city:
+            return 5000.0
+        }
+    }
 
     /// Отчёт
     func calculateSportSquare(for population: Population, polygon: GMSPolygon, allPolygons: [GMSPolygon]) -> SquareReport {
