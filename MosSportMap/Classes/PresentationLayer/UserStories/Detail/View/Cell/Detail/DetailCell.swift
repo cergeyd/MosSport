@@ -14,11 +14,11 @@ class DetailCell: TableViewCell {
     @IBOutlet var detailPlace: UILabel!
 
     //MARK: Func
-    func configure(with detail: Detail) {
+    func configure(with detail: Detail, indexPath: IndexPath) {
         self.detailTitle.text = detail.title
         self.detailSubtitle.text = detail.subtitle
         self.detailPlace.text = detail.place
-        let isDisclosure = detail.type == .sportObjects || detail.type == .sportTypes || detail.type == .department
+        let isDisclosure = detail.type == .sportObjects || (detail.type == .department && indexPath.section != 0)
         self.accessoryType = isDisclosure ? .disclosureIndicator : .none
     }
 }

@@ -8,18 +8,6 @@
 
 import UIKit
 
-struct MenuSection {
-    let title: String
-    let items: [MenuItem]
-}
-
-struct MenuItem {
-    let title: String
-    let subtitle: String
-    let isDetailed: Bool
-    let type: MenuType
-}
-
 enum MenuType: Int {
     case clear = 0
     case objects = 1
@@ -44,7 +32,7 @@ protocol MenuDelegate: AnyObject {
     func didSelect(department: Department)
 }
 
-class MenuViewController: UITableViewController {
+class MenuViewController: TableViewController {
 
     struct Config {
         static let width = 0.5

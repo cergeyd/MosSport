@@ -7,6 +7,8 @@
 
 import GoogleMapsUtils
 
+let gSquareToKilometers = 1_000_000.0 /// Площадь вычесляется по границам. Крайне точно, но нам нужоны просто километры
+
 class SharedManager {
 
     struct Config {
@@ -37,7 +39,7 @@ class SharedManager {
         }
         return color.withAlphaComponent(0.1)
     }
-    
+
     func meters(for availability: SportObject.AvailabilityType) -> Double {
         switch availability {
         case .walking:
@@ -48,6 +50,19 @@ class SharedManager {
             return 3000.0
         case .city:
             return 5000.0
+        }
+    }
+
+    func title(for availabilityInd: Int) -> String {
+        switch availabilityInd {
+        case 0:
+            return "Шаговая доступность"
+        case 1:
+            return "Районное"
+        case 2:
+            return "Окружное"
+        default:
+            return "Городское"
         }
     }
 
@@ -70,12 +85,12 @@ class SharedManager {
             }
         }
         /// Площадь спортивных объектов на одного
-        let squareForOne = allSquare / population.population
+        let squareForOne = (allSquare / 100) / population.population
         let sportForOne = Double(sports.count) / population.population
         let objectForOne = Double(objects.count) / population.population
         let sportTypeForOne = Double(sportTypes.count) / population.population
         let sortedSportTypes = sportTypes.sorted(by: { $0.id < $1.id })
-        
+
 //        let placeBySquare = self.placeNumber(for: population, type: .population, allPolygons: allPolygons)
 //        let placebySportObjects = self.placeNumber(for: population, type: .sportObjects, allPolygons: allPolygons)
 //        let placeBySportSquare = self.placeNumber(for: population, type: .sportSquare, allPolygons: allPolygons)
@@ -97,6 +112,43 @@ class SharedManager {
             sportForOne: sportForOne,
             objectForOne: objectForOne,
             sportTypeForOne: sportTypeForOne)
+    }
+    
+    func findSportObjectsAround(object: SportObject) -> SportObjectsAround {
+        var sportObjectsArea: [SportObject] = []
+        var sportObjectsDistrict: [SportObject] = []
+        var sportObjectsWalking: [SportObject] = []
+        var sportObjectsCity: [SportObject] = []
+
+        let currentLocation = CLLocation(latitude: object.coordinate.latitude, longitude: object.coordinate.longitude)
+        for object in sportObjectResponse.objects {
+            let location = CLLocation(latitude: object.coordinate.latitude, longitude: object.coordinate.longitude)
+            let distance = currentLocation.distance(from: location)
+            switch distance {
+            case 1..<501:
+                sportObjectsWalking.append(object)
+            case 500..<1001:
+                sportObjectsDistrict.append(object)
+            case 1000..<3001:
+                sportObjectsArea.append(object)
+            case 3000..<5001:
+                sportObjectsCity.append(object)
+            default:
+                break
+            }
+        }
+        let around = SportObjectsAround(sportObjectsArea: sportObjectsArea, sportObjectsDistrict: sportObjectsDistrict, sportObjectsWalking: sportObjectsWalking, sportObjectsCity: sportObjectsCity)
+        return around
+    }
+    
+    func objects(for department: Department) -> [SportObject] {
+        var objects: [SportObject] = []
+        for object in sportObjectResponse.objects {
+            if (object.department == department) {
+                objects.append(object)
+            }
+        }
+        return objects
     }
 
 //    private func placeNumber(for population: Population, type: DetailType, allPolygons: [GMSPolygon]) -> Int {

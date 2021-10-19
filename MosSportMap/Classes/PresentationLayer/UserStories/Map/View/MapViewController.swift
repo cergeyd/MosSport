@@ -240,6 +240,7 @@ extension MapViewController: MenuDelegate, DetailViewDelegate, ListViewDelegate 
     func didUpdate(map type: MenuType) {
         switch type {
         case .clear:
+            self.avaiavailabilityCircle?.map = nil
             self.makeClusters(hidden: true)
             self.makeBorders(hidden: true)
             self.makeHeatmap(hidden: true)
@@ -260,6 +261,7 @@ extension MapViewController: GMSMapViewDelegate {
 
     /// Движем к кластерам
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
+        self.avaiavailabilityCircle?.map = nil
         mapView.animate(toLocation: marker.position)
         if let _ = marker.userData as? GMUCluster {
             mapView.animate(toZoom: mapView.camera.zoom + 1)
@@ -293,15 +295,18 @@ extension MapViewController: GMSMapViewDelegate {
 
     /// Место (не точные координаты, а координаты места)
     func mapView(_ mapView: GMSMapView, didTapPOIWithPlaceID placeID: String, name: String, location: CLLocationCoordinate2D) {
+        self.avaiavailabilityCircle?.map = nil
         self.createArea(with: location)
     }
 
     /// Точные координаты на карте
     func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
+        self.avaiavailabilityCircle?.map = nil
         self.createArea(with: coordinate)
     }
 
     func mapView(_ mapView: GMSMapView, didTap overlay: GMSOverlay) {
+        self.avaiavailabilityCircle?.map = nil
         print(overlay)
         if let polygon = overlay as? GMSPolygon, let title = overlay.title {
             let populationColor = SharedManager.shared.calculateColor(for: self.lastSelectedPolygon?.title)

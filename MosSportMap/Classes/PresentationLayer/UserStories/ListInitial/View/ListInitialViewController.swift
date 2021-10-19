@@ -7,18 +7,18 @@
 //
 
 import Pageboy
-import UIKit
 
-class ListInitialViewController: PageboyViewController, SegmentProtocol {
+class ListInitialViewController: PageboyViewController, SegmentProtocol, PageboyViewControllerDataSource, PageboyViewControllerDelegate {
 
     var output: ListInitialViewOutput!
     var type: ListType!
-    var isExist = true
     var listViewDelegate: ListViewDelegate?
-    lazy var listViewController: ListViewController = { return self.output.listViewController(type: self.type, index: 0) }()
-    lazy var listViewController1: ListViewController = { return self.output.listViewController(type: self.type, index: 1) }()
-    lazy var listViewController2: ListViewController = { return self.output.listViewController(type: self.type, index: 2) }()
-    lazy var listViewController3: ListViewController = { return self.output.listViewController(type: self.type, index: 3) }()
+    /// Сегменты
+    var segment: SegmentedControl!
+    private lazy var listViewController: ListViewController = { return self.output.listViewController(type: self.type, index: 0) }()
+    private lazy var listViewController1: ListViewController = { return self.output.listViewController(type: self.type, index: 1) }()
+    private lazy var listViewController2: ListViewController = { return self.output.listViewController(type: self.type, index: 2) }()
+    private lazy var listViewController3: ListViewController = { return self.output.listViewController(type: self.type, index: 3) }()
     lazy var viewControllers: [UIViewController] = {
         switch self.type! {
         case .details(detail: let detail, report: let report):
@@ -34,39 +34,88 @@ class ListInitialViewController: PageboyViewController, SegmentProtocol {
         case .sport(object: let object):
             self.title = "Спортивный объект"
         case .sportObjectsAround:
+            self.rightNavigationBar(isLoading: false)
             return [self.listViewController, self.listViewController1, listViewController2, listViewController3]
         default: break
         }
         return [self.listViewController]
     }()
-    var segment: SegmentedControl!
+    lazy var searchController: UISearchController = {
+        let _searchController = UISearchController(searchResultsController: nil)
+        _searchController.searchBar.autocapitalizationType = .none
+        _searchController.searchBar.placeholder = "Поиск по разделам"
+        _searchController.isActive = true
+        _searchController.obscuresBackgroundDuringPresentation = false
+        _searchController.delegate = self as? UISearchControllerDelegate
+        return _searchController
+    }()
 
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.output.didLoadView()
-        self.configureElements()
-        //self.isModalInPresentation = true
+        self.setupSearchController()
+    }
+
+    func setupSearchController() {
+        switch self.type! {
+        case .sport:
+            break
+        default:
+            self.navigationItem.searchController = self.searchController
+        }
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.prefersLargeTitles = false
+        let children = (self.navigationController?.children.count ?? 1)
+        self.isModalInPresentation = children > 1
+    }
+
+    //MARK: Private func
+    private func setupDelegate() {
         for controller in self.viewControllers as! [ListViewController] {
             controller.delegate = self.listViewDelegate
         }
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.prefersLargeTitles = false
+
+    private func rightNavigationBar(isLoading: Bool = false) {
+        if (isLoading) {
+            self.navigationActivity()
+        } else {
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.up"), style: .plain, target: self, action: #selector(didTapExport))
+        }
+    }
+    /// Создаэм PDF
+    @objc private func didTapExport() {
+        self.rightNavigationBar(isLoading: true)
+        Dispatch.after(2.0, completion: { self.rightNavigationBar(isLoading: false) })
+        if let topController = UIViewController.topController() {
+            if let children = topController.children.last {
+                if let listInitialViewController = children as? ListInitialViewController {
+                    let listViewController = listInitialViewController.viewControllers[listInitialViewController.segment.selectedSegmentIndex] as! ListViewController
+                    switch self.type! {
+                    case .sportObjectsAround:
+                        let availability = SharedManager.shared.title(for: listViewController.index)
+                        let name = "Объекты рядом. Доступность: \(availability)"
+                        self.pdfData(with: listViewController.tableView, name: name, sourceView: self.navigationItem.rightBarButtonItem!)
+                        self.murmur(text: "Сохранено", isError: false, subtitle: name)
+                    default: break
+                    }
+                }
+            }
+        }
     }
 
-    //MARK: Private func
     private func configurePageboy() {
         self.dataSource = self
         self.delegate = self
     }
 
     @objc func controlValueChanged(segment: UISegmentedControl) {
-        //let isSign = segment.selectedSegmentIndex == 0
-        // self.title = isSign ? "Вход" : "Регистрация"
         self.scrollToPage(.at(index: segment.selectedSegmentIndex), animated: true)
+        self.searchController.searchResultsUpdater = self.viewControllers[segment.selectedSegmentIndex] as? UISearchResultsUpdating
     }
 
     private func configureElements() {
@@ -87,49 +136,7 @@ class ListInitialViewController: PageboyViewController, SegmentProtocol {
 extension ListInitialViewController: ListInitialViewInput {
 
     func setupInitialState() {
-
-    }
-}
-
-extension ListInitialViewController: PageboyViewControllerDataSource, PageboyViewControllerDelegate {
-
-}
-
-extension UITableViewController {
-
-    func pdfDataWithTableView(name: String, sourceView: UIView) {
-        let priorBounds = tableView.bounds
-        let fittedSize = tableView.sizeThatFits(CGSize(width: priorBounds.size.width, height: tableView.contentSize.height + 200.0))
-        tableView.bounds = CGRect(x: 0, y: 0, width: fittedSize.width, height: fittedSize.height)
-        let pdfPageBounds = CGRect(x: 0, y: 0, width: tableView.frame.width, height: self.view.frame.height)
-        let pdfData = NSMutableData()
-        UIGraphicsBeginPDFContextToData(pdfData, pdfPageBounds, nil)
-        var pageOriginY: CGFloat = 0
-        while pageOriginY < fittedSize.height {
-            UIGraphicsBeginPDFPageWithInfo(pdfPageBounds, nil)
-            UIGraphicsGetCurrentContext()!.saveGState()
-            UIGraphicsGetCurrentContext()!.translateBy(x: 0, y: -pageOriginY)
-            tableView.layer.render(in: UIGraphicsGetCurrentContext()!)
-            UIGraphicsGetCurrentContext()!.restoreGState()
-            pageOriginY += pdfPageBounds.size.height
-        }
-        UIGraphicsEndPDFContext()
-        tableView.bounds = priorBounds
-        var docURL = (FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)).last! as URL
-        docURL = docURL.appendingPathComponent(name + ".pdf")
-        pdfData.write(to: docURL as URL, atomically: true)
-
-        // Create the Array which includes the files you want to share
-        var filesToShare = [Any]()
-
-        // Add the path of the file to the Array
-        filesToShare.append(docURL)
-
-        // Make the activityViewContoller which shows the share-view
-        let activityViewController = UIActivityViewController(activityItems: filesToShare, applicationActivities: nil)
-        activityViewController.popoverPresentationController?.sourceView = sourceView
-
-        // Show the share-view
-        self.present(activityViewController, animated: true, completion: nil)
+        self.configureElements()
+        self.setupDelegate()
     }
 }

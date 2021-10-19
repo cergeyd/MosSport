@@ -13,7 +13,7 @@ protocol CalculatedDelegate: AnyObject {
     func didTapShow(detail report: SquareReport)
 }
 
-class CalculatedViewController: UITableViewController {
+class CalculatedViewController: TableViewController {
 
     struct Config {
         static let animationDuration = 0.4

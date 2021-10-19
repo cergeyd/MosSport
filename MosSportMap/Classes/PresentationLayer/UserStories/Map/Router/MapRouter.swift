@@ -47,6 +47,5 @@ class MapRouter {
         controller.type = .sport(object: object)
         controller.listViewDelegate = self.viewController
         self.show(detailController: controller)
-       // self.viewController?.push(controller)
     }
 }

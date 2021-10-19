@@ -42,12 +42,12 @@ extension UIViewController {
         completion?()
     }
 
-    func murmur(text: String, isError: Bool = true, subtitle: String = "", duration: Double = 1.0) {
-        if (isError) {
-            Banner.show(with: text, subtitle: subtitle, time: "now", image: R.image.warning()!)
-        } else {
-            NotificationBanner.show(with: text, subtitle: subtitle, time: "now", image: R.image.warning())
-        }
+    func murmur(text: String, isError: Bool = true, subtitle: String = "", duration: Double = 4.0) {
+        // if (isError) {
+        Banner.show(with: text, subtitle: subtitle, time: "now", image: R.image.warning()!, duration: duration)
+        //} else {
+        //   NotificationBanner.show(with: text, subtitle: subtitle, time: "now", image: R.image.warning())
+        // }
     }
 
     func hideKeyboardWhenTappedAround(_view: UIView? = nil) {
@@ -74,5 +74,37 @@ extension UIViewController {
 
     @objc func dismissKeyboard() {
         self.view.endEditing(true)
+    }
+    
+    func pdfData(with tableView: UITableView, name: String, sourceView: UIBarButtonItem) {
+        let priorBounds = tableView.bounds
+        let fittedSize = tableView.sizeThatFits(CGSize(width: priorBounds.size.width, height: tableView.contentSize.height))
+        tableView.bounds = CGRect(x: 0, y: 0, width: fittedSize.width, height: fittedSize.height)
+        let pdfPageBounds = CGRect(x: 0, y: 0, width: tableView.frame.width, height: self.view.frame.height)
+        let pdfData = NSMutableData()
+        UIGraphicsBeginPDFContextToData(pdfData, pdfPageBounds, nil)
+        var pageOriginY: CGFloat = 0
+        while (pageOriginY < fittedSize.height) {
+            UIGraphicsBeginPDFPageWithInfo(pdfPageBounds, nil)
+            UIGraphicsGetCurrentContext()!.saveGState()
+            UIGraphicsGetCurrentContext()!.translateBy(x: 0, y: -pageOriginY)
+            tableView.layer.render(in: UIGraphicsGetCurrentContext()!)
+            UIGraphicsGetCurrentContext()!.restoreGState()
+            pageOriginY += pdfPageBounds.size.height
+        }
+        UIGraphicsEndPDFContext()
+        tableView.bounds = priorBounds
+        var docURL = (FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)).last! as URL
+        docURL = docURL.appendingPathComponent(name + ".pdf")
+        pdfData.write(to: docURL as URL, atomically: true)
+        // Create the Array which includes the files you want to share
+        var filesToShare = [Any]()
+        // Add the path of the file to the Array
+        filesToShare.append(docURL)
+        // Make the activityViewContoller which shows the share-view
+        let activityViewController = UIActivityViewController(activityItems: filesToShare, applicationActivities: nil)
+        activityViewController.popoverPresentationController?.barButtonItem = sourceView
+        // Show the share-view
+        self.present(activityViewController, animated: true, completion: nil)
     }
 }
