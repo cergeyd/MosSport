@@ -16,7 +16,9 @@ enum ListType {
     case department(department: Department, sportObjects: [SportObject])
     case filterDepartments
     case filterAreas
-    case filterObjects
+    case filter
+    case filterObjects(items: [SportObject])
+    case filterSportTypes
     case sports(items: [SportObject.Sport])
     case sportObjectsAround(around: SportObjectsAround)
 }
@@ -25,7 +27,8 @@ protocol ListViewDelegate: AnyObject {
     func didSelect(population: Population)
     func didSelect(department: Department)
     func didTapShowDepartment(sport object: SportObject)
-    func didSelect(sport object: SportObject)
+    func didTapShow(type: SportType, objects: [SportObject])
+    func didSelect(filter sport: SportObject)
 }
 
 extension ListViewDelegate {
@@ -33,6 +36,8 @@ extension ListViewDelegate {
     func didSelect(department: Department) { }
     func didTapShowDepartment(sport object: SportObject) { }
     func didSelect(sport object: SportObject) { }
+    func didTapShow(type: SportType, objects: [SportObject]) { }
+    func didSelect(filter sport: SportObject) { }
 }
 
 class ListViewController: TableViewController {
@@ -102,9 +107,12 @@ class ListViewController: TableViewController {
             case .objectForOne:
                 self.details.append(Detail(type: detail.type, title: report.population.area, place: "Место", subtitle: report.objectForOne.formattedWithSeparator))
             case .department: /// Департаменты в регионе
-                //let sortBySqare = report.departments.sorted(by: { $0.id < $1.id })
                 for department in report.departments {
                     self.details.append(Detail(type: .department, title: department.title, place: "Идентификатор: \(department.id)", subtitle: "Название"))
+                }
+            case .sportZones: /// Виды Зоны в регионе
+                for sport in report.sports {
+                    self.details.append(Detail(type: .sportTypes, title: sport.sportType.title, place: "Идентификатор: \(sport.sportAreaID)", subtitle: sport.sportArea))
                 }
             case .sportTypes: /// Виды спорта в регионе
                 let sortBySport = report.sportTypes.sorted(by: { $0.id < $1.id })
@@ -123,19 +131,45 @@ class ListViewController: TableViewController {
                     }
                 }
             case .sportObjects:
-                //let sortBySport = report.objects.sorted(by: { $0.id > $1.id }) sportSquare
                 for object in report.objects {
                     self.details.append(Detail(type: detail.type, title: object.title, place: "ID: \(object.address)", subtitle: object.department.title))
                 }
             default: break
             }
-        case .filterDepartments:
-            for department in departmentResponse.departments {
-                self.details.append(Detail(type: .filter, title: department.title, place: "ID: \(department.id)", subtitle: "Dd"))
+        case .filterObjects(let objects): /// Фильтрация по видам спорта
+//            if let objects = objects {
+//                self.title = "Спортивный объект"
+//                for object in objects {
+//                    self.details.append(Detail(type: .filter, title: object.title, place: object.address, subtitle: object.department.title))
+//                }
+//            } else {
+            self.title = "Объекты"
+            for object in objects {
+                self.details.append(Detail(type: .filter, title: object.title, place: object.address, subtitle: object.department.title))
             }
-        case .filterAreas:
+//                for department in departmentResponse.departments {
+//                    self.details.append(Detail(type: .filter, title: department.title, place: "Идентификатор: \(department.id)", subtitle: "Название"))
+//                }
+            // }
+        case .filterSportTypes: /// Фильтрация по объектам
+            self.title = "Видам спорта"
+            for type in sportTypes.types {
+                self.details.append(Detail(type: .filter, title: type.title, place: "Идентификатор: \(type.id)", subtitle: "Вид спорта"))
+            }
+        case .filterDepartments: /// Фильтрация по Департаментам
+            self.title = "Департаменты"
+            for department in departmentResponse.departments {
+                self.details.append(Detail(type: .filter, title: department.title, place: "Идентификатор: \(department.id)", subtitle: "Название"))
+            }
+//            for type in sportTypes.types {
+//                self.details.append(Detail(type: .filter, title: type.title, place: "Идентификатор: \(type.id)", subtitle: "Вид спорта"))
+//            }
+        case .filterAreas: /// Фильтрация по районам
+            self.title = "Районы, кварталы"
             for population in populationResponse.populations {
-                self.details.append(Detail(type: .filter, title: population.area, place: population.population.formattedWithSeparator, subtitle: "Dd"))
+                let populationValue = Int(population.population)
+                let square = population.square / gSquareToKilometers
+                self.details.append(Detail(type: .filter, title: population.area, place: populationValue.peoples() + "/км²", subtitle: "Площадь района: \(square.formattedWithSeparator + " км²")"))
             }
         case .department(let department, let objects): /// Объекты департамента
             self.title = "Объекты департамента"
@@ -215,18 +249,38 @@ class ListViewController: TableViewController {
                 self.output.showListDetailScreen(with: .department(department: department, sportObjects: objects))
             }
         case .filterAreas:
-            let detail = self.detail(at: indexPath)
-            if let population = SharedManager.shared.population(by: detail.title) {
-                self.delegate?.didSelect(population: population)
+            self.navigationBar(isLoading: true)
+            Dispatch.after(2.5) { self.navigationBar(isLoading: false) }
+            Dispatch.global {
+                let detail = self.detail(at: indexPath)
+                if let population = SharedManager.shared.population(by: detail.title) {
+                    Dispatch.main {
+                        self.delegate?.didSelect(population: population)
+                    }
+                }
             }
         case .filterDepartments:
             let detail = self.detail(at: indexPath)
-            for department in departmentResponse.departments {
-                if (department.title == detail.title) {
-                    self.delegate?.didSelect(department: department)
+            var department: Department?
+            for d in departmentResponse.departments { if (d.title == detail.title) { department = d } }
+            if let department = department {
+                self.delegate?.didSelect(department: department)
+            }
+        case .filterObjects(let items):
+            let object = items[indexPath.row]
+            self.delegate?.didSelect(filter: object)
+        case .filterSportTypes:
+            self.navigationBar(isLoading: true)
+            Dispatch.after(2.5) { self.navigationBar(isLoading: false) }
+            Dispatch.global {
+                let detail = self.detail(at: indexPath)
+                let result = SharedManager.shared.findSportObjects(by: detail.title)
+                Dispatch.main {
+                    self.delegate?.didTapShow(type: result.type, objects: result.objects)
                 }
             }
         case .department(_, let objects):
+            //self.title = "Департамент"
             if (indexPath.section != 0) {
                 let object = objects[indexPath.row]
                 self.output.showListDetailScreen(with: .sport(object: object))
@@ -256,6 +310,8 @@ class ListViewController: TableViewController {
         switch self.type! {
         case .department:
             return section == 0 ? "Ведомство" : "Спортивные объекты"
+        case .sports:
+            return "Спортивные объекты"
         case .details(let detail, _):
             switch detail.type {
             case .department:
@@ -297,8 +353,9 @@ class ListViewController: TableViewController {
             self.isSearchActive = !text.isEmpty
             self.filterDetails = self.details.filter({ (detail) -> Bool in
                 let byTitle = detail.title.lowercased().contains(text)
+                let byPlace = detail.place.lowercased().contains(text)
                 let bySubTitle = detail.subtitle.lowercased().contains(text)
-                return byTitle || bySubTitle
+                return byTitle || bySubTitle || byPlace
             })
         }
         self.tableView.reloadData()

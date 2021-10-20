@@ -18,12 +18,17 @@ extension MapPresenter: MapViewOutput {
         self.view.setupInitialState()
     }
     
+    //MARK: Router
     func didTapShow(detail report: SquareReport) {
         self.router.didTapShow(detail: report)
     }
     
     func didTapShow(sportObjects: [SportObject], department: Department) {
         self.router.didTapShow(sportObjects: sportObjects, department: department)
+    }
+    
+    func didTapShow(sportObjects: [SportObject], type: SportType) {
+        self.router.didTapShow(sportObjects: sportObjects, type: type)
     }
     
     func didTapShow(sport object: SportObject) {

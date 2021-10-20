@@ -5,11 +5,12 @@
 //  Created by Sergeyd on 19.10.2021.
 //
 
-import UIKit
+import BusyNavigationBar
 
 class TableViewController: UITableViewController, UISearchResultsUpdating {
 
     var isSearchActive = false
+    var options = BusyNavigationBarOptions()
     lazy var searchController: UISearchController = {
         let _searchController = UISearchController(searchResultsController: nil)
         _searchController.searchBar.autocapitalizationType = .none
@@ -43,5 +44,13 @@ class TableViewController: UITableViewController, UISearchResultsUpdating {
 
     func updateSearchResults(for searchController: UISearchController) {
 
+    }
+    
+    func navigationBar(isLoading: Bool) {
+        if (isLoading) {
+            self.navigationController?.navigationBar.start(self.options)
+        } else {
+            self.navigationController?.navigationBar.stop()
+        }
     }
 }

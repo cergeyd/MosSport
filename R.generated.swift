@@ -236,6 +236,18 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
 
+  /// This `R.info` struct is generated, and contains static references to 1 properties.
+  struct info {
+    struct uiApplicationSceneManifest {
+      static let _key = "UIApplicationSceneManifest"
+      static let uiApplicationSupportsMultipleScenes = false
+
+      fileprivate init() {}
+    }
+
+    fileprivate init() {}
+  }
+
   /// This `R.nib` struct is generated, and contains static references to 6 nibs.
   struct nib {
     /// Nib `CalculatedAreaCell`.

@@ -8,6 +8,7 @@
 
 import GoogleMapsUtils
 import CoreLocation
+import BusyNavigationBar
 
 protocol MapViewDataSource: AnyObject {
     func didCalculated(report: SquareReport)
@@ -30,11 +31,14 @@ class MapViewController: UIViewController {
     /// Если карта, необходима для выбора границ к отчёту
     var calculateAreaType: CalculateAreaType?
     /// Полигон, для рисования вручную
+    private var allOverlays: [GMSPolygon] = []
+    private var byHandPopulation: Population?
     private var drawPolygon = GMSMutablePath()
     private var polygons: [GMSPolygon] = []
     private var coordinates: [CLLocationCoordinate2D] = []
     /// Радиус с доступностью
     private var avaiavailabilityCircle: GMSCircle?
+    private var options = BusyNavigationBarOptions()
     /// Карта
     private lazy var mapView: GMSMapView = {
         let camera = GMSCameraPosition.camera(withLatitude: Config.initialCoordinates.latitude, longitude: Config.initialCoordinates.longitude, zoom: Config.zoomLevel)
@@ -59,7 +63,7 @@ class MapViewController: UIViewController {
         let _heatmapLayer = GMUHeatmapTileLayer()
         _heatmapLayer.radius = 50
         _heatmapLayer.opacity = 0.8
-        _heatmapLayer.gradient = GMUGradient(colors: gradientColors, startPoints: gradientStartPoints, colorMapSize: 64)
+        _heatmapLayer.gradient = GMUGradient(colors: gradientColors, startPoints: gradientStartPoints, colorMapSize: 256)
         return _heatmapLayer
     }()
     /// Данные о численности населения
@@ -111,10 +115,11 @@ class MapViewController: UIViewController {
         if (hidden) { self.heatmapLayer.map = nil; return }
         var list = [GMUWeightedLatLng]()
         for object in sportObjectResponse.objects {
-            list.append(GMUWeightedLatLng(coordinate: object.coorditate, intensity: 1))
+            list.append(GMUWeightedLatLng(coordinate: object.coorditate, intensity: 5))
         }
         self.heatmapLayer.weightedData = list
         self.heatmapLayer.map = mapView
+        self.mapView.animate(to: GMSCameraPosition(latitude: Config.initialCoordinates.latitude, longitude: Config.initialCoordinates.longitude, zoom: 10.0))
     }
 
     /// Границы Москвы
@@ -133,25 +138,38 @@ class MapViewController: UIViewController {
                     overlay.strokeWidth = 2.5
                 }
             }
+            self.allOverlays = self.render.mapOverlays() as! [GMSPolygon]
         }
     }
 
     /// Спортивные объекты на карте
-    private func makeClusters(hidden: Bool, availabilityType: SportObject.AvailabilityType? = nil) {
+    private func makeClusters(hidden: Bool, availabilityType: SportObject.AvailabilityType? = nil, objects: [SportObject]? = nil) {
         self.clusterManager.clearItems()
-        for object in sportObjectResponse.objects {
-            let marker = GMSMarker()
-            marker.userData = object
-            marker.title = object.title
-            marker.snippet = object.department.title
-            marker.appearAnimation = .pop // Appearing animation. default
-            marker.position = object.coorditate
-            if let availabilityType = availabilityType {
-                if (object.availabilityType == availabilityType) {
+        if let objects = objects {
+            for object in objects {
+                let marker = GMSMarker()
+                marker.userData = object
+                marker.title = object.title
+                marker.snippet = object.department.title
+                marker.appearAnimation = .pop // Appearing animation. default
+                marker.position = object.coorditate
+                self.clusterManager.add(marker)
+            }
+        } else {
+            for object in sportObjectResponse.objects {
+                let marker = GMSMarker()
+                marker.userData = object
+                marker.title = object.title
+                marker.snippet = object.department.title
+                marker.appearAnimation = .pop // Appearing animation. default
+                marker.position = object.coorditate
+                if let availabilityType = availabilityType {
+                    if (object.availabilityType == availabilityType) {
+                        self.clusterManager.add(marker)
+                    }
+                } else {
                     self.clusterManager.add(marker)
                 }
-            } else {
-                self.clusterManager.add(marker)
             }
         }
         self.clusterManager.cluster()
@@ -183,10 +201,21 @@ extension MapViewController: MenuDelegate, DetailViewDelegate, ListViewDelegate 
         self.mapView.animate(to: GMSCameraPosition(latitude: object.coordinate.latitude, longitude: object.coordinate.longitude, zoom: self.mapView.camera.zoom))
     }
 
-    /// Группируем все сопрт. объекты департамента
+    func didTapShow(type: SportType, objects: [SportObject]) {
+        print(objects)
+        self.output.didTapShow(sportObjects: objects, type: type)
+        self.makeClusters(hidden: false, availabilityType: nil, objects: objects)
+    }
+
+    /// Отфильтрованный объект спорта
+    func didSelect(filter sport: SportObject) {
+        self.mapView.animate(to: GMSCameraPosition(latitude: sport.coordinate.latitude, longitude: sport.coordinate.longitude, zoom: self.mapView.camera.zoom))
+        self.output.didTapShow(sport: sport)
+    }
+
+    /// Группируем все спортивные. объекты департамента
     func didSelect(department: Department) {
-        var sportObjects: [SportObject] = []
-        for object in sportObjectResponse.objects { if (object.department == department) { sportObjects.append(object) } }
+        let sportObjects = SharedManager.shared.objects(for: department)
         self.output.didTapShow(sportObjects: sportObjects, department: department)
     }
 
@@ -207,10 +236,11 @@ extension MapViewController: MenuDelegate, DetailViewDelegate, ListViewDelegate 
         for overlay in allOverlays {
             if (overlay.title == population.area) {
                 self.mapView(self.mapView, didTap: overlay)
-                let report = SharedManager.shared.calculateSportSquare(for: population, polygon: overlay, allPolygons: allOverlays)
+                let report = SharedManager.shared.calculateSportSquare(for: population, polygon: overlay)
                 self.output.didTapShow(detail: report)
             }
         }
+        self.view.endEditing(true)
     }
 
     /// Показываем отчёт с экрана калькуляции
@@ -225,12 +255,12 @@ extension MapViewController: MenuDelegate, DetailViewDelegate, ListViewDelegate 
     /// Способ выбора границ
     func didSelect(calculated type: CalculateAreaType?) {
         self.calculateAreaType = type
+        self.makeHeatmap(hidden: true)
         if let type = type {
             if (type == .borders) {
-                self.makeClusters(hidden: true)
-                self.makeHeatmap(hidden: true)
                 self.makeBorders(hidden: false)
             } else {
+                self.makeBorders(hidden: true)
                 self.murmur(text: "Укажите вручную границы, в пределах которых необходимо произвести расчёт", subtitle: "Точка за точкой", duration: 4.0)
             }
         }
@@ -238,21 +268,34 @@ extension MapViewController: MenuDelegate, DetailViewDelegate, ListViewDelegate 
 
     /// Обновление вида карты
     func didUpdate(map type: MenuType) {
+        self.navigationBar(isLoading: true)
         switch type {
         case .clear:
+            Dispatch.after { self.navigationBar(isLoading: false) }
             self.avaiavailabilityCircle?.map = nil
             self.makeClusters(hidden: true)
             self.makeBorders(hidden: true)
             self.makeHeatmap(hidden: true)
         case .heatMap:
+            Dispatch.after(5.0) { Dispatch.after { self.navigationBar(isLoading: false) } }
             self.makeBorders(hidden: true)
             self.makeHeatmap(hidden: false)
         case .population:
+            Dispatch.after { self.navigationBar(isLoading: false) }
             self.makeHeatmap(hidden: true)
             self.makeBorders(hidden: false)
         case .objects:
+            Dispatch.after { self.navigationBar(isLoading: false) }
             self.makeClusters(hidden: false)
         default: break
+        }
+    }
+
+    func navigationBar(isLoading: Bool) {
+        if (isLoading) {
+            self.navigationController?.navigationBar.start(self.options)
+        } else {
+            self.navigationController?.navigationBar.stop()
         }
     }
 }
@@ -277,20 +320,51 @@ extension MapViewController: GMSMapViewDelegate {
 
     /// Рисуем границу вручную
     func createArea(with coordinate: CLLocationCoordinate2D) {
-//        let circ = GMSCircle(position: coordinate, radius: 55.0)
-//        circ.fillColor = .red
-//        circ.map = self.mapView
-//
-//        for p in self.polygons { p.map = nil }
-//        self.drawPolygon.removeAllCoordinates()
-//        self.coordinates.append(coordinate)
-//        for coord in coordinates { self.drawPolygon.add(coord) }
-//        let polygon = GMSPolygon(path: self.drawPolygon)
-//        polygon.fillColor = UIColor(red: 0.25, green: 0, blue: 0, alpha: 0.2);
-//        polygon.strokeColor = .black
-//        polygon.strokeWidth = 2
-//        polygon.map = mapView
-//        self.polygons.append(polygon)
+        /// Если нужно для экрана калькуляции
+        if let _ = self.calculateAreaType {
+            let circ = GMSCircle(position: coordinate, radius: 55.0)
+            circ.fillColor = .red
+            circ.map = self.mapView
+
+            for p in self.polygons { p.map = nil }
+            self.drawPolygon.removeAllCoordinates()
+            self.coordinates.append(coordinate)
+            for coord in coordinates { self.drawPolygon.add(coord) }
+            let polygon = GMSPolygon(path: self.drawPolygon)
+            polygon.fillColor = UIColor(red: 0.25, green: 0, blue: 0, alpha: 0.2);
+            polygon.strokeColor = .black
+            polygon.strokeWidth = 2
+            polygon.map = mapView
+            self.polygons.append(polygon)
+
+            if (self.byHandPopulation == nil) {
+                self.population(for: coordinate, in: self.allOverlays)
+            }
+
+            if (self.coordinates.count == 5) {
+                didTapHandsBorders()
+            }
+        }
+    }
+
+    /// Ручные границы приняты
+    @objc private func didTapHandsBorders() {
+        if let population = self.byHandPopulation {
+            let report = SharedManager.shared.calculateSportSquare(for: population, path: self.drawPolygon)
+            for dataSource in self.dataSources {
+                dataSource.didCalculated(report: report)
+            }
+        }
+    }
+
+    /// определим район по первой точке ручного ввода
+    private func population(for coordinate: CLLocationCoordinate2D, in polygons: [GMSPolygon]) {
+        for polygon in polygons {
+            if (polygon.contains(coordinate: coordinate)) {
+                let population = SharedManager.shared.population(by: polygon.title)
+                self.byHandPopulation = population
+            }
+        }
     }
 
     /// Место (не точные координаты, а координаты места)
@@ -313,11 +387,11 @@ extension MapViewController: GMSMapViewDelegate {
             self.lastSelectedPolygon?.fillColor = populationColor
             self.lastSelectedPolygon?.strokeWidth = 3.0
             self.lastSelectedPolygon = polygon
-            polygon.fillColor = AppStyle.color(for: .coloured).withAlphaComponent(0.7)
+            polygon.fillColor = AppStyle.color(for: .coloured).withAlphaComponent(0.9)
             polygon.strokeColor = .black
             polygon.strokeWidth = 5.0
             if let population = SharedManager.shared.population(by: title) {
-                let report = SharedManager.shared.calculateSportSquare(for: population, polygon: polygon, allPolygons: self.render.mapOverlays() as! [GMSPolygon])
+                let report = SharedManager.shared.calculateSportSquare(for: population, polygon: polygon)
                 /// Если нужно для экрана калькуляции
                 if let _ = self.calculateAreaType {
                     for dataSource in self.dataSources {

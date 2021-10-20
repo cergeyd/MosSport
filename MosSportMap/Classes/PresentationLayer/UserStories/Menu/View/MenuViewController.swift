@@ -21,6 +21,7 @@ enum MenuType: Int {
     case filterDepartments = 20
     case filterAreas = 21
     case filterObjects = 22
+    case filterSportTypes = 23
 }
 
 protocol MenuDelegate: AnyObject {
@@ -30,6 +31,8 @@ protocol MenuDelegate: AnyObject {
     func didTapShow(detail report: SquareReport)
     func didSelect(population: Population)
     func didSelect(department: Department)
+    func didTapShow(type: SportType, objects: [SportObject])
+    func didSelect(filter sport: SportObject)
 }
 
 class MenuViewController: TableViewController {
@@ -39,10 +42,10 @@ class MenuViewController: TableViewController {
         static let smallWidth = 0.35
         static let animationDuration = 0.4
     }
-    
+
     var output: MenuViewOutput!
     weak var delegate: MenuDelegate?
-    
+
     /// Контроллер с вычислениями, храним так, чтобы удобно было добавить в dataSource
     lazy var calculatedViewController = self.output.calculatedViewController()
     /// Меню
@@ -59,24 +62,25 @@ class MenuViewController: TableViewController {
             MenuItem(title: "Количества видов спортивных услуг", subtitle: "расчет количества видов спортивных услуг на одного человека на выбранной территории", isDetailed: true, type: .calculateSportType)
             ]),
         MenuSection(title: "Фильтр", items: [
-            MenuItem(title: "Департаменты", subtitle: "Расчет площади спортивных зон на одного человека на выбранной территории", isDetailed: true, type: .filterDepartments),
-            MenuItem(title: "Районы", subtitle: "Расчет количества спортивных зон на одного человека на выбранной территории", isDetailed: true, type: .filterAreas),
-            MenuItem(title: "Спортивные объекты", subtitle: "расчет количества видов спортивных услуг на одного человека на выбранной территории", isDetailed: true, type: .filterObjects)
+            MenuItem(title: "Департаменты", subtitle: "Фильтрации по принадлежности спортивного объекта к департаменту", isDetailed: true, type: .filterDepartments),
+            MenuItem(title: "Районы", subtitle: "Спортивная инфраструктура в районе", isDetailed: true, type: .filterAreas),
+            MenuItem(title: "Cпортивные объекты", subtitle: "Фильтрации спортивных объектов", isDetailed: true, type: .filterObjects),
+            MenuItem(title: "Виды спортивных услуг", subtitle: "Фильтрации спортивных объектов по видам спорта", isDetailed: true, type: .filterSportTypes)
             ])
     ]
-    
+
     //MARK: Lifecycle
     override func viewDidLoad() {
         self.configureTableView()
         super.viewDidLoad()
         self.output.didLoadView()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.splitWidth(isSmall: true)
     }
-    
+
     //MARK: Private func
     private func configureTableView() {
         self.tableView = UITableView(frame: .zero, style: .insetGrouped)
@@ -107,7 +111,7 @@ extension MenuViewController: MenuViewInput {
 
 //MARK: TableView
 extension MenuViewController {
-    
+
     private func menuItem(at indexPath: IndexPath) -> MenuItem {
         self.sections[indexPath.section].items[indexPath.row]
     }
@@ -144,21 +148,29 @@ extension MenuViewController {
         default:
             self.output.didTapShow(listType: type)
         }
-         // let controller = UIViewController()
-         // self.showDetailViewController(UINavigationController(rootViewController: controller), sender: nil)
+        // let controller = UIViewController()
+        // self.showDetailViewController(UINavigationController(rootViewController: controller), sender: nil)
     }
 }
 
 extension MenuViewController: CalculatedDelegate, ListViewDelegate {
+
+    func didSelect(filter sport: SportObject) {
+        self.delegate?.didSelect(filter: sport)
+    }
     
+    func didTapShow(type: SportType, objects: [SportObject]) {
+        self.delegate?.didTapShow(type: type, objects: objects)
+    }
+
     func didSelect(department: Department) {
         self.delegate?.didSelect(department: department)
     }
-    
+
     func didSelect(population: Population) {
         self.delegate?.didSelect(population: population)
     }
-    
+
     func didTapShow(detail report: SquareReport) {
         self.delegate?.didTapShow(detail: report)
     }

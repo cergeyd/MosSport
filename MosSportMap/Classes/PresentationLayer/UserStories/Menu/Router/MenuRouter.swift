@@ -31,6 +31,10 @@ class MenuRouter {
         switch listType {
         case .filterAreas:
             controller.type = .filterAreas
+        case .filterSportTypes:
+            controller.type = .filterSportTypes
+        case .filterObjects:
+            controller.type = .filterObjects(items: sportObjectResponse.objects)
         default:
             controller.type = .filterDepartments
         }

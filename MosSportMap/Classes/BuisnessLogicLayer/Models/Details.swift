@@ -12,6 +12,11 @@ struct DepartmentSection {
     let sportObjects: [SportObject]
 }
 
+struct SportTypeSection {
+    let type: SportType
+    let sportObjects: [SportObject]
+}
+
 struct DetailSection {
     let title: String
     let details: [Detail]

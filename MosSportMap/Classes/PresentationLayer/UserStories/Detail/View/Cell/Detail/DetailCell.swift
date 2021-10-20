@@ -18,7 +18,7 @@ class DetailCell: TableViewCell {
         self.detailTitle.text = detail.title
         self.detailSubtitle.text = detail.subtitle
         self.detailPlace.text = detail.place
-        let isDisclosure = detail.type == .sportObjects || (detail.type == .department && indexPath.section != 0)
+        let isDisclosure = detail.type == .sportObjects || (detail.type == .department && indexPath.section != 0) || detail.type == .filter || detail.type == .sportZones
         self.accessoryType = isDisclosure ? .disclosureIndicator : .none
     }
 }

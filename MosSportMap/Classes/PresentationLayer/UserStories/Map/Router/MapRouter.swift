@@ -24,10 +24,17 @@ class MapRouter {
         detailController.report = report
         self.show(detailController: detailController)
     }
+    
+    func didTapShow(sportObjects: [SportObject], type: SportType) {
+        let detailController = self.detailFactory.instantiateModule()
+        detailController.sportTypeSection = SportTypeSection(type: type, sportObjects: sportObjects)
+        detailController.delegate = self.viewController
+        self.show(detailController: detailController)
+    }
 
     func didTapShow(sportObjects: [SportObject], department: Department) {
         let detailController = self.detailFactory.instantiateModule()
-        detailController.section = DepartmentSection(sportObjects: sportObjects, department: department)
+        detailController.section = DepartmentSection(department: department, sportObjects: sportObjects)
         detailController.delegate = self.viewController
         self.show(detailController: detailController)
     }

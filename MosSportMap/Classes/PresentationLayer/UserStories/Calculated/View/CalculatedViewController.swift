@@ -40,13 +40,17 @@ class CalculatedViewController: TableViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.delegate?.didSelect(calculated: .borders)
-        if (self.report != nil) {
-            self.report = nil
-            self.tableView.reloadData()
-        }
         UIView.animate(withDuration: Config.animationDuration) {
             self.splitViewController?.preferredPrimaryColumnWidthFraction = Config.width
+        }
+        if let lastSelectedAreaReport = lastSelectedAreaReport {
+            self.didCalculated(report: lastSelectedAreaReport)
+        } else {
+            self.delegate?.didSelect(calculated: .borders)
+            if (self.report != nil) {
+                self.report = nil
+                self.tableView.reloadData()
+            }
         }
     }
 
@@ -99,7 +103,6 @@ extension CalculatedViewController: CalculatedTypeDelegate, MapViewDataSource {
     func didCalculated(report: SquareReport) {
         self.report = report
         self.tableView.reloadData()
-        Hud.hide()
     }
 
     func didSelect(calculated type: CalculateAreaType?) {

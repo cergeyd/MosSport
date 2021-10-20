@@ -8,6 +8,8 @@
 import GoogleMapsUtils
 
 let gSquareToKilometers = 1_000_000.0 /// Площадь вычесляется по границам. Крайне точно, но нам нужоны просто километры
+let gCalculatePerPeoples = 100_000.0 /// на 100 000 человек на выбранной территории;
+var lastSelectedAreaReport: SquareReport?
 
 class SharedManager {
 
@@ -18,9 +20,9 @@ class SharedManager {
     static let shared = SharedManager()
 
     /// Население по области
-    func population(by area: String) -> Population? {
+    func population(by area: String?) -> Population? {
         for population in populationResponse.populations {
-            if (population.area.lowercased() == area.lowercased()) {
+            if (population.area.lowercased() == area?.lowercased()) {
                 return population
             }
         }
@@ -29,7 +31,7 @@ class SharedManager {
 
     /// Население по области
     func calculateColor(for area: String?) -> UIColor {
-        let color = AppStyle.color(for: .coloured).withAlphaComponent(0.4)
+        let color = AppStyle.color(for: .coloured).withAlphaComponent(0.5)
         if let title = area, let population = SharedManager.shared.population(by: title) {
             let maxPop = Config.maxPopultaionValue
             let currentPop = Double(population.population)
@@ -67,14 +69,21 @@ class SharedManager {
     }
 
     /// Отчёт
-    func calculateSportSquare(for population: Population, polygon: GMSPolygon, allPolygons: [GMSPolygon]) -> SquareReport {
+    func calculateSportSquare(for population: Population, polygon: GMSPolygon? = nil, path: GMSMutablePath? = nil) -> SquareReport {
         var objects: [SportObject] = []
         var sports: [SportObject.Sport] = []
         var sportTypes: Set<SportType> = []
         var departments: Set<Department> = []
         var allSquare = 0.0
+
         for object in sportObjectResponse.objects {
-            if (polygon.contains(coordinate: object.coorditate)) {
+            var isContains = false
+            if let polygon = polygon {
+                isContains = polygon.contains(coordinate: object.coorditate)
+            } else if let path = path {
+                isContains = path.contains(coordinate: object.coorditate, geodesic: false)
+            }
+            if (isContains) {
                 objects.append(object)
                 departments.insert(object.department)
                 for sport in object.sport {
@@ -85,18 +94,15 @@ class SharedManager {
             }
         }
         /// Площадь спортивных объектов на одного
-        let squareForOne = (allSquare / 100) / population.population
-        let sportForOne = Double(sports.count) / population.population
-        let objectForOne = Double(objects.count) / population.population
-        let sportTypeForOne = Double(sportTypes.count) / population.population
+        let squareForOne = allSquare / gCalculatePerPeoples
+        let sportForOne = Double(sports.count) / gCalculatePerPeoples
+        let objectForOne = Double(objects.count) / gCalculatePerPeoples
+        let sportTypeForOne = Double(sportTypes.count) / gCalculatePerPeoples
         let sortedSportTypes = sportTypes.sorted(by: { $0.id < $1.id })
 
-//        let placeBySquare = self.placeNumber(for: population, type: .population, allPolygons: allPolygons)
-//        let placebySportObjects = self.placeNumber(for: population, type: .sportObjects, allPolygons: allPolygons)
-//        let placeBySportSquare = self.placeNumber(for: population, type: .sportSquare, allPolygons: allPolygons)
-
-        return SquareReport(
-            population: population, departments: departments.sorted(by: { $0.id < $1.id }),
+        let report = SquareReport(
+            population: population,
+            departments: departments.sorted(by: { $0.id < $1.id }),
             placeBySquare: 0,
             placebySportObjects: 0,
             placeBySportSquare: 0,
@@ -112,8 +118,10 @@ class SharedManager {
             sportForOne: sportForOne,
             objectForOne: objectForOne,
             sportTypeForOne: sportTypeForOne)
+        lastSelectedAreaReport = report
+        return report
     }
-    
+
     func findSportObjectsAround(object: SportObject) -> SportObjectsAround {
         var sportObjectsArea: [SportObject] = []
         var sportObjectsDistrict: [SportObject] = []
@@ -140,7 +148,18 @@ class SharedManager {
         let around = SportObjectsAround(sportObjectsArea: sportObjectsArea, sportObjectsDistrict: sportObjectsDistrict, sportObjectsWalking: sportObjectsWalking, sportObjectsCity: sportObjectsCity)
         return around
     }
-    
+
+    func findSportObjects(by type: String) -> (type: SportType, objects: [SportObject]) {
+        let type = SportType(id: 0, title: type)
+        var objects: [SportObject] = []
+        for object in sportObjectResponse.objects {
+            if (object.sport.contains(where: { $0.sportType == type })) {
+                objects.append(object)
+            }
+        }
+        return (type, objects)
+    }
+
     func objects(for department: Department) -> [SportObject] {
         var objects: [SportObject] = []
         for object in sportObjectResponse.objects {
