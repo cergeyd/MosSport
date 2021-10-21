@@ -21,6 +21,7 @@ let applicationAssembler = Assembler([
     DetailModule(),
     ListModule(),
     ListInitialModule(),
+    RecommendationModule(),
     MenuModule()
     ])
 

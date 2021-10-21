@@ -85,4 +85,11 @@ class MosDataProcessing {
         let documentsDirectory = paths[0]
         return documentsDirectory
     }
+    
+    /// Идём по цунтрам квадрантов, в указанном прямоугольнике
+    private func createArrayPoints() {
+        // 56.026179 36.827946 | 55.169184 37.962116
+        
+        
+    }
 }

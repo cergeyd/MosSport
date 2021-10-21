@@ -11,12 +11,20 @@ import UIKit
 class MenuRouter {
     private weak var viewController: MenuViewController?
     private let calculatedFactory: CalculatedFactory
+    private let recommendationFactory: RecommendationFactory
     private let listFactory: ListFactory
 
-    init(viewController: MenuViewController, calculatedFactory: CalculatedFactory, listFactory: ListFactory) {
+    init(viewController: MenuViewController, calculatedFactory: CalculatedFactory, listFactory: ListFactory, recommendationFactory: RecommendationFactory) {
         self.viewController = viewController
+        self.recommendationFactory = recommendationFactory
         self.calculatedFactory = calculatedFactory
         self.listFactory = listFactory
+    }
+    
+    func recommendationViewController() -> RecommendationViewController {
+        let controller = self.recommendationFactory.instantiateModule()
+      controller.delegate = self.viewController
+        return controller
     }
 
     func calculatedViewController() -> CalculatedViewController {

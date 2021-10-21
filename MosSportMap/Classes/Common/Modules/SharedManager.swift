@@ -18,12 +18,26 @@ class SharedManager {
     }
 
     static let shared = SharedManager()
+    var allPolygons: [GMSPolygon] = []
+    let geoCoder = CLGeocoder()
 
     /// Население по области
     func population(by area: String?) -> Population? {
         for population in populationResponse.populations {
             if (population.area.lowercased() == area?.lowercased()) {
                 return population
+            }
+        }
+        return nil
+    }
+
+    /// Область для населения
+    func polygon(by population: Population) -> GMSPolygon? {
+        for polygon in self.allPolygons {
+            if let title = polygon.title {
+                if (title.lowercased() == population.area.lowercased()) {
+                    return polygon
+                }
             }
         }
         return nil
@@ -66,6 +80,64 @@ class SharedManager {
         default:
             return "Городское"
         }
+    }
+
+    /// Адрес по координатам
+    func coordinates(by population: Population, completion: @escaping (_ coordinates: CLLocationCoordinate2D?) -> Void) {
+        self.geoCoder.geocodeAddressString("Москва, \(population.area)") { (placemarks, error) in
+            guard let placemarks = placemarks, let location = placemarks.first?.location
+                else {
+                completion(nil)
+                return
+            }
+            completion(location.coordinate)
+        }
+    }
+
+    /// Координаты по адресу
+    func address(for coordinates: CLLocationCoordinate2D, completion: @escaping (_ address: Address?) -> Void) {
+        let ceo = CLGeocoder()
+        ceo.reverseGeocodeLocation(CLLocation(latitude: coordinates.latitude, longitude: coordinates.longitude), completionHandler:
+            { (placemarks, error) in
+                if (error != nil) {
+                    completion(nil)
+                    print("reverse geodcode fail: \(error!.localizedDescription)")
+                }
+                if let placemarks = placemarks {
+                    if (placemarks.count) > 0 {
+                        let pm = placemarks[0]
+                        let city = pm.locality
+                        let county = pm.country
+                        let code = pm.isoCountryCode
+                        let thoroughfare = pm.thoroughfare ?? ""
+                        let subThoroughfare = pm.subThoroughfare ?? ""
+                        var street = thoroughfare + " " + subThoroughfare
+                        if (street == " ") {
+                            street = "Улица не определена"
+                        }
+                        completion(Address(city: city, street: street, country: county, countyCode: code))
+                    } else {
+                        completion(nil)
+                    }
+                } else {
+                    completion(nil)
+                }
+            })
+    }
+
+    func missingSportTypes(objects: [SportObject]) -> [SportType] {
+        var missing: [SportType] = []
+        let sports = objects.flatMap({ $0.sport })
+        let exist = sports.compactMap({ $0.sportType })
+
+        for type in sportTypes.types {
+            if (!exist.contains(where: { detail in
+                return detail == type
+            })) {
+                missing.append(type)
+            }
+        }
+        return missing
     }
 
     /// Отчёт
@@ -164,6 +236,16 @@ class SharedManager {
         var objects: [SportObject] = []
         for object in sportObjectResponse.objects {
             if (object.department == department) {
+                objects.append(object)
+            }
+        }
+        return objects
+    }
+
+    func objects(for polygon: GMSPolygon, with availability: SportObject.AvailabilityType) -> [SportObject] {
+        var objects: [SportObject] = []
+        for object in sportObjectResponse.objects {
+            if (polygon.contains(coordinate: object.coorditate) && object.availabilityType == availability) {
                 objects.append(object)
             }
         }

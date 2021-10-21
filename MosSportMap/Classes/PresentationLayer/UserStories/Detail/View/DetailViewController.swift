@@ -44,7 +44,7 @@ class DetailViewController: TableViewController {
         /// Отчёт                                                                                                                                                                /// Объекты депртамента
         if let report = self.report { self.configureSection(with: report) }
         else if let section = self.section { self.configureSection(with: section) }
-        else if let sportTypeSection = self.sportTypeSection { self.configureSection(with: sportTypeSection)  }
+        else if let sportTypeSection = self.sportTypeSection { self.configureSection(with: sportTypeSection) }
         self.configureTableView()
         self.rightNavigationBar()
         self.isModalInPresentation = true
@@ -70,7 +70,7 @@ class DetailViewController: TableViewController {
         self.tableView.register(UINib(nibName: DetailRegionCell.identifier, bundle: nil), forCellReuseIdentifier: DetailRegionCell.identifier)
         self.tableView.register(UINib(nibName: DetailCell.identifier, bundle: nil), forCellReuseIdentifier: DetailCell.identifier)
     }
-    
+
     /// Фильтрация по типам игр
     private func configureSection(with sportTypeSection: SportTypeSection) {
         var details: [Detail] = []
@@ -218,6 +218,10 @@ extension DetailViewController {
             /// Игры департамента
             if let section = self.section {
                 let sportObject = section.sportObjects[indexPath.row]
+                self.output.didTapShow(detail: sportObject)
+                self.delegate?.didSelect(sport: sportObject)
+            } else if let sportTypeSection = self.sportTypeSection {
+                let sportObject = sportTypeSection.sportObjects[indexPath.row]
                 self.output.didTapShow(detail: sportObject)
                 self.delegate?.didSelect(sport: sportObject)
             }

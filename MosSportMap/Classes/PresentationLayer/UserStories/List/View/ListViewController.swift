@@ -16,7 +16,7 @@ enum ListType {
     case department(department: Department, sportObjects: [SportObject])
     case filterDepartments
     case filterAreas
-    case filter
+   // case filter
     case filterObjects(items: [SportObject])
     case filterSportTypes
     case sports(items: [SportObject.Sport])

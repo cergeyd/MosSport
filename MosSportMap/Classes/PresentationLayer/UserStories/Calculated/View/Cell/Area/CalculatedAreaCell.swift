@@ -40,10 +40,14 @@ class CalculatedAreaCell: TableViewCell {
     }
 
     //MARK: Func
-    func configure(with report: SquareReport, type: MenuType) {
+    func configure(with report: SquareReport, type: MenuType, borders: [Detail]) {
         self.report = report
-        self.headerLabel.text = "Произведён расчёт для территории:"
-        self.areaButton.setTitle(report.population.area, for: .normal)
+        self.areaButton.setTitle(report.population.area, for: .normal)        
+        if (borders.isEmpty) {
+            self.headerLabel.text = "Произведён расчёт для территории:"
+        } else {
+            self.headerLabel.text = "Произведён расчёт для территории, указанной вручную:"
+        }
         
         let populationValue = Int(report.population.population)
         self.descriptionLabel.text = "Плотность населения на квадратный километр: \(populationValue.peoples())/км²"

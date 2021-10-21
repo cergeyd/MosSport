@@ -248,8 +248,10 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
 
-  /// This `R.nib` struct is generated, and contains static references to 6 nibs.
+  /// This `R.nib` struct is generated, and contains static references to 7 nibs.
   struct nib {
+    /// Nib `BorderCell`.
+    static let borderCell = _R.nib._BorderCell()
     /// Nib `CalculatedAreaCell`.
     static let calculatedAreaCell = _R.nib._CalculatedAreaCell()
     /// Nib `CalculatedTypeCell`.
@@ -262,6 +264,14 @@ struct R: Rswift.Validatable {
     static let searchHeaderView = _R.nib._SearchHeaderView()
     /// Nib `SportObjectCell`.
     static let sportObjectCell = _R.nib._SportObjectCell()
+
+    #if os(iOS) || os(tvOS)
+    /// `UINib(name: "BorderCell", in: bundle)`
+    @available(*, deprecated, message: "Use UINib(resource: R.nib.borderCell) instead")
+    static func borderCell(_: Void = ()) -> UIKit.UINib {
+      return UIKit.UINib(resource: R.nib.borderCell)
+    }
+    #endif
 
     #if os(iOS) || os(tvOS)
     /// `UINib(name: "CalculatedAreaCell", in: bundle)`
@@ -310,6 +320,10 @@ struct R: Rswift.Validatable {
       return UIKit.UINib(resource: R.nib.sportObjectCell)
     }
     #endif
+
+    static func borderCell(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> CalculatedTypeCell? {
+      return R.nib.borderCell.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? CalculatedTypeCell
+    }
 
     static func calculatedAreaCell(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> CalculatedAreaCell? {
       return R.nib.calculatedAreaCell.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? CalculatedAreaCell
@@ -417,6 +431,20 @@ struct _R: Rswift.Validatable {
 
   #if os(iOS) || os(tvOS)
   struct nib {
+    struct _BorderCell: Rswift.NibResourceType, Rswift.ReuseIdentifierType {
+      typealias ReusableType = CalculatedTypeCell
+
+      let bundle = R.hostingBundle
+      let identifier = "CalculatedTypeCell"
+      let name = "BorderCell"
+
+      func firstView(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> CalculatedTypeCell? {
+        return instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? CalculatedTypeCell
+      }
+
+      fileprivate init() {}
+    }
+
     struct _CalculatedAreaCell: Rswift.NibResourceType, Rswift.ReuseIdentifierType {
       typealias ReusableType = CalculatedAreaCell
 

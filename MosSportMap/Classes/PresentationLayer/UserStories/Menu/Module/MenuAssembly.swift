@@ -21,7 +21,7 @@ class MenuModule: Assembly {
             viewController.output = r.resolve(MenuPresenter.self)!
         }
         container.register(MenuRouter.self) { r in
-            MenuRouter(viewController: r.resolve(MenuViewController.self)!, calculatedFactory: r.resolve(CalculatedFactory.self)!, listFactory: r.resolve(ListFactory.self)!)
+            MenuRouter(viewController: r.resolve(MenuViewController.self)!, calculatedFactory: r.resolve(CalculatedFactory.self)!, listFactory: r.resolve(ListFactory.self)!, recommendationFactory: r.resolve(RecommendationFactory.self)!)
         }
         container.register(MenuPresenter.self) { _ in MenuPresenter() }
             .initCompleted { (r, presenter) in

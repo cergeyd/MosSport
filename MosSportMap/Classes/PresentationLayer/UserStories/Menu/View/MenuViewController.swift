@@ -6,7 +6,7 @@
 //  Copyright © 2021 Serjey.com LLC.. All rights reserved.
 //
 
-import UIKit
+import GoogleMapsUtils
 
 enum MenuType: Int {
     case clear = 0
@@ -22,6 +22,9 @@ enum MenuType: Int {
     case filterAreas = 21
     case filterObjects = 22
     case filterSportTypes = 23
+    
+    case recNewObjects = 30
+    case recNewsTypes = 31
 }
 
 protocol MenuDelegate: AnyObject {
@@ -33,6 +36,9 @@ protocol MenuDelegate: AnyObject {
     func didSelect(department: Department)
     func didTapShow(type: SportType, objects: [SportObject])
     func didSelect(filter sport: SportObject)
+    func didTapClearBorders()
+    func didCalculate(recommendation: Recommendation)
+    func didSelect(population: Population, polygon: GMSPolygon)
 }
 
 class MenuViewController: TableViewController {
@@ -48,6 +54,9 @@ class MenuViewController: TableViewController {
 
     /// Контроллер с вычислениями, храним так, чтобы удобно было добавить в dataSource
     lazy var calculatedViewController = self.output.calculatedViewController()
+    /// Контроллер с вычислениями, храним так, чтобы удобно было добавить в dataSource
+    lazy var recommendationViewController = self.output.recommendationViewController()
+
     /// Меню
     let sections = [
         MenuSection(title: "Карта", items: [
@@ -66,6 +75,10 @@ class MenuViewController: TableViewController {
             MenuItem(title: "Районы", subtitle: "Спортивная инфраструктура в районе", isDetailed: true, type: .filterAreas),
             MenuItem(title: "Cпортивные объекты", subtitle: "Фильтрации спортивных объектов", isDetailed: true, type: .filterObjects),
             MenuItem(title: "Виды спортивных услуг", subtitle: "Фильтрации спортивных объектов по видам спорта", isDetailed: true, type: .filterSportTypes)
+            ]),
+        MenuSection(title: "Рекомендации", items: [
+            MenuItem(title: "Новые спортивные объекты", subtitle: "Оснащению территории новыми спортивными объектами", isDetailed: true, type: .filterDepartments),
+            MenuItem(title: "Новые спортивные зоны", subtitle: "Увеличение количества спортивных зон, видов спорта", isDetailed: true, type: .filterAreas)
             ])
     ]
 
@@ -106,6 +119,7 @@ extension MenuViewController: MenuViewInput {
     func setupInitialState() {
         self.navigationItem.title = "Меню"
         self.delegate?.addToDataSource(controller: self.calculatedViewController)
+        self.delegate?.addToDataSource(controller: self.recommendationViewController)
     }
 }
 
@@ -145,6 +159,9 @@ extension MenuViewController {
         case 1:
             self.calculatedViewController.type = type
             self.push(self.calculatedViewController)
+        case 3:
+            self.recommendationViewController.type = type
+            self.push(self.recommendationViewController)
         default:
             self.output.didTapShow(listType: type)
         }
@@ -153,7 +170,19 @@ extension MenuViewController {
     }
 }
 
-extension MenuViewController: CalculatedDelegate, ListViewDelegate {
+extension MenuViewController: CalculatedDelegate, RecommendationDelegate, ListViewDelegate {
+    
+    func didSelect(population: Population, polygon: GMSPolygon) {
+        self.delegate?.didSelect(population: population, polygon: polygon)
+    }
+    
+    func didCalculate(recommendation: Recommendation) {
+        self.delegate?.didCalculate(recommendation: recommendation)
+    }
+    
+    func didTapClearBorders() {
+        self.delegate?.didTapClearBorders()
+    }
 
     func didSelect(filter sport: SportObject) {
         self.delegate?.didSelect(filter: sport)

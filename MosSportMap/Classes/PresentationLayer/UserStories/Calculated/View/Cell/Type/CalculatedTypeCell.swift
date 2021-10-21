@@ -10,16 +10,19 @@ import Squircle
 enum CalculateAreaType: Int {
     case borders = 0
     case hands = 1
+    case recommendation
 }
 
 protocol CalculatedTypeDelegate: AnyObject {
-    func didSelect(calculated type: CalculateAreaType?)
+    func didSelect(calculated type: CalculateAreaType)
+    func didTapClearBorders()
 }
 
 class CalculatedTypeCell: TableViewCell {
 
     @IBOutlet var typeDescription: UILabel!
     @IBOutlet var typeButtons: [UIButton]!
+    @IBOutlet var clearButton: UIButton!
 
     weak var delegate: CalculatedTypeDelegate?
     private var selectedType: CalculateAreaType = .borders
@@ -28,6 +31,13 @@ class CalculatedTypeCell: TableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         self.updateType()
+    }
+    
+    //MARK: Func
+    func configure(with borders: [Detail]) {
+        let isEnabled = !borders.isEmpty
+        self.clearButton.isEnabled = isEnabled
+        self.clearButton.backgroundColor = isEnabled ? AppStyle.color(for: .title) : AppStyle.color(for: .background)
     }
     
     //MARK: Private func
@@ -51,5 +61,9 @@ class CalculatedTypeCell: TableViewCell {
         self.selectedType = CalculateAreaType(rawValue: sender.tag)!
         self.updateType()
         self.delegate?.didSelect(calculated: self.selectedType)
+    }
+    
+    @IBAction func didTapClearBorders() {
+        self.delegate?.didTapClearBorders()
     }
 }

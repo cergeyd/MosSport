@@ -26,5 +26,5 @@ struct Detail {
     let type: DetailType
     let title: String
     let place: String
-    let subtitle: String
+    var subtitle: String
 }
