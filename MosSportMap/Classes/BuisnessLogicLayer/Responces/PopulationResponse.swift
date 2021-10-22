@@ -16,6 +16,8 @@ struct Population: CodableMappable {
     let area: String
     let population: Double
     let square: Double
+    let latitude: Double
+    let longitude: Double
 }
 
 extension Population: Equatable, Hashable {
@@ -28,20 +30,3 @@ extension Population: Equatable, Hashable {
         hasher.combine(self.area)
     }
 }
-//
-//struct PopulationSquares: CodableMappable {
-//    let area: String
-//    let population: Double
-//    let square: Double
-//}
-//
-//extension PopulationSquares: Equatable, Hashable {
-//
-//    static func == (lhs: PopulationSquares, rhs: PopulationSquares) -> Bool {
-//        return lhs.area == rhs.area
-//    }
-//
-//    func hash(into hasher: inout Hasher) {
-//        hasher.combine(self.area)
-//    }
-//}

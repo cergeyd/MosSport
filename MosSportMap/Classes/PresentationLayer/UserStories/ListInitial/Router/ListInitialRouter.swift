@@ -21,6 +21,7 @@ class ListInitialRouter {
         let controller = self.listFactory.instantiateModule()
         controller.type = type
         controller.index = index
+        controller.isPage = true
         return controller
     }
 }

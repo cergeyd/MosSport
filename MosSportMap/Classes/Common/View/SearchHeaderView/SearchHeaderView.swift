@@ -19,7 +19,6 @@ extension SearchHeaderView: UISearchBarDelegate {
 }
 
 extension UISearchBar {
-
     // Due to searchTextField property who available iOS 13 only, extend this property for iOS 13 previous version compatibility
     var compatibleSearchTextField: UITextField {
         guard #available(iOS 13.0, *) else { return legacySearchField }

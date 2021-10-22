@@ -23,11 +23,6 @@ class TableViewCell: UITableViewCell {
         return view
     }()
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        self.selectionStyle = .none
-    }
-
     // MARK: - Init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -41,17 +36,16 @@ class TableViewCell: UITableViewCell {
     }
 
     //MARK: Liecycle
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.selectionStyle = .none
+    }
+
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
         self.contentView.backgroundColor = .white
         self.backgroundColor = .white
     }
-
-//    override func draw(_ rect: CGRect) {
-//        super.draw(rect)
-//        self.contentView.backgroundColor = .white
-//        self.backgroundColor = .white
-//    }
 
     open func setUpLayout() {
 

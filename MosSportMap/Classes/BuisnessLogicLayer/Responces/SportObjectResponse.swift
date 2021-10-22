@@ -27,7 +27,7 @@ struct SportObject: CodableMappable {
         let sportArea: String // Спортзона | бассейн плавательный 25-ти метровый крытый
         let sportAreaType: String // Тип спортзоны. Идентичен Спортзоне ? | бассейн плавательный 25-ти метровый крытый
         let sportType: SportType // Вид спорта | Плавание
-        let square: Double? // Площадь спортзоны | 150.0
+        let square: Double? // Площадь спортзоны | 150.0 
     }
 
     struct Coordinate: CodableMappable {
@@ -47,14 +47,3 @@ struct SportObject: CodableMappable {
         return CLLocationCoordinate2D(latitude: self.coordinate.latitude, longitude: self.coordinate.longitude)
     }
 }
-
-//extension SportObject.Sport: Equatable, Hashable {
-//
-//    static func == (lhs: SportObject.Sport, rhs: SportObject.Sport) -> Bool {
-//        return lhs.sportType.title == rhs.sportType.title
-//    }
-//
-//    func hash(into hasher: inout Hasher) {
-//        hasher.combine(self.sportType.title)
-//    }
-//}

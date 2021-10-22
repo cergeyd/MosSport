@@ -7,7 +7,6 @@
 //
 
 import GoogleMapsUtils
-import CoreLocation
 import BusyNavigationBar
 
 protocol MapViewDataSource: AnyObject {
@@ -22,13 +21,10 @@ extension MapViewDataSource {
     func didSelect(polygon: GMSPolygon) { }
 }
 
-class MapViewController: UIViewController {
+class MapViewController: GMClusterViewController {
 
     struct Config {
-        static let bucketsCount = 100
-        static let clusterDistance: UInt = 100
         static let initialCoordinates = CLLocationCoordinate2D(latitude: 55.71, longitude: 37.62)
-        static let zoomLevel: Float = 15.0
     }
 
     var output: MapViewOutput!
@@ -39,56 +35,16 @@ class MapViewController: UIViewController {
     /// Если карта, необходима для выбора границ к отчёту
     var calculateAreaType: CalculateAreaType?
     /// Полигон, для рисования вручную
-    private var allOverlays: [GMSPolygon] = []
     private var byHandPopulation: Population?
     private var drawPolygon = GMSMutablePath()
     private var polygons: [GMSPolygon] = []
     private var circles: [GMSCircle] = []
     private var coordinates: [CLLocationCoordinate2D] = []
+    /// Круги рекоммендаций
+    private var recommendationsCircles: [GMSCircle] = []
     /// Радиус с доступностью
     private var avaiavailabilityCircle: GMSCircle?
     private var options = BusyNavigationBarOptions()
-    /// Карта
-    private lazy var mapView: GMSMapView = {
-        let camera = GMSCameraPosition.camera(withLatitude: Config.initialCoordinates.latitude, longitude: Config.initialCoordinates.longitude, zoom: Config.zoomLevel)
-        let _mapView = GMSMapView.map(withFrame: self.view.frame, camera: camera)
-        _mapView.delegate = self
-        self.view.addSubview(_mapView)
-        return _mapView
-    }()
-    /// Объекты на карте
-    private lazy var clusterManager: GMUClusterManager = {
-        let iconGenerator = GMUDefaultClusterIconGenerator(buckets: [NSNumber(value: Config.bucketsCount)], backgroundColors: [AppStyle.color(for: .coloured)])
-        let algorithm = GMUNonHierarchicalDistanceBasedAlgorithm(clusterDistancePoints: Config.clusterDistance)!
-        let renderer = GMUDefaultClusterRenderer(mapView: self.mapView, clusterIconGenerator: iconGenerator)
-        let _clusterManager = GMUClusterManager(map: self.mapView, algorithm: algorithm, renderer: renderer)
-        _clusterManager.setMapDelegate(self)
-        return _clusterManager
-    }()
-    /// Тепловая карта
-    private lazy var heatmapLayer: GMUHeatmapTileLayer = {
-        let gradientColors = [UIColor.green, UIColor.red]
-        let gradientStartPoints = [0.2, 1.0] as [NSNumber]
-        let _heatmapLayer = GMUHeatmapTileLayer()
-        //_heatmapLayer.radius = 40
-        _heatmapLayer.maximumZoomIntensity = 25
-        _heatmapLayer.opacity = 0.8
-        _heatmapLayer.gradient = GMUGradient(colors: gradientColors, startPoints: gradientStartPoints, colorMapSize: 156)
-        return _heatmapLayer
-    }()
-    /// Данные о численности населения
-    private lazy var parser: GMUKMLParser = {
-        let path = Bundle.main.path(forResource: "mo", ofType: "kml")!
-        let url = URL(fileURLWithPath: path)
-        let _parser = GMUKMLParser(url: url)
-        _parser.parse()
-        return _parser
-    }()
-    /// Отрисовка границ
-    private lazy var render: GMUGeometryRenderer = {
-        let _render = GMUGeometryRenderer(map: self.mapView, geometries: self.parser.placemarks, styles: self.parser.styles, styleMaps: self.parser.styleMaps)
-        return _render
-    }()
 
     //MARK: Lifecycle
     override func viewDidLoad() {
@@ -96,7 +52,6 @@ class MapViewController: UIViewController {
         self.output.didLoadView()
         /// Вначале были кластеры
         self.makeClusters(hidden: false)
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "camera.filters"), style: .plain, target: self, action: #selector(didTapShowFilter))
     }
 
     //MARK: Private func
@@ -118,15 +73,24 @@ class MapViewController: UIViewController {
             }
         }
     }
+}
 
-    //MARK: Виды карт
+extension MapViewController: MapViewInput {
+
+    func setupInitialState() {
+        self.title = "Карта"
+        self.configureNavigationButtons()
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "camera.filters"), style: .plain, target: self, action: #selector(didTapShowFilter))
+    }
+}
+
+//MARK: Виды карт
+extension MapViewController {
     /// Тепловая карта спортивных объектов
     private func makeHeatmap(hidden: Bool) {
         if (hidden) { self.heatmapLayer.map = nil; return }
         var list = [GMUWeightedLatLng]()
-        for object in sportObjectResponse.objects {
-            list.append(GMUWeightedLatLng(coordinate: object.coorditate, intensity: 5))
-        }
+        for object in gSportObjectResponse.objects { list.append(GMUWeightedLatLng(coordinate: object.coorditate, intensity: 5)) }
         self.heatmapLayer.weightedData = list
         self.heatmapLayer.map = mapView
         self.mapView.animate(to: GMSCameraPosition(latitude: Config.initialCoordinates.latitude, longitude: Config.initialCoordinates.longitude, zoom: 10.0))
@@ -155,25 +119,25 @@ class MapViewController: UIViewController {
     /// Спортивные объекты на карте
     private func makeClusters(hidden: Bool, availabilityType: SportObject.AvailabilityType? = nil, objects: [SportObject]? = nil) {
         self.clusterManager.clearItems()
-        if let objects = objects {
+        if let objects = objects { /// Указаны определённые объекты
             for object in objects {
                 let marker = GMSMarker()
                 marker.userData = object
                 marker.title = object.title
                 marker.snippet = object.department.title
-                marker.appearAnimation = .pop // Appearing animation. default
+                marker.appearAnimation = .pop
                 marker.position = object.coorditate
                 self.clusterManager.add(marker)
             }
         } else {
-            for object in sportObjectResponse.objects {
+            for object in gSportObjectResponse.objects { // Все объекты
                 let marker = GMSMarker()
                 marker.userData = object
                 marker.title = object.title
                 marker.snippet = object.department.title
-                marker.appearAnimation = .pop // Appearing animation. default
+                marker.appearAnimation = .pop
                 marker.position = object.coorditate
-                if let availabilityType = availabilityType {
+                if let availabilityType = availabilityType { // Указан определённые тип доступности
                     if (object.availabilityType == availabilityType) {
                         self.clusterManager.add(marker)
                     }
@@ -184,6 +148,7 @@ class MapViewController: UIViewController {
         }
         self.clusterManager.cluster()
     }
+
     /// Рисуем радиус доступности (шаговая, городская и т.д.)
     private func drawAreaCircle(with circleCenter: CLLocationCoordinate2D, type: SportObject.AvailabilityType) {
         self.avaiavailabilityCircle?.map = nil
@@ -196,14 +161,6 @@ class MapViewController: UIViewController {
     }
 }
 
-extension MapViewController: MapViewInput {
-
-    func setupInitialState() {
-        self.title = "Карта"
-        self.configureNavigationButtons()
-    }
-}
-
 extension MapViewController: MenuDelegate, DetailViewDelegate, ListViewDelegate {
 
     func didTapClearBorders() {
@@ -212,30 +169,31 @@ extension MapViewController: MenuDelegate, DetailViewDelegate, ListViewDelegate 
 
     /// Указали регион, с экрана 'Рекоммендация'
     func didSelect(population: Population, polygon: GMSPolygon) {
-        SharedManager.shared.coordinates(by: population) { coordinates in
-            if let coordinates = coordinates {
-                self.mapView.animate(to: GMSCameraPosition(latitude: coordinates.latitude, longitude: coordinates.longitude, zoom: self.mapView.camera.zoom))
-            }
-        }
+        self.mapView.animate(to: GMSCameraPosition(latitude: population.latitude, longitude: population.longitude, zoom: self.mapView.camera.zoom))
         self.didTap(polygon: polygon)
     }
 
     /// Подготовленная рекомендация по размещению спортивных объектов
     func didCalculate(recommendation: Recommendation) {
+        self.makeClusters(hidden: false, availabilityType: recommendation.availabilityType, objects: nil)
+        for oldRecommendations in self.recommendationsCircles { oldRecommendations.map = nil }
         for coordinate in recommendation.coordinates {
-            let circle = GMSCircle(position: coordinate, radius: 4)
-            circle.fillColor = .black
+            let circle = GMSCircle(position: coordinate, radius: 8.0)
+            circle.fillColor = AppStyle.color(for: .coloured)
             circle.strokeColor = .black
-            circle.strokeWidth = 1.0
+            circle.strokeWidth = 1.4
             circle.map = self.mapView
+            self.recommendationsCircles.append(circle)
         }
     }
 
-    /// Выбираем объект с экрна меню "Департамент" или с экрана "Площадки рядом", движем камеру
+    /// Выбираем объект с экрана меню "Департамент" или с экрана "Площадки рядом", движем камеру
     func didSelect(sport object: SportObject) {
         self.mapView.animate(to: GMSCameraPosition(latitude: object.coordinate.latitude, longitude: object.coordinate.longitude, zoom: self.mapView.camera.zoom))
+        self.drawAreaCircle(with: object.coorditate, type: object.availabilityType)
     }
 
+    /// Показываем объекты для определённого вида игр
     func didTapShow(type: SportType, objects: [SportObject]) {
         self.output.didTapShow(sportObjects: objects, type: type)
         self.makeClusters(hidden: false, availabilityType: nil, objects: objects)
@@ -244,6 +202,7 @@ extension MapViewController: MenuDelegate, DetailViewDelegate, ListViewDelegate 
     /// Отфильтрованный объект спорта
     func didSelect(filter sport: SportObject) {
         self.mapView.animate(to: GMSCameraPosition(latitude: sport.coordinate.latitude, longitude: sport.coordinate.longitude, zoom: self.mapView.camera.zoom))
+        self.drawAreaCircle(with: sport.coorditate, type: sport.availabilityType)
         self.output.didTapShow(sport: sport)
     }
 
@@ -255,20 +214,13 @@ extension MapViewController: MenuDelegate, DetailViewDelegate, ListViewDelegate 
 
     /// Информация по району
     func didSelect(population: Population) {
-        /// Координаты районов лень добавлять, пока вот так
-        SharedManager.shared.coordinates(by: population) { coordinates in
-            if let coordinates = coordinates {
-                self.mapView.animate(to: GMSCameraPosition(latitude: coordinates.latitude, longitude: coordinates.longitude, zoom: 13.0))
-            } else {
-                self.murmur(text: "Координаты не определены", isError: true, subtitle: "")
-            }
-        }
+        self.mapView.animate(to: GMSCameraPosition(latitude: population.latitude, longitude: population.longitude, zoom: 13.0))
         self.makeBorders(hidden: false)
         let allOverlays = self.render.mapOverlays() as! [GMSPolygon]
         for overlay in allOverlays {
             if (overlay.title == population.area) {
                 self.mapView(self.mapView, didTap: overlay)
-                let report = SharedManager.shared.calculateSportSquare(for: population, polygon: overlay)
+                let report = SharedManager.shared.calculateReport(for: population, polygon: overlay)
                 self.output.didTapShow(detail: report)
             }
         }
@@ -280,13 +232,13 @@ extension MapViewController: MenuDelegate, DetailViewDelegate, ListViewDelegate 
         self.output.didTapShow(detail: report)
     }
 
+    /// Слушатели
     func addToDataSource(controller: MapViewDataSource) {
         self.dataSources.append(controller)
     }
 
     /// Способ выбора границ
     func didSelect(calculated type: CalculateAreaType?) {
-        // lastSelectedAreaReport = nil
         self.calculateAreaType = type
         self.makeHeatmap(hidden: true)
         if let type = type {
@@ -326,24 +278,19 @@ extension MapViewController: MenuDelegate, DetailViewDelegate, ListViewDelegate 
     }
 
     func navigationBar(isLoading: Bool) {
-        if (isLoading) {
-            self.navigationController?.navigationBar.start(self.options)
-        } else {
-            self.navigationController?.navigationBar.stop()
-        }
+        if (isLoading) { self.navigationController?.navigationBar.start(self.options) } else { self.navigationController?.navigationBar.stop() }
     }
 }
 
-extension MapViewController: GMSMapViewDelegate {
+//MARK: GMSMapViewDelegate
+extension MapViewController {
 
     /// Движем к кластерам
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
         self.avaiavailabilityCircle?.map = nil
         mapView.animate(toLocation: marker.position)
-        if let _ = marker.userData as? GMUCluster {
-            mapView.animate(toZoom: mapView.camera.zoom + 1)
-            return true
-        } else {
+        if let _ = marker.userData as? GMUCluster { mapView.animate(toZoom: mapView.camera.zoom + 1); return true }
+        else {
             if let object = marker.userData as? SportObject {
                 self.drawAreaCircle(with: object.coorditate, type: object.availabilityType)
                 self.output.didTapShow(sport: object)
@@ -357,15 +304,15 @@ extension MapViewController: GMSMapViewDelegate {
         /// Если нужно для экрана калькуляции
         if let _ = self.calculateAreaType {
             self.clearHandsBorders()
-
+            /// Кружок
             let circle = GMSCircle(position: coordinate, radius: 25.0)
             circle.fillColor = #colorLiteral(red: 0.8302407265, green: 0.6964268088, blue: 0.4022175074, alpha: 1)
             circle.map = self.mapView
-
+            /// По ним строим полигон
             self.circles.append(circle)
             self.coordinates.append(coordinate)
             for coord in self.coordinates { self.drawPolygon.add(coord) }
-
+            /// Полигон
             let polygon = GMSPolygon(path: self.drawPolygon)
             polygon.fillColor = UIColor(red: 0.25, green: 0, blue: 0, alpha: 0.2);
             polygon.strokeColor = .black
@@ -374,19 +321,18 @@ extension MapViewController: GMSMapViewDelegate {
             self.polygons.append(polygon)
 
             self.didSelect(point: coordinate)
-            if (self.byHandPopulation == nil) {
-                self.population(for: coordinate, in: self.allOverlays)
-            }
+            if (self.byHandPopulation == nil) { self.population(for: coordinate, in: SharedManager.shared.allPolygons) } /// Район для первой точки.
             self.didTapHandsBorders()
         }
     }
 
+    /// Очистимь ручные границы
     private func clearHandsBorders(isFullClear: Bool = false) {
         if (isFullClear) {
             self.coordinates.removeAll()
-            for c in self.circles { c.map = nil }
+            for circle in self.circles { circle.map = nil }
         }
-        for p in self.polygons { p.map = nil }
+        for polygon in self.polygons { polygon.map = nil }
         self.drawPolygon.removeAllCoordinates()
     }
 
@@ -405,7 +351,7 @@ extension MapViewController: GMSMapViewDelegate {
     /// Ручные границы приняты
     @objc private func didTapHandsBorders() {
         if let population = self.byHandPopulation {
-            let report = SharedManager.shared.calculateSportSquare(for: population, path: self.drawPolygon)
+            let report = SharedManager.shared.calculateReport(for: population, path: self.drawPolygon)
             for dataSource in self.dataSources {
                 dataSource.didCalculated(report: report)
             }
@@ -433,7 +379,8 @@ extension MapViewController: GMSMapViewDelegate {
         self.avaiavailabilityCircle?.map = nil
         self.createArea(with: coordinate)
     }
-    
+
+    /// Подсветим текущий полигон
     private func didTap(polygon: GMSPolygon) {
         let populationColor = SharedManager.shared.calculateColor(for: self.lastSelectedPolygon?.title)
         self.lastSelectedPolygon?.fillColor = populationColor
@@ -447,11 +394,10 @@ extension MapViewController: GMSMapViewDelegate {
     /// Выбираем регион
     func mapView(_ mapView: GMSMapView, didTap overlay: GMSOverlay) {
         self.avaiavailabilityCircle?.map = nil
-        print(overlay)
         if let polygon = overlay as? GMSPolygon, let title = overlay.title {
             self.didTap(polygon: polygon)
             if let population = SharedManager.shared.population(by: title) {
-                let report = SharedManager.shared.calculateSportSquare(for: population, polygon: polygon)
+                let report = SharedManager.shared.calculateReport(for: population, polygon: polygon)
                 /// Если нужно для экрана калькуляции
                 if let type = self.calculateAreaType {
                     if (type == .recommendation) {
@@ -467,71 +413,6 @@ extension MapViewController: GMSMapViewDelegate {
                     self.output.didTapShow(detail: report)
                 }
             }
-            self.calc(overlay: polygon)
         }
-    }
-
-    private func calc(overlay: GMSPolygon) {
-//        print(overlay.path!.allCoordinates.count)
-//        // 56.026179 36.827946 | 55.169184 37.962116
-//        var minLeft: Double = 500.0 // 37.5115
-//        var topLeft: Double = 0.0 // 55.6899
-//
-//        var maxRight: Double = 0.0 // 37.5555
-//        var bottomRight: Double = 500.0 //55.66819
-//
-//        for coordinate in overlay.path!.allCoordinates {
-//            let latitude = coordinate.latitude
-//            let longitude = coordinate.longitude
-//
-//            if (longitude < minLeft) {
-//                minLeft = longitude
-//            }
-//            if (latitude > topLeft) {
-//                topLeft = latitude
-//            }
-//
-//            if (longitude > maxRight) {
-//                maxRight = longitude
-//            }
-//            if (latitude < bottomRight) {
-//                bottomRight = latitude
-//            }
-//        }
-//
-//        let left = CLLocationCoordinate2D(latitude: topLeft, longitude: minLeft)
-//        let right = CLLocationCoordinate2D(latitude: bottomRight, longitude: maxRight)
-//
-//        let circle = GMSCircle(position: left, radius: 100)
-//        circle.fillColor = .red
-//        circle.strokeColor = .black
-//        circle.strokeWidth = 10.0
-//        circle.map = self.mapView
-//
-//        let circle1 = GMSCircle(position: right, radius: 100)
-//        circle1.fillColor = .red
-//        circle1.strokeColor = .black
-//        circle1.strokeWidth = 10.0
-//        circle1.map = self.mapView
-//
-//        var points: [CLLocationCoordinate2D] = []
-//
-//        let objects = SharedManager.shared.objects(for: overlay)
-//
-//        for i in stride(from: minLeft, to: maxRight, by: 0.003) {
-//            for j in stride(from: bottomRight, to: topLeft, by: 0.001) {
-//                let current = CLLocationCoordinate2D(latitude: j, longitude: i)
-//                if (overlay.contains(coordinate: current)) {
-//                    points.append(current)
-//                    print(current)
-//                    let circle = GMSCircle(position: current, radius: 12)
-//                    circle.fillColor = .black
-//                    circle.strokeColor = .black
-//                    circle.strokeWidth = 1.0
-//                    circle.map = self.mapView
-//                }
-//            }
-//        }
-//        print(points.count)
     }
 }

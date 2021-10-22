@@ -122,7 +122,7 @@ class ListInitialViewController: PageboyViewController, SegmentProtocol, Pageboy
         if (self.viewControllers.count > 1) {
             switch self.type! {
             case .sportObjectsAround:
-                self.segment = self.configureControl(with: ["Шаговая", "Районное", "Окружное", "Городское"], selector: #selector(ListInitialViewController.controlValueChanged(segment:)), isNeedAddToSuperView: false, size: CGSize(width: 100.0, height: 37.0))
+                self.segment = self.configureControl(with: ["Шаговая", "Районная", "Окружная", "Городская"], selector: #selector(ListInitialViewController.controlValueChanged(segment:)), isNeedAddToSuperView: false, size: CGSize(width: 100.0, height: 37.0))
             default:
                 self.segment = self.configureControl(with: ["Присутствуют", "Отсутствуют"], selector: #selector(ListInitialViewController.controlValueChanged(segment:)), isNeedAddToSuperView: false, size: CGSize(width: 100.0, height: 37.0))
             }

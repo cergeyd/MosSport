@@ -7,9 +7,18 @@
 
 import GoogleMapsUtils
 
-let gSquareToKilometers = 1_000_000.0 /// Площадь вычесляется по границам. Крайне точно, но нам нужоны просто километры
-let gCalculatePerPeoples = 100_000.0 /// на 100 000 человек на выбранной территории;
-var lastSelectedAreaReport: SquareReport?
+/// Environments
+var googleAPIkey: String {
+    return Bundle.main.object(forInfoDictionaryKey: "GoogleAPIkey") as! String
+}
+
+var hostUrl: String {
+    return Bundle.main.object(forInfoDictionaryKey: "HostURL") as! String
+}
+
+let gSquareToKilometers = 1_000_000.0 /// Площадь вычесляется по границам. Крайне точно, но нам нужоны просто килОметры
+let gCalculatePerPeoples = 100_000.0 /// На 100 000 человек на выбранной территории;
+var lastSelectedAreaReport: SquareReport? /// Запоминаем, выбранную территорию
 
 class SharedManager {
 
@@ -18,44 +27,38 @@ class SharedManager {
     }
 
     static let shared = SharedManager()
+
+    /// Все полигоны Москвы
     var allPolygons: [GMSPolygon] = []
     let geoCoder = CLGeocoder()
 
+    //MARK: Func
     /// Население по области
     func population(by area: String?) -> Population? {
-        for population in populationResponse.populations {
-            if (population.area.lowercased() == area?.lowercased()) {
-                return population
-            }
-        }
+        for population in gPopulationResponse.populations { if (population.area.lowercased() == area?.lowercased()) { return population } }
         return nil
     }
 
     /// Область для населения
     func polygon(by population: Population) -> GMSPolygon? {
-        for polygon in self.allPolygons {
-            if let title = polygon.title {
-                if (title.lowercased() == population.area.lowercased()) {
-                    return polygon
-                }
-            }
-        }
+        for polygon in self.allPolygons { if let title = polygon.title { if (title.lowercased() == population.area.lowercased()) { return polygon } } }
         return nil
     }
 
-    /// Население по области
+    /// Цвет, в зависимости от население по региону
     func calculateColor(for area: String?) -> UIColor {
-        let color = AppStyle.color(for: .coloured).withAlphaComponent(0.5)
+        let color = AppStyle.color(for: .coloured)
         if let title = area, let population = SharedManager.shared.population(by: title) {
             let maxPop = Config.maxPopultaionValue
             let currentPop = Double(population.population)
-            let percent = (currentPop / maxPop) * 100.0
-            let lighter = color.darker(by: percent)
-            return lighter!
+            let percent = (currentPop / maxPop)
+            let lighter = color.darker(by: percent * 100.0)?.withAlphaComponent(max(percent, 0.5)) ?? color.withAlphaComponent(0.1)
+            return lighter
         }
         return color.withAlphaComponent(0.1)
     }
 
+    /// Метры для доступности
     func meters(for availability: SportObject.AvailabilityType) -> Double {
         switch availability {
         case .walking:
@@ -69,6 +72,7 @@ class SharedManager {
         }
     }
 
+    /// Название доступности
     func title(for availabilityInd: Int) -> String {
         switch availabilityInd {
         case 0:
@@ -79,18 +83,6 @@ class SharedManager {
             return "Окружное"
         default:
             return "Городское"
-        }
-    }
-
-    /// Адрес по координатам
-    func coordinates(by population: Population, completion: @escaping (_ coordinates: CLLocationCoordinate2D?) -> Void) {
-        self.geoCoder.geocodeAddressString("Москва, \(population.area)") { (placemarks, error) in
-            guard let placemarks = placemarks, let location = placemarks.first?.location
-                else {
-                completion(nil)
-                return
-            }
-            completion(location.coordinate)
         }
     }
 
@@ -125,12 +117,13 @@ class SharedManager {
             })
     }
 
+    /// Каких видов игр нет среди представленных
     func missingSportTypes(objects: [SportObject]) -> [SportType] {
         var missing: [SportType] = []
         let sports = objects.flatMap({ $0.sport })
         let exist = sports.compactMap({ $0.sportType })
 
-        for type in sportTypes.types {
+        for type in gSportTypes.types {
             if (!exist.contains(where: { detail in
                 return detail == type
             })) {
@@ -141,14 +134,14 @@ class SharedManager {
     }
 
     /// Отчёт
-    func calculateSportSquare(for population: Population, polygon: GMSPolygon? = nil, path: GMSMutablePath? = nil) -> SquareReport {
+    func calculateReport(for population: Population, polygon: GMSPolygon? = nil, path: GMSMutablePath? = nil) -> SquareReport {
         var objects: [SportObject] = []
         var sports: [SportObject.Sport] = []
-        var sportTypes: Set<SportType> = []
+        var sportTypes: [SportType] = []
         var departments: Set<Department> = []
         var allSquare = 0.0
 
-        for object in sportObjectResponse.objects {
+        for object in gSportObjectResponse.objects {
             var isContains = false
             if let polygon = polygon {
                 isContains = polygon.contains(coordinate: object.coorditate)
@@ -160,17 +153,20 @@ class SharedManager {
                 departments.insert(object.department)
                 for sport in object.sport {
                     sports.append(sport)
-                    sportTypes.insert(sport.sportType)
+                    sportTypes.append(sport.sportType)
                     allSquare += sport.square ?? 0.0
                 }
             }
         }
+        allSquare /= 1000 /// В метры
+        ///
         /// Площадь спортивных объектов на одного
-        let squareForOne = allSquare / gCalculatePerPeoples
-        let sportForOne = Double(sports.count) / gCalculatePerPeoples
-        let objectForOne = Double(objects.count) / gCalculatePerPeoples
-        let sportTypeForOne = Double(sportTypes.count) / gCalculatePerPeoples
-        let sortedSportTypes = sportTypes.sorted(by: { $0.id < $1.id })
+        ///
+        let perPeople = population.population
+        let squareForOne = allSquare / perPeople
+        let sportForOne = Double(sports.count) / perPeople
+        let objectForOne = Double(objects.count) / perPeople
+        let sportTypeForOne = Double(sportTypes.count) / perPeople
 
         let report = SquareReport(
             population: population,
@@ -184,7 +180,7 @@ class SharedManager {
             placeByObjectForOne: 0,
             objects: objects,
             sports: sports,
-            sportTypes: sortedSportTypes,
+            sportTypes: sportTypes,
             allSquare: allSquare,
             squareForOne: squareForOne,
             sportForOne: sportForOne,
@@ -194,6 +190,7 @@ class SharedManager {
         return report
     }
 
+    /// Спортивные объекты в зависимости от доступности
     func findSportObjectsAround(object: SportObject) -> SportObjectsAround {
         var sportObjectsArea: [SportObject] = []
         var sportObjectsDistrict: [SportObject] = []
@@ -201,7 +198,7 @@ class SharedManager {
         var sportObjectsCity: [SportObject] = []
 
         let currentLocation = CLLocation(latitude: object.coordinate.latitude, longitude: object.coordinate.longitude)
-        for object in sportObjectResponse.objects {
+        for object in gSportObjectResponse.objects {
             let location = CLLocation(latitude: object.coordinate.latitude, longitude: object.coordinate.longitude)
             let distance = currentLocation.distance(from: location)
             switch distance {
@@ -224,7 +221,7 @@ class SharedManager {
     func findSportObjects(by type: String) -> (type: SportType, objects: [SportObject]) {
         let type = SportType(id: 0, title: type)
         var objects: [SportObject] = []
-        for object in sportObjectResponse.objects {
+        for object in gSportObjectResponse.objects {
             if (object.sport.contains(where: { $0.sportType == type })) {
                 objects.append(object)
             }
@@ -234,7 +231,7 @@ class SharedManager {
 
     func objects(for department: Department) -> [SportObject] {
         var objects: [SportObject] = []
-        for object in sportObjectResponse.objects {
+        for object in gSportObjectResponse.objects {
             if (object.department == department) {
                 objects.append(object)
             }
@@ -244,93 +241,11 @@ class SharedManager {
 
     func objects(for polygon: GMSPolygon, with availability: SportObject.AvailabilityType) -> [SportObject] {
         var objects: [SportObject] = []
-        for object in sportObjectResponse.objects {
+        for object in gSportObjectResponse.objects {
             if (polygon.contains(coordinate: object.coorditate) && object.availabilityType == availability) {
                 objects.append(object)
             }
         }
         return objects
     }
-
-//    private func placeNumber(for population: Population, type: DetailType, allPolygons: [GMSPolygon]) -> Int {
-//        switch type {
-//        case .region:
-//            break
-//        case .population:
-//            for (ind, _population) in populationResponse.populations.enumerated() {
-//                if (_population == population) {
-//                    return ind + 1
-//                }
-//            }
-//        case .square:
-//            let sortBySqare = populationResponse.populations.sorted(by: { $0.square > $1.square })
-//            for (ind, _population) in sortBySqare.enumerated() {
-//                if (_population == population) {
-//                    return ind + 1
-//                }
-//            }
-//        case .sportObjects:
-//            return 1
-//            var objectsDict: [String: Int] = [:]
-//            for object in sportObjectResponse.objects {
-//                for polygon in allPolygons {
-//                    if (polygon.contains(coordinate: object.coorditate)) {
-//                        if let title = polygon.title {
-//                            if let count = objectsDict[title] {
-//                                objectsDict[title] = count + 1
-//                            } else {
-//                                objectsDict[title] = 1
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//            var areaWithSports: [AreaWithSports] = []
-//            for key in objectsDict.keys {
-//                let count = objectsDict[key] ?? 0
-//                areaWithSports.append(AreaWithSports(area: key, count: count))
-//            }
-//            areaWithSports.sort(by: { $0.count > $1.count })
-//            for (ind, area) in areaWithSports.enumerated() {
-//                if (population.area == area.area) {
-//                    return ind + 1
-//                }
-//            }
-//        case .sportSquare:
-//            var objectsDict: [String: Int] = [:]
-//            for object in sportObjectResponse.objects {
-//                for sport in object.sport {
-//                    for polygon in allPolygons {
-//                        if (polygon.contains(coordinate: object.coorditate)) {
-//                            if let title = polygon.title {
-//                                if let square = objectsDict[title] {
-//                                    let sportSquare = sport.square ?? 10.0
-//                                    objectsDict[title] = square + Int(sportSquare)
-//                                } else {
-//                                    objectsDict[title] = 1
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//            var areaWithSports: [AreaWithSports] = []
-//            for key in objectsDict.keys {
-//                let count = objectsDict[key] ?? 0
-//                areaWithSports.append(AreaWithSports(area: key, count: count))
-//            }
-//            areaWithSports.sort(by: { $0.count > $1.count })
-//            for (ind, area) in areaWithSports.enumerated() {
-//                if (population.area == area.area) {
-//                    return ind + 1
-//                }
-//            }
-//        }
-//        return 0
-//    }
-}
-
-struct AreaWithSports {
-    let area: String
-    let count: Int
 }

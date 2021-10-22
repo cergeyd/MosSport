@@ -9,14 +9,7 @@
 import UIKit
 
 public class AppStyle {
-
-    struct Config {
-        let cornerRadius: CGFloat = 4.0
-        let menuWidthMultiplier: CGFloat = 0.86
-    }
-
-    static let config = Config()
-
+    
     public enum Width {
         case bold
         case semibold

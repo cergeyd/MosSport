@@ -43,11 +43,7 @@ extension UIViewController {
     }
 
     func murmur(text: String, isError: Bool = true, subtitle: String = "", duration: Double = 4.0) {
-        // if (isError) {
         Banner.show(with: text, subtitle: subtitle, time: "now", image: R.image.warning()!, duration: duration)
-        //} else {
-        //   NotificationBanner.show(with: text, subtitle: subtitle, time: "now", image: R.image.warning())
-        // }
     }
 
     func hideKeyboardWhenTappedAround(_view: UIView? = nil) {
@@ -77,8 +73,8 @@ extension UIViewController {
     }
     
     func pdfData(with tableView: UITableView, name: String, sourceView: UIBarButtonItem) {
-        let priorBounds = tableView.bounds
-        let fittedSize = tableView.sizeThatFits(CGSize(width: priorBounds.size.width, height: tableView.contentSize.height))
+        let priorBounds = CGRect(x: 0.0, y: 0.0, width: tableView.bounds.width, height: tableView.bounds.height + 500.0)
+        let fittedSize = tableView.sizeThatFits(CGSize(width: priorBounds.size.width, height: tableView.contentSize.height + 500.0))
         tableView.bounds = CGRect(x: 0, y: 0, width: fittedSize.width, height: fittedSize.height)
         let pdfPageBounds = CGRect(x: 0, y: 0, width: tableView.frame.width, height: self.view.frame.height)
         let pdfData = NSMutableData()

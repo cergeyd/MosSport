@@ -42,7 +42,7 @@ class MenuRouter {
         case .filterSportTypes:
             controller.type = .filterSportTypes
         case .filterObjects:
-            controller.type = .filterObjects(items: sportObjectResponse.objects)
+            controller.type = .filterObjects(items: gSportObjectResponse.objects)
         default:
             controller.type = .filterDepartments
         }

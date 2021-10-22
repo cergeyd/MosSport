@@ -42,7 +42,6 @@ class StorageManager {
 
     func store<T: Encodable>(_ object: T, to directory: Directory, as fileName: String) {
         let url = self.getURL(for: directory).appendingPathComponent(fileName, isDirectory: false)
-
         let encoder = JSONEncoder()
         do {
             let data = try encoder.encode(object)

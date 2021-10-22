@@ -21,11 +21,12 @@ class CalculatedViewController: TableViewController {
         static let width = 0.5
     }
 
-    var type: MenuType!
     var output: CalculatedViewOutput!
+    var type: MenuType!
     weak var delegate: CalculatedDelegate?
     var report: SquareReport?
     private var calculateAreaType: CalculateAreaType = .borders
+    /// Текущие границы, указанные пользователем на экране Карт
     private var borders: [Detail] = []
 
     //MARK: Lifecycle
@@ -65,40 +66,33 @@ class CalculatedViewController: TableViewController {
         self.tableView.register(UINib(nibName: DetailCell.identifier, bundle: nil), forCellReuseIdentifier: DetailCell.identifier)
     }
 
+    //MARK: TableView
     override func numberOfSections(in tableView: UITableView) -> Int {
         switch self.calculateAreaType {
-        case .borders:
-            return self.report == nil ? 1 : 2
-        default:
-            return self.report == nil ? 2 : 3
+        case .borders: return self.report == nil ? 1 : 2
+        default: return self.report == nil ? 2 : 3
         }
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch self.calculateAreaType {
-        case .borders:
-            return 1
-        default:
-            return section == 1 ? self.borders.count : 1
+        case .borders: return 1
+        default: return section == 1 ? self.borders.count : 1
         }
     }
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch self.calculateAreaType {
-        case .borders:
-            return section == 0 ? "Способ выбора области" : "Отчёт"
-        default:
-            return section == 0 ? "Способ выбора области" : section == 1 ? "Границы" : "Отчёт"
+        case .borders: return section == 0 ? "Способ выбора области" : "Отчёт"
+        default: return section == 0 ? "Способ выбора области" : section == 1 ? "Границы" : "Отчёт"
         }
     }
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if (indexPath.section == 0) {
             switch self.calculateAreaType {
-            case .borders:
-                return 180.0
-            default:
-                return 240.0
+            case .borders: return 180.0
+            default: return 240.0
             }
         }
         return UITableView.automaticDimension
@@ -156,7 +150,6 @@ extension CalculatedViewController: CalculatedTypeDelegate, MapViewDataSource {
     func didSelect(border: Detail) {
         self.borders.append(border)
         self.tableView.reloadData()
-        self.tableView.scrollToBottom()
     }
 
     func didCalculated(report: SquareReport) {

@@ -38,5 +38,4 @@ extension UIApplication {
             // Finally, keep only the key window
             .first(where: \.isKeyWindow)
     }
-    
 }

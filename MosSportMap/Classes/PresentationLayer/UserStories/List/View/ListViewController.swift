@@ -16,7 +16,6 @@ enum ListType {
     case department(department: Department, sportObjects: [SportObject])
     case filterDepartments
     case filterAreas
-   // case filter
     case filterObjects(items: [SportObject])
     case filterSportTypes
     case sports(items: [SportObject.Sport])
@@ -44,24 +43,29 @@ class ListViewController: TableViewController {
 
     struct Config {
         static let sectionHeight = 60.0
+        static let searchBarHeight: CGFloat = 50.0
     }
 
     var output: ListViewOutput!
     var type: ListType!
-    /// Сегмен
+    var isPage = false
+    /// Сегмент
     var index: Int = 0
     weak var delegate: ListViewDelegate?
     private var details: [Detail] = []
     private var filterDetails: [Detail] = []
+    private lazy var isNeedSearchView: Bool = {
+        switch self.type! {
+        case .sport, .sportObjectsAround: return false
+        default: return true
+        }
+    }()
 
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.output.didLoadView()
         self.configureTableView()
-        self.configureType()
-        self.setupSearchController()
-        self.hideKeyboardWhenTappedAround()
     }
 
     //MARK: Private func
@@ -83,7 +87,7 @@ class ListViewController: TableViewController {
     @objc override func didTapExport() {
         self.exportRightNavigationBar(isLoading: true)
         Dispatch.after(2.0, completion: { self.exportRightNavigationBar(isLoading: false) })
-        let name = self.title ?? Date().toStyle()
+        let name = self.title ?? "PDF Документ"
         self.pdfData(with: self.tableView, name: name, sourceView: self.navigationItem.rightBarButtonItem!)
         self.murmur(text: "Сохранено", isError: false, subtitle: name)
     }
@@ -93,17 +97,13 @@ class ListViewController: TableViewController {
         case .details(let detail, let report):
             switch detail.type {
             case .population:
-                for (ind, population) in populationResponse.populations.enumerated() {
+                for (ind, population) in gPopulationResponse.populations.enumerated() {
                     self.details.append(Detail(type: detail.type, title: population.area, place: "\(String(ind + 1)) Место", subtitle: population.population.formattedWithSeparator))
                 }
-            case .sportSquare:
-                self.details.append(detail)
-            case .square:
-                self.details.append(detail)
-            case .sportTypeForOne:
+            case .sportSquare, .square, .sportTypeForOne:
                 self.details.append(detail)
             case .squareForOne:
-                self.details.append(Detail(type: detail.type, title: "report.population.area", place: "Место", subtitle: report.squareForOne.formattedWithSeparator))
+                self.details.append(Detail(type: detail.type, title: "Площадь на одного человека:", place: "Место", subtitle: report.squareForOne.formattedWithSeparator))
             case .objectForOne:
                 self.details.append(Detail(type: detail.type, title: report.population.area, place: "Место", subtitle: report.objectForOne.formattedWithSeparator))
             case .department: /// Департаменты в регионе
@@ -112,17 +112,21 @@ class ListViewController: TableViewController {
                 }
             case .sportZones: /// Виды Зоны в регионе
                 for sport in report.sports {
-                    self.details.append(Detail(type: .sportTypes, title: sport.sportType.title, place: "Идентификатор: \(sport.sportAreaID)", subtitle: sport.sportArea))
+                    self.details.append(Detail(type: .region, title: sport.sportType.title, place: "Идентификатор: \(sport.sportAreaID)", subtitle: sport.sportArea))
                 }
             case .sportTypes: /// Виды спорта в регионе
-                let sortBySport = report.sportTypes.sorted(by: { $0.id < $1.id })
+                var uniqSportType: Set<SportType> = []
+                for type in report.sportTypes {
+                    uniqSportType.insert(type)
+                }
+                let sortBySport = uniqSportType.sorted(by: { $0.id < $1.id })
                 for type in sortBySport {
-                    self.details.append(Detail(type: detail.type, title: type.title, place: "ID: \(type.id)", subtitle: "Dd"))
+                    self.details.append(Detail(type: .region, title: type.title, place: "ID: \(type.id)", subtitle: "Dd"))
                 }
                 if (self.index == 1) {
                     let exist = self.details
                     self.details.removeAll()
-                    for type in sportTypes.types {
+                    for type in gSportTypes.types {
                         if (!exist.contains(where: { detail in
                             return detail.title == type.title
                         })) {
@@ -137,36 +141,23 @@ class ListViewController: TableViewController {
             default: break
             }
         case .filterObjects(let objects): /// Фильтрация по видам спорта
-//            if let objects = objects {
-//                self.title = "Спортивный объект"
-//                for object in objects {
-//                    self.details.append(Detail(type: .filter, title: object.title, place: object.address, subtitle: object.department.title))
-//                }
-//            } else {
             self.title = "Объекты"
             for object in objects {
                 self.details.append(Detail(type: .filter, title: object.title, place: object.address, subtitle: object.department.title))
             }
-//                for department in departmentResponse.departments {
-//                    self.details.append(Detail(type: .filter, title: department.title, place: "Идентификатор: \(department.id)", subtitle: "Название"))
-//                }
-            // }
         case .filterSportTypes: /// Фильтрация по объектам
             self.title = "Видам спорта"
-            for type in sportTypes.types {
+            for type in gSportTypes.types {
                 self.details.append(Detail(type: .filter, title: type.title, place: "Идентификатор: \(type.id)", subtitle: "Вид спорта"))
             }
         case .filterDepartments: /// Фильтрация по Департаментам
             self.title = "Департаменты"
-            for department in departmentResponse.departments {
+            for department in gDepartmentResponse.departments {
                 self.details.append(Detail(type: .filter, title: department.title, place: "Идентификатор: \(department.id)", subtitle: "Название"))
             }
-//            for type in sportTypes.types {
-//                self.details.append(Detail(type: .filter, title: type.title, place: "Идентификатор: \(type.id)", subtitle: "Вид спорта"))
-//            }
         case .filterAreas: /// Фильтрация по районам
             self.title = "Районы, кварталы"
-            for population in populationResponse.populations {
+            for population in gPopulationResponse.populations {
                 let populationValue = Int(population.population)
                 let square = population.square / gSquareToKilometers
                 self.details.append(Detail(type: .filter, title: population.area, place: populationValue.peoples() + "/км²", subtitle: "Площадь района: \(square.formattedWithSeparator + " км²")"))
@@ -175,7 +166,7 @@ class ListViewController: TableViewController {
             self.title = "Объекты департамента"
             self.exportRightNavigationBar(isLoading: false)
             /// Сам департамент
-            self.details.append(Detail(type: .department, title: department.title, place: "Идентификатор: \(department.id)", subtitle: "\(objects.count) Объекта"))
+            self.details.append(Detail(type: .departmentHeader, title: department.title, place: "Идентификатор: \(department.id)", subtitle: "\(objects.count) Объекта"))
             /// Объекты
             for sport in objects {
                 self.details.append(Detail(type: .sportObjects, title: sport.title, place: "Адрес: \(sport.address)", subtitle: sport.department.title))
@@ -185,7 +176,7 @@ class ListViewController: TableViewController {
             self.exportRightNavigationBar(isLoading: false)
             for item in items {
                 let square = item.square?.formattedWithSeparator ?? "Не указана"
-                self.details.append(Detail(type: .sportTypes, title: item.sportType.title, place: "Площадь: \(square)", subtitle: item.sportArea))
+                self.details.append(Detail(type: .filter, title: item.sportType.title, place: "Площадь: \(square)", subtitle: item.sportArea))
             }
         default: break
         }
@@ -194,18 +185,26 @@ class ListViewController: TableViewController {
     //MARK: TableView
     override func numberOfSections(in tableView: UITableView) -> Int {
         switch self.type! {
-//        case .sport:
-//            return 1
         case .department:
-            return 2
+            return self.isNeedSearchView ? (self.isPage ? 3 : 2) : 2
         case .sportObjectsAround(let around):
-            return self.objectsInArea(around: around).count
+            return self.objectsInArea(around: around).count + (self.isNeedSearchView ? ((self.isPage ? 1 : 0)) : 0)
         default:
-            return 1
+            return self.isNeedSearchView ? (self.isPage ? 2 : 1) : 1
+        }
+    }
+    
+    private func objectsInArea(around: SportObjectsAround) -> [SportObject] {
+        switch self.index {
+        case 0: return around.sportObjectsWalking
+        case 1: return around.sportObjectsDistrict
+        case 2: return around.sportObjectsArea
+        default: return around.sportObjectsCity
         }
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if (section == 0 && self.isPage && self.isNeedSearchView) { return 0 }
         switch self.type! {
         case .sport:
             return 1
@@ -220,20 +219,7 @@ class ListViewController: TableViewController {
             return self.details.count
         }
     }
-
-    private func objectsInArea(around: SportObjectsAround) -> [SportObject] {
-        switch self.index {
-        case 0:
-            return around.sportObjectsWalking
-        case 1:
-            return around.sportObjectsDistrict
-        case 2:
-            return around.sportObjectsArea
-        default:
-            return around.sportObjectsCity
-        }
-    }
-
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch self.type! {
         case .details(_, let report):
@@ -262,7 +248,7 @@ class ListViewController: TableViewController {
         case .filterDepartments:
             let detail = self.detail(at: indexPath)
             var department: Department?
-            for d in departmentResponse.departments { if (d.title == detail.title) { department = d } }
+            for d in gDepartmentResponse.departments { if (d.title == detail.title) { department = d } }
             if let department = department {
                 self.delegate?.didSelect(department: department)
             }
@@ -280,7 +266,6 @@ class ListViewController: TableViewController {
                 }
             }
         case .department(_, let objects):
-            //self.title = "Департамент"
             if (indexPath.section != 0) {
                 let object = objects[indexPath.row]
                 self.output.showListDetailScreen(with: .sport(object: object))
@@ -306,23 +291,43 @@ class ListViewController: TableViewController {
         }
     }
 
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return (self.isPage && self.isNeedSearchView) ? Config.searchBarHeight : 35.0
+    }
+
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        /// Если пагинция - поиск как секция
+        if (!self.isNeedSearchView) { return nil }
+        if (self.isPage) {
+            if (section == 0) {
+                return self.searchHeaderView
+            } else {
+                let hearedTableView = HeaderGrayTableView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 40.0))
+                hearedTableView.label.text = self.tableView(titleForHeaderInSection: section)?.uppercased() ?? ""
+                return hearedTableView
+            }
+        }
+        return nil
+    }
+
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return self.tableView(titleForHeaderInSection: section)?.uppercased()
+    }
+
+    private func tableView(titleForHeaderInSection section: Int) -> String? {
         switch self.type! {
-        case .department:
-            return section == 0 ? "Ведомство" : "Спортивные объекты"
-        case .sports:
-            return "Спортивные объекты"
+        case .department: return section == 0 ? "Ведомство" : "Спортивные объекты"
+        case .sports: return "Спортивные объекты"
         case .details(let detail, _):
             switch detail.type {
-            case .department:
-                return "Департаменты"
-            case.sportTypes:
-                return "Виды спорта"
-            default:
-                return nil
+            case .department: return "Департаменты"
+            case.sportTypes: return "Виды спорта"
+            case .sportObjects: return "Спортивные объекты"
+            case .sportZones: return "Спортивные зоны"
+            default: return nil
             }
-        default:
-            return nil
+        case .sport, .sportObjectsAround: return "Спортивный объект"
+        default: return nil
         }
     }
 
@@ -348,6 +353,23 @@ class ListViewController: TableViewController {
     }
 
     //MARK: Search
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        let searchText = searchText.lowercased()
+        self.isSearchActive = !searchText.isEmpty
+        if (!self.isSearchActive) { self.view.endEditing(true) }
+        self.filterDetails = self.details.filter({ (detail) -> Bool in
+            let byTitle = detail.title.lowercased().contains(searchText)
+            let byPlace = detail.place.lowercased().contains(searchText)
+            let bySubTitle = detail.subtitle.lowercased().contains(searchText)
+            return byTitle || bySubTitle || byPlace
+        })
+        self.tableView.reloadData()
+    }
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
+
     override func updateSearchResults(for searchController: UISearchController) {
         if let text = searchController.searchBar.text?.lowercased() {
             self.isSearchActive = !text.isEmpty
@@ -366,6 +388,9 @@ extension ListViewController: ListViewInput {
 
     func setupInitialState() {
         self.navigationItem.title = "Меню"
+        self.configureType()
+        self.setupSearchController()
+        self.hideKeyboardWhenTappedAround()
     }
 }
 
@@ -386,53 +411,7 @@ extension ListViewController: SportObjectDelegate {
 
     func didTapShowDepartment(sport object: SportObject) {
         var sports: [SportObject] = []
-        for sport in sportObjectResponse.objects {
-            if (sport.department == object.department) {
-                sports.append(sport)
-            }
-        }
+        for sport in gSportObjectResponse.objects { if (sport.department == object.department) { sports.append(sport) } }
         self.output.showListDetailScreen(with: .department(department: object.department, sportObjects: sports))
     }
 }
-//
-//class HeaderGrayTableView: View {
-//
-//    lazy var label: UILabel = {
-//        var label = UILabel()
-//        label.textColor = AppStyle.color(for: .title)
-//        label.numberOfLines = 1
-//        label.font = AppStyle.font(size: .title, width: .medium)
-//        self.addSubview(label)
-//        return label
-//    }()
-//
-//    //MARK: Lifecycle
-//    override func setUpLayout() {
-//        super.setUpLayout()
-//        self.backgroundColor = .clear
-//        self.label.snp.makeConstraints { (make) in
-//            make.left.equalToSuperview().offset(32.0)
-//            make.bottom.equalToSuperview().inset(6.0)
-//        }
-//    }
-//}
-//
-//class View: UIView {
-//
-//    public static var identifier: String {
-//        return String(describing: self)
-//    }
-//
-//    override init(frame: CGRect) {
-//        super.init(frame: frame)
-//        self.setUpLayout()
-//    }
-//
-//    required init?(coder: NSCoder) {
-//        super.init(coder: coder)
-//    }
-//
-//    func setUpLayout() {
-//
-//    }
-//}

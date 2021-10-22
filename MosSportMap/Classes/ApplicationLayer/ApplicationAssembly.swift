@@ -40,7 +40,7 @@ class ApplicationAssembly: Assembly {
             AppDelegateFirstLaunchService(keychainService: r.resolve(KeychainService.self)!, notifications: NotificationCenter.default)
         }
         container.register(AppDelegateUnauthorizedService.self) { r in
-            AppDelegateUnauthorizedService(notificationCenter: NotificationCenter.default, menuFactory: r.resolve(MenuFactory.self)!, mapFactory: r.resolve(MapFactory.self)!)
+            AppDelegateUnauthorizedService(menuFactory: r.resolve(MenuFactory.self)!, mapFactory: r.resolve(MapFactory.self)!)
         }
     }
 }

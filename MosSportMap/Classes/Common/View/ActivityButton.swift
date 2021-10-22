@@ -14,9 +14,7 @@ class ActivityButton: UIButton {
     var originalButtonText: String?
     var originalButtonImage: UIImage?
     var originButtonImageInsets: UIEdgeInsets?
-    lazy var activityIndicator: UIActivityIndicatorView = {
-        return self.createActivityIndicator(isFilled: self.isFilled)
-    }()
+    lazy var activityIndicator: UIActivityIndicatorView = { return self.createActivityIndicator(isFilled: self.isFilled) }()
 
     //MARK: Lifecycle
     override func awakeFromNib() {

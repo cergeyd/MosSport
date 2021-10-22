@@ -18,12 +18,9 @@ class AppDelegateUnauthorizedService: AppDelegateService {
     
     private let menuFactory: MenuFactory
     private let mapFactory: MapFactory
-
-    private let notificationCenter: NotificationCenter
     let disposeBag = DisposeBag()
 
-    init(notificationCenter: NotificationCenter, menuFactory: MenuFactory, mapFactory: MapFactory) {
-        self.notificationCenter = notificationCenter
+    init( menuFactory: MenuFactory, mapFactory: MapFactory) {
         self.menuFactory = menuFactory
         self.mapFactory = mapFactory
     }

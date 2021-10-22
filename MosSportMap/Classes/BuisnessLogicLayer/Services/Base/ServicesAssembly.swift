@@ -23,11 +23,5 @@ class ServicesAssembly: Assembly {
         container.register(MosDataProcessing.self) { r in
             MosDataProcessing(localService: r.resolve(LocalService.self)!)
         }
-        container.register(PlaygroundService.self) { r in
-            PlaygroundService(
-                apiClient: r.resolve(APIClient.self, name: NetworkAssembly.networkClientAssemblyDefault)!,
-                requestPatternFactory: r.resolve(RequestPatternFactory.self)!
-            )
-        }
     }
 }

@@ -8,23 +8,6 @@
 
 import GoogleMapsUtils
 
-struct Rectangle {
-    let topLeft: CLLocationCoordinate2D
-    let bottomRight: CLLocationCoordinate2D
-}
-
-struct Recommendation {
-    let availabilityType: SportObject.AvailabilityType
-    let missingTypes: [SportType]
-    let coordinates: [CLLocationCoordinate2D]
-}
-
-enum RecommendationType {
-    case area
-    case availability(area: Population, polygon: GMSPolygon)
-    case objects(area: Population, availability: SportObject.AvailabilityType, recommendation: Recommendation)
-}
-
 protocol RecommendationDelegate: AnyObject {
     func didSelect(calculated type: CalculateAreaType?)
     func didCalculate(recommendation: Recommendation)
@@ -37,7 +20,6 @@ class RecommendationViewController: TableViewController {
     var type: MenuType!
     weak var delegate: RecommendationDelegate?
     var recommendationType: RecommendationType = .area
-
     private var sections: [DetailSection] = []
     private var filterDetails: [Detail] = []
 
@@ -47,7 +29,6 @@ class RecommendationViewController: TableViewController {
         self.output.didLoadView()
         self.configureTableView()
         self.configureSections()
-        self.navigationItem.searchController = self.searchController
     }
 
     //MARK: Private func
@@ -62,7 +43,7 @@ class RecommendationViewController: TableViewController {
             var details: [Detail] = []
             self.title = "Укажите район"
             self.delegate?.didSelect(calculated: .recommendation)
-            for population in populationResponse.populations {
+            for population in gPopulationResponse.populations {
                 let populationValue = Int(population.population)
                 let square = population.square / gSquareToKilometers
                 details.append(Detail(type: .filter, title: population.area, place: populationValue.peoples() + "/км²", subtitle: "Площадь района: \(square.formattedWithSeparator + " км²")"))
@@ -83,17 +64,15 @@ class RecommendationViewController: TableViewController {
             let populationValue = Int(area.population)
             let square = area.square / gSquareToKilometers
             let area = Detail(type: .filter, title: area.area, place: populationValue.peoples() + "/км²", subtitle: "Площадь района: \(square.formattedWithSeparator + " км²")")
-
             /// Доступность
             let range = SharedManager.shared.meters(for: availability)
-            let availability = Detail(type: .filter, title: availability.rawValue, place: "", subtitle: "В радиусе \(range) м.")
-
+            let availability = Detail(type: .filter, title: availability.rawValue, place: "Всего: \(recommendations.existObjects.count.objects())", subtitle: "В радиусе \(range) м.")
             /// Отсутствующие виды спорта
             var details: [Detail] = []
             for missing in recommendations.missingTypes {
                 details.append(Detail(type: .filter, title: missing.title, place: "Идентификатор: \(missing.id)", subtitle: "Вид спорта"))
             }
-
+            
             self.sections.append(DetailSection(title: "Регион", details: [area]))
             self.sections.append(DetailSection(title: "Доступность", details: [availability]))
             self.sections.append(DetailSection(title: "Отсутствующие виды спорта", details: details))
@@ -119,7 +98,8 @@ class RecommendationViewController: TableViewController {
 extension RecommendationViewController: RecommendationViewInput {
 
     func setupInitialState() {
-
+        self.navigationItem.searchController = self.searchController
+        self.navigationBar(isLoading: false)
     }
 }
 
@@ -133,43 +113,40 @@ extension RecommendationViewController: MapViewDataSource {
     }
 
     private func detail(at indexPath: IndexPath) -> Detail {
-        if (self.isSearchActive) {
-            return self.filterDetails[indexPath.row]
-        }
+        if (self.isSearchActive) { return self.filterDetails[indexPath.row] }
         return self.sections[indexPath.section].details[indexPath.row]
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        if (self.isSearchActive) {
-            return 1
-        }
+        if (self.isSearchActive) { return 1 }
         return self.sections.count
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if (self.isSearchActive) {
-            return self.filterDetails.count
-        }
+        if (self.isSearchActive) { return self.filterDetails.count }
         return self.sections[section].details.count
     }
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if (self.isSearchActive) {
-            return "Результаты:"
-        }
+        if (self.isSearchActive) { return "Результаты:" }
         return self.sections[section].title
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let detailCell = tableView.dequeueReusableCell(withIdentifier: DetailCell.identifier) as! DetailCell
         let item = self.detail(at: indexPath)
-        detailCell.accessoryType = .disclosureIndicator
         detailCell.configure(with: item, indexPath: indexPath)
+        switch self.recommendationType {
+        case .objects:
+            detailCell.accessoryType = .none
+        default:
+            detailCell.accessoryType = .disclosureIndicator
+        }
         return detailCell
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.view.endEditing(true)
+        self.navigationBar(isLoading: true)
         switch self.recommendationType {
         case .area:
             let area = self.detail(at: indexPath)
@@ -220,7 +197,7 @@ extension RecommendationViewController: MapViewDataSource {
         var emptyCoordinates: [CLLocationCoordinate2D] = []
         let range = SharedManager.shared.meters(for: availabilityType)
 
-        for i in stride(from: rectangle.topLeft.longitude, to: rectangle.bottomRight.longitude, by: 0.003) {
+        for i in stride(from: rectangle.topLeft.longitude, to: rectangle.bottomRight.longitude, by: 0.002) {
             for j in stride(from: rectangle.bottomRight.latitude, to: rectangle.topLeft.latitude, by: 0.001) {
                 let missCoordinates = CLLocationCoordinate2D(latitude: j, longitude: i)
                 if (polygon.contains(coordinate: missCoordinates)) {
@@ -233,13 +210,13 @@ extension RecommendationViewController: MapViewDataSource {
                         if (distance < minDistance) {
                             minDistance = distance
                         }
-                        if (minDistance > range) {
-                            emptyCoordinates.append(missCoordinates)
-                        }
+                    }
+                    if (minDistance + 100.0 > range) { /// Сто метров offset
+                        emptyCoordinates.append(missCoordinates)
                     }
                 }
             }
         }
-        return Recommendation(availabilityType: availabilityType, missingTypes: missingTypes, coordinates: emptyCoordinates)
+        return Recommendation(availabilityType: availabilityType, missingTypes: missingTypes, existObjects: objects, coordinates: emptyCoordinates)
     }
 }

@@ -54,28 +54,28 @@ class CalculatedAreaCell: TableViewCell {
 
         switch type {
         case .calculateSportSquare:
-            self.firstValueDescription.text = "Площадь спортивных зон на 100 000 человек на выбранной территории:"
-            self.firstValue.text = report.squareForOne.formatted() + " м²"
+            self.firstValueDescription.text = "Площадь спортивных зон для данной плотности населения на выбранной территории:"
+            self.firstValue.text = report.squareForOne.formattedWithSeparator + " м²"
             self.secondValueDescription.text = "Количество спортивных объектов в регионе:"
             self.secondValue.text = String(report.objects.count)
             self.fourthValueDescription.text = "Количество спортивных зон в регионе:"
             self.fourthValue.text = String(report.sports.count)
             self.thirdValueDescription.text = "Общая площадь спортивных объектов:"
-            self.thirdValue.text = (report.allSquare / gSquareToKilometers).formattedWithSeparator + " км²"
+            self.thirdValue.text = (report.allSquare).formattedWithSeparator + " м²"
         case .calculateSportCount:
-            self.firstValueDescription.text = "Количество спортивных зон на 100 000 человек на выбранной территории:"
-            self.firstValue.text = report.sportForOne.formatted()
-            self.secondValueDescription.text = "Количество спортивных объектов на 100 000 человек на выбранной территории:"
-            self.secondValue.text = report.objectForOne.formatted()
+            self.firstValueDescription.text = "Количество спортивных зон для данной плотности населения на выбранной территории:"
+            self.firstValue.text = report.sportForOne.formattedWithSeparator
+            self.secondValueDescription.text = "Количество спортивных объектов для данной плотности населения на выбранной территории:"
+            self.secondValue.text = report.objectForOne.formattedWithSeparator
             self.fourthValueDescription.text = "Количество спортивных объектов в регионе:"
             self.fourthValue.text = String(report.objects.count)
             self.thirdValueDescription.text = "Количество спортивных зон в регионе:"
             self.thirdValue.text = String(report.sports.count)
         case .calculateSportType:
-            self.firstValueDescription.text = "Количества видов спортивных услуг на 100 000 человек на выбранной территории:"
-            self.firstValue.text = report.sportTypeForOne.formatted()
-            self.secondValueDescription.text = "Количество спортивных объектов на 100 000 человек на выбранной территории:"
-            self.secondValue.text = report.objectForOne.formatted()
+            self.firstValueDescription.text = "Количества видов спортивных услуг для данной плотности населения на выбранной территории:"
+            self.firstValue.text = report.sportTypeForOne.formattedWithSeparator
+            self.secondValueDescription.text = "Количество спортивных объектов для данной плотности населения на выбранной территории:"
+            self.secondValue.text = report.objectForOne.formattedWithSeparator
             self.fourthValueDescription.text = "Количество спортивных объектов в регионе:"
             self.fourthValue.text = String(report.objects.count)
             self.thirdValueDescription.text = "Количество спортивных зон в регионе:"

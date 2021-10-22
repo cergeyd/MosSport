@@ -13,16 +13,16 @@ enum MenuType: Int {
     case objects = 1
     case heatMap = 2
     case population = 3
-
+    /// Расчёты
     case calculateSportSquare = 10
     case calculateSportCount = 11
     case calculateSportType = 12
-
+    /// Фильтрация
     case filterDepartments = 20
     case filterAreas = 21
     case filterObjects = 22
     case filterSportTypes = 23
-    
+    /// Рекомендации
     case recNewObjects = 30
     case recNewsTypes = 31
 }
@@ -51,34 +51,30 @@ class MenuViewController: TableViewController {
 
     var output: MenuViewOutput!
     weak var delegate: MenuDelegate?
-
-    /// Контроллер с вычислениями, храним так, чтобы удобно было добавить в dataSource
+    /// Контроллеры, храним так, чтобы удобно было добавить в dataSource
     lazy var calculatedViewController = self.output.calculatedViewController()
-    /// Контроллер с вычислениями, храним так, чтобы удобно было добавить в dataSource
     lazy var recommendationViewController = self.output.recommendationViewController()
-
     /// Меню
     let sections = [
         MenuSection(title: "Карта", items: [
             MenuItem(title: "Очистить", subtitle: "Карта без каких-либо данных", isDetailed: false, type: .clear),
             MenuItem(title: "Объекты на карте", subtitle: "Спортивная инфраструктура на карте", isDetailed: false, type: .objects),
-            MenuItem(title: "Тепловая карта", subtitle: "Спортивная инфраструктура, отображаются при помощи цвета", isDetailed: false, type: .heatMap),
+            MenuItem(title: "Тепловая карта", subtitle: "Спортивная инфраструктура, отображается при помощи цвета", isDetailed: false, type: .heatMap),
             MenuItem(title: "Границы районов Москвы", subtitle: "Границы районов Москвы с учётом плотности населения", isDetailed: false, type: .population),
             ]),
         MenuSection(title: "Расчёты", items: [
             MenuItem(title: "Площадь спортивных зон", subtitle: "Расчет площади спортивных зон на одного человека на выбранной территории", isDetailed: true, type: .calculateSportSquare),
             MenuItem(title: "Количества спортивных зон", subtitle: "Расчет количества спортивных зон на одного человека на выбранной территории", isDetailed: true, type: .calculateSportCount),
-            MenuItem(title: "Количества видов спортивных услуг", subtitle: "расчет количества видов спортивных услуг на одного человека на выбранной территории", isDetailed: true, type: .calculateSportType)
+            MenuItem(title: "Количества видов спортивных услуг", subtitle: "Расчет количества видов спортивных услуг на одного человека на выбранной территории", isDetailed: true, type: .calculateSportType)
             ]),
         MenuSection(title: "Фильтр", items: [
-            MenuItem(title: "Департаменты", subtitle: "Фильтрации по принадлежности спортивного объекта к департаменту", isDetailed: true, type: .filterDepartments),
+            MenuItem(title: "Департаменты", subtitle: "Фильтрация по принадлежности спортивного объекта к департаменту", isDetailed: true, type: .filterDepartments),
             MenuItem(title: "Районы", subtitle: "Спортивная инфраструктура в районе", isDetailed: true, type: .filterAreas),
-            MenuItem(title: "Cпортивные объекты", subtitle: "Фильтрации спортивных объектов", isDetailed: true, type: .filterObjects),
-            MenuItem(title: "Виды спортивных услуг", subtitle: "Фильтрации спортивных объектов по видам спорта", isDetailed: true, type: .filterSportTypes)
+            MenuItem(title: "Cпортивные объекты", subtitle: "Фильтрация спортивных объектов", isDetailed: true, type: .filterObjects),
+            MenuItem(title: "Виды спортивных услуг", subtitle: "Фильтрация спортивных объектов по видам спорта", isDetailed: true, type: .filterSportTypes)
             ]),
         MenuSection(title: "Рекомендации", items: [
-            MenuItem(title: "Новые спортивные объекты", subtitle: "Оснащению территории новыми спортивными объектами", isDetailed: true, type: .filterDepartments),
-            MenuItem(title: "Новые спортивные зоны", subtitle: "Увеличение количества спортивных зон, видов спорта", isDetailed: true, type: .filterAreas)
+            MenuItem(title: "Новые спортивные объекты", subtitle: "Оснащению территории новыми спортивными объектами", isDetailed: true, type: .filterDepartments)
             ])
     ]
 
@@ -165,21 +161,19 @@ extension MenuViewController {
         default:
             self.output.didTapShow(listType: type)
         }
-        // let controller = UIViewController()
-        // self.showDetailViewController(UINavigationController(rootViewController: controller), sender: nil)
     }
 }
 
 extension MenuViewController: CalculatedDelegate, RecommendationDelegate, ListViewDelegate {
-    
+
     func didSelect(population: Population, polygon: GMSPolygon) {
         self.delegate?.didSelect(population: population, polygon: polygon)
     }
-    
+
     func didCalculate(recommendation: Recommendation) {
         self.delegate?.didCalculate(recommendation: recommendation)
     }
-    
+
     func didTapClearBorders() {
         self.delegate?.didTapClearBorders()
     }
@@ -187,7 +181,7 @@ extension MenuViewController: CalculatedDelegate, RecommendationDelegate, ListVi
     func didSelect(filter sport: SportObject) {
         self.delegate?.didSelect(filter: sport)
     }
-    
+
     func didTapShow(type: SportType, objects: [SportObject]) {
         self.delegate?.didTapShow(type: type, objects: objects)
     }

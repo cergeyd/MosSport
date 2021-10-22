@@ -8,10 +8,10 @@
 import Foundation
 import RxSwift
 
-var sportTypes: SportTypeResponse!
-var departmentResponse: DepartmentResponse!
-var sportObjectResponse: SportObjectResponse!
-var populationResponse: PopulationResponse!
+var gSportTypes: SportTypeResponse!
+var gDepartmentResponse: DepartmentResponse!
+var gSportObjectResponse: SportObjectResponse!
+var gPopulationResponse: PopulationResponse!
 
 class MosDataProcessing {
 
@@ -37,7 +37,7 @@ class MosDataProcessing {
         self.localService
             .loadPopulation()
             .subscribe(onNext: { response in
-            populationResponse = PopulationResponse(populations: response.populations.sorted(by: { $0.population > $1.population }))
+            gPopulationResponse = response
         }).disposed(by: self.disposeBag)
     }
 
@@ -46,7 +46,7 @@ class MosDataProcessing {
         self.localService
             .loadSportTypes()
             .subscribe(onNext: { response in
-            sportTypes = response
+            gSportTypes = response
         }).disposed(by: self.disposeBag)
     }
 
@@ -55,7 +55,7 @@ class MosDataProcessing {
         self.localService
             .loadDepartments()
             .subscribe(onNext: { response in
-            departmentResponse = response
+            gDepartmentResponse = response
         }).disposed(by: self.disposeBag)
     }
 
@@ -64,10 +64,10 @@ class MosDataProcessing {
         self.localService
             .loadSportObjects()
             .subscribe(onNext: { response in
-            sportObjectResponse = response
+            gSportObjectResponse = response
         }).disposed(by: self.disposeBag)
     }
-    
+
     func save<T: Codable>(object: T, filename: String) {
         let filePath = self.getDocumentsDirectoryUrl().appendingPathComponent(filename)
         print(filePath)
@@ -84,12 +84,5 @@ class MosDataProcessing {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         let documentsDirectory = paths[0]
         return documentsDirectory
-    }
-    
-    /// Идём по цунтрам квадрантов, в указанном прямоугольнике
-    private func createArrayPoints() {
-        // 56.026179 36.827946 | 55.169184 37.962116
-        
-        
     }
 }
