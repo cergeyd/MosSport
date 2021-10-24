@@ -26,7 +26,7 @@
 | Ссылка на презентацию |
 | Keynote | [Mac OS Keynote][Present] |
 | Power Point | [Windows Power Point][PresentPP] |
-| Ссылка на интерактивный прототип | [Test Flight. iPAD][testFlight] |
+| Ссылка на интерактивный прототип | [Test Flight. iPad][testFlight] |
 
    [contest]: <https://leaders2021.innoagency.ru>
    [present]: <https://disk.yandex.ru/d/ootGPagwqbEsMA>
