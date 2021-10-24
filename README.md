@@ -29,9 +29,9 @@
 | Ссылка на интерактивный прототип | [Test Flight. iPAD][testFlight] |
 
    [contest]: <https://leaders2021.innoagency.ru>
-   [present]: <https://drive.google.com/file/d/13uTajul0BGMbdSnOdxnjWrzxRBuu-Lcy/view?usp=sharing>
-   [docsPDF]: <https://drive.google.com/file/d/1XO_10-UUTmTOzy-x7ajm9DWtfAaKikWQ/view?usp=sharing>
+   [present]: <https://disk.yandex.ru/d/ootGPagwqbEsMA>
+   [presentPP]: <https://disk.yandex.ru/d/NClUmrbU8X_AeQ>
+   [docsPDF]: <https://disk.yandex.ru/i/r255Zao5gUBgXg>
    [docsWEB]: <https://serjey.com/sportgrounds/docs>
    [gith]: <https://github.com/cergeyd/MosSport>
- [testFlight]: <https://testflight.apple.com/join/UIJs5Thk>
-   [presentPP]: <https://docs.google.com/presentation/d/16Nr5hMaftAL96vOsuqtfhX83zfkr7D_A/edit?usp=sharing&ouid=111020423093922310013&rtpof=true&sd=true>
+   [testFlight]: <https://testflight.apple.com/join/UIJs5Thk>
