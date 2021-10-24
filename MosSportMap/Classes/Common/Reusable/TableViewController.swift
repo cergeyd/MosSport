@@ -10,7 +10,12 @@ import BusyNavigationBar
 class TableViewController: UITableViewController, UISearchResultsUpdating, UISearchBarDelegate {
 
     var isSearchActive = false
-    var options = BusyNavigationBarOptions()
+    lazy var options: BusyNavigationBarOptions = {
+        let _options = BusyNavigationBarOptions()
+        _options.color = AppStyle.color(for: .coloured)
+        _options.alpha = 0.8
+        return _options
+    }()
     lazy var searchController: UISearchController = {
         let _searchController = UISearchController(searchResultsController: nil)
         _searchController.searchBar.autocapitalizationType = .none
@@ -25,7 +30,8 @@ class TableViewController: UITableViewController, UISearchResultsUpdating, UISea
         let searchHeader = SearchHeaderView(frame: CGRect(x: 0, y: 0, width: self.tableView.bounds.size.width, height: ListViewController.Config.searchBarHeight))
         searchHeader.searchBar.keyboardAppearance = .dark
         searchHeader.searchBar.delegate = self
-        return searchHeader }()
+        return searchHeader
+    }()
 
     //MARK: Lifecycle
     override func viewWillAppear(_ animated: Bool) {

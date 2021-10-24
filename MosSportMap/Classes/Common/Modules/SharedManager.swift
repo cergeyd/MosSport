@@ -154,7 +154,7 @@ class SharedManager {
                 for sport in object.sport {
                     sports.append(sport)
                     sportTypes.append(sport.sportType)
-                    allSquare += sport.square ?? 0.0
+                    allSquare += sport.square
                 }
             }
         }

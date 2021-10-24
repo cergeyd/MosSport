@@ -7,7 +7,6 @@
 //
 
 import GoogleMapsUtils
-import BusyNavigationBar
 
 protocol MapViewDataSource: AnyObject {
     func didCalculated(report: SquareReport)
@@ -40,11 +39,10 @@ class MapViewController: GMClusterViewController {
     private var polygons: [GMSPolygon] = []
     private var circles: [GMSCircle] = []
     private var coordinates: [CLLocationCoordinate2D] = []
-    /// Круги рекоммендаций
+    /// Круги рекомендаций
     private var recommendationsCircles: [GMSCircle] = []
     /// Радиус с доступностью
     private var avaiavailabilityCircle: GMSCircle?
-    private var options = BusyNavigationBarOptions()
 
     //MARK: Lifecycle
     override func viewDidLoad() {
@@ -167,7 +165,7 @@ extension MapViewController: MenuDelegate, DetailViewDelegate, ListViewDelegate 
         self.clearHandsBorders(isFullClear: true)
     }
 
-    /// Указали регион, с экрана 'Рекоммендация'
+    /// Указали регион, с экрана 'Рекомендация'
     func didSelect(population: Population, polygon: GMSPolygon) {
         self.mapView.animate(to: GMSCameraPosition(latitude: population.latitude, longitude: population.longitude, zoom: self.mapView.camera.zoom))
         self.didTap(polygon: polygon)
@@ -278,6 +276,7 @@ extension MapViewController: MenuDelegate, DetailViewDelegate, ListViewDelegate 
     }
 
     func navigationBar(isLoading: Bool) {
+        if (isLoading) { Hud.show() } else { Hud.hide() }
         if (isLoading) { self.navigationController?.navigationBar.start(self.options) } else { self.navigationController?.navigationBar.stop() }
     }
 }
@@ -305,8 +304,8 @@ extension MapViewController {
         if let _ = self.calculateAreaType {
             self.clearHandsBorders()
             /// Кружок
-            let circle = GMSCircle(position: coordinate, radius: 25.0)
-            circle.fillColor = #colorLiteral(red: 0.8302407265, green: 0.6964268088, blue: 0.4022175074, alpha: 1)
+            let circle = GMSCircle(position: coordinate, radius: 20.0)
+            circle.fillColor = #colorLiteral(red: 0, green: 0.5898008943, blue: 1, alpha: 1)
             circle.map = self.mapView
             /// По ним строим полигон
             self.circles.append(circle)
@@ -393,24 +392,28 @@ extension MapViewController {
 
     /// Выбираем регион
     func mapView(_ mapView: GMSMapView, didTap overlay: GMSOverlay) {
-        self.avaiavailabilityCircle?.map = nil
-        if let polygon = overlay as? GMSPolygon, let title = overlay.title {
-            self.didTap(polygon: polygon)
-            if let population = SharedManager.shared.population(by: title) {
-                let report = SharedManager.shared.calculateReport(for: population, polygon: polygon)
-                /// Если нужно для экрана калькуляции
-                if let type = self.calculateAreaType {
-                    if (type == .recommendation) {
-                        for dataSource in self.dataSources {
-                            dataSource.didSelect(polygon: polygon)
+        self.navigationBar(isLoading: true)
+        Dispatch.after {
+            self.navigationBar(isLoading: false)
+            self.avaiavailabilityCircle?.map = nil
+            if let polygon = overlay as? GMSPolygon, let title = overlay.title {
+                self.didTap(polygon: polygon)
+                if let population = SharedManager.shared.population(by: title) {
+                    let report = SharedManager.shared.calculateReport(for: population, polygon: polygon)
+                    /// Если нужно для экрана калькуляции
+                    if let type = self.calculateAreaType {
+                        if (type == .recommendation) {
+                            for dataSource in self.dataSources {
+                                dataSource.didSelect(polygon: polygon)
+                            }
+                        } else {
+                            for dataSource in self.dataSources {
+                                dataSource.didCalculated(report: report)
+                            }
                         }
-                    } else {
-                        for dataSource in self.dataSources {
-                            dataSource.didCalculated(report: report)
-                        }
+                    } else { /// Информация по выбранной границе
+                        self.output.didTapShow(detail: report)
                     }
-                } else { /// Информация по выбранной границе
-                    self.output.didTapShow(detail: report)
                 }
             }
         }

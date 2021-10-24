@@ -88,6 +88,7 @@ class MenuViewController: TableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.splitWidth(isSmall: true)
+        self.delegate?.didSelect(calculated: nil)
     }
 
     //MARK: Private func

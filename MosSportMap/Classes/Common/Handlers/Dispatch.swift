@@ -10,7 +10,7 @@ import Foundation
 
 class Dispatch {
 
-    static func after(_ time: Double = 0.6, completion: @escaping () -> Void) {
+    static func after(_ time: Double = 0.1, completion: @escaping () -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + time) {
             completion()
         }

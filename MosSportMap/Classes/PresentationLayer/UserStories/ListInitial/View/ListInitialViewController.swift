@@ -90,7 +90,7 @@ class ListInitialViewController: PageboyViewController, SegmentProtocol, Pageboy
     /// Создаэм PDF
     @objc private func didTapExport() {
         self.rightNavigationBar(isLoading: true)
-        Dispatch.after(2.0, completion: { self.rightNavigationBar(isLoading: false) })
+        Dispatch.after(1.0, completion: { self.rightNavigationBar(isLoading: false) })
         if let topController = UIViewController.topController() {
             if let children = topController.children.last {
                 if let listInitialViewController = children as? ListInitialViewController {

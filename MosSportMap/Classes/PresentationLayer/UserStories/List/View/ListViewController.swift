@@ -121,7 +121,7 @@ class ListViewController: TableViewController {
                 }
                 let sortBySport = uniqSportType.sorted(by: { $0.id < $1.id })
                 for type in sortBySport {
-                    self.details.append(Detail(type: .region, title: type.title, place: "ID: \(type.id)", subtitle: "Dd"))
+                    self.details.append(Detail(type: .region, title: type.title, place: "ID: \(type.id)", subtitle: "Спорт:"))
                 }
                 if (self.index == 1) {
                     let exist = self.details
@@ -130,7 +130,7 @@ class ListViewController: TableViewController {
                         if (!exist.contains(where: { detail in
                             return detail.title == type.title
                         })) {
-                            self.details.append(Detail(type: detail.type, title: type.title, place: "ID: \(type.id)", subtitle: "Dd"))
+                            self.details.append(Detail(type: detail.type, title: type.title, place: "ID: \(type.id)", subtitle: "Спорт:"))
                         }
                     }
                 }
@@ -175,8 +175,8 @@ class ListViewController: TableViewController {
             self.title = "Виды спорта"
             self.exportRightNavigationBar(isLoading: false)
             for item in items {
-                let square = item.square?.formattedWithSeparator ?? "Не указана"
-                self.details.append(Detail(type: .filter, title: item.sportType.title, place: "Площадь: \(square)", subtitle: item.sportArea))
+                let square = item.square.formattedWithSeparator
+                self.details.append(Detail(type: .departmentHeader, title: item.sportType.title, place: "Площадь: \(square)", subtitle: item.sportArea))
             }
         default: break
         }
@@ -236,7 +236,7 @@ class ListViewController: TableViewController {
             }
         case .filterAreas:
             self.navigationBar(isLoading: true)
-            Dispatch.after(2.5) { self.navigationBar(isLoading: false) }
+            Dispatch.after(1.0) { self.navigationBar(isLoading: false) }
             Dispatch.global {
                 let detail = self.detail(at: indexPath)
                 if let population = SharedManager.shared.population(by: detail.title) {
@@ -257,7 +257,7 @@ class ListViewController: TableViewController {
             self.delegate?.didSelect(filter: object)
         case .filterSportTypes:
             self.navigationBar(isLoading: true)
-            Dispatch.after(2.5) { self.navigationBar(isLoading: false) }
+            Dispatch.after(1.0) { self.navigationBar(isLoading: false) }
             Dispatch.global {
                 let detail = self.detail(at: indexPath)
                 let result = SharedManager.shared.findSportObjects(by: detail.title)

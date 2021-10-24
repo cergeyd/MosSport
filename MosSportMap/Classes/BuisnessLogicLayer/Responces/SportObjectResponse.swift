@@ -27,7 +27,7 @@ struct SportObject: CodableMappable {
         let sportArea: String // Спортзона | бассейн плавательный 25-ти метровый крытый
         let sportAreaType: String // Тип спортзоны. Идентичен Спортзоне ? | бассейн плавательный 25-ти метровый крытый
         let sportType: SportType // Вид спорта | Плавание
-        let square: Double? // Площадь спортзоны | 150.0 
+        let square: Double // Площадь спортзоны | 150.0 
     }
 
     struct Coordinate: CodableMappable {

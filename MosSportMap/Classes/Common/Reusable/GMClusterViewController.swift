@@ -6,6 +6,7 @@
 //
 
 import GoogleMapsUtils
+import BusyNavigationBar
 
 class GMClusterViewController: UIViewController, GMSMapViewDelegate, GMUClusterManagerDelegate {
     
@@ -19,9 +20,10 @@ class GMClusterViewController: UIViewController, GMSMapViewDelegate, GMUClusterM
     /// Карта
     lazy var mapView: GMSMapView = {
         let camera = GMSCameraPosition.camera(withLatitude: Config.initialCoordinates.latitude, longitude: Config.initialCoordinates.longitude, zoom: Config.zoomLevel)
-        let _mapView = GMSMapView.map(withFrame: self.view.frame, camera: camera)
+        let _mapView = GMSMapView.map(withFrame: .zero, camera: camera)
         _mapView.delegate = self
         self.view.addSubview(_mapView)
+        _mapView.makeConstraintsFulView()
         return _mapView
     }()
     /// Объекты на карте
@@ -38,10 +40,10 @@ class GMClusterViewController: UIViewController, GMSMapViewDelegate, GMUClusterM
         let gradientColors = [UIColor.green, UIColor.red]
         let gradientStartPoints = [0.2, 1.0] as [NSNumber]
         let _heatmapLayer = GMUHeatmapTileLayer()
-        //_heatmapLayer.radius = 40
+        _heatmapLayer.radius = 50
         _heatmapLayer.maximumZoomIntensity = 25
         _heatmapLayer.opacity = 0.8
-        _heatmapLayer.gradient = GMUGradient(colors: gradientColors, startPoints: gradientStartPoints, colorMapSize: 156)
+        _heatmapLayer.gradient = GMUGradient(colors: gradientColors, startPoints: gradientStartPoints, colorMapSize: 112)
         return _heatmapLayer
     }()
     /// Данные о численности населения
@@ -56,5 +58,12 @@ class GMClusterViewController: UIViewController, GMSMapViewDelegate, GMUClusterM
     lazy var render: GMUGeometryRenderer = {
         let _render = GMUGeometryRenderer(map: self.mapView, geometries: self.parser.placemarks, styles: self.parser.styles, styleMaps: self.parser.styleMaps)
         return _render
+    }()
+    /// Activity
+    lazy var options: BusyNavigationBarOptions = {
+        let _options = BusyNavigationBarOptions()
+        _options.color = AppStyle.color(for: .coloured)
+        _options.alpha = 0.8
+        return _options
     }()
 }

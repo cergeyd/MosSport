@@ -58,7 +58,7 @@ class RecommendationViewController: TableViewController {
             details.append(Detail(type: .filter, title: "Городское", place: "", subtitle: "В радиусе 5000 м."))
             self.sections.append(DetailSection(title: "Доступность", details: details))
         case .objects(let area, let availability, let recommendations):
-            self.title = "Рекоммендация"
+            self.title = "Рекомендация"
             self.delegate?.didCalculate(recommendation: recommendations)
             /// Регион
             let populationValue = Int(area.population)
@@ -72,7 +72,7 @@ class RecommendationViewController: TableViewController {
             for missing in recommendations.missingTypes {
                 details.append(Detail(type: .filter, title: missing.title, place: "Идентификатор: \(missing.id)", subtitle: "Вид спорта"))
             }
-            
+
             self.sections.append(DetailSection(title: "Регион", details: [area]))
             self.sections.append(DetailSection(title: "Доступность", details: [availability]))
             self.sections.append(DetailSection(title: "Отсутствующие виды спорта", details: details))
@@ -155,10 +155,14 @@ extension RecommendationViewController: MapViewDataSource {
                 self.output.didSelect(recommendationType: .availability(area: population, polygon: polygon))
             }
         case .availability(area: let area, polygon: let polygon):
-            let availability = self.detail(at: indexPath)
-            if let type = SportObject.AvailabilityType.init(rawValue: availability.title) {
-                let recommendation = self.calculateRecommendation(in: polygon, availabilityType: type)
-                self.output.didSelect(recommendationType: .objects(area: area, availability: type, recommendation: recommendation))
+            self.navigationBar(isLoading: true)
+            Dispatch.after {
+                let availability = self.detail(at: indexPath)
+                if let type = SportObject.AvailabilityType.init(rawValue: availability.title) {
+                    let recommendation = self.calculateRecommendation(in: polygon, availabilityType: type)
+                    self.output.didSelect(recommendationType: .objects(area: area, availability: type, recommendation: recommendation))
+                }
+                self.navigationBar(isLoading: false)
             }
         case .objects:
             break

@@ -15,19 +15,17 @@ class Hud {
     lazy var bulletin: BulletinView = {
         let view = HudView()
         let _bulletin = BulletinView.hud()
-        _bulletin.duration = .limit(30)
+        _bulletin.duration = .limit(10)
         _bulletin.snp_embed(content: view, usingStrictHeightConstraint: view.snp.width)
         return _bulletin
     }()
 
     static func show() {
-        Hud.shared.bulletin.present()
+       // Hud.shared.bulletin.present()
     }
 
     static func hide() {
-        Dispatch.after {
-            Hud.shared.bulletin.dismiss()
-        }
+        //Hud.shared.bulletin.dismiss()
     }
 }
 

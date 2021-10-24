@@ -35,12 +35,12 @@ class CalculatedViewController: TableViewController {
         self.configureTableView()
         self.output.didLoadView()
     }
-
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        /// Ушли с экрана - рассказали
-        self.delegate?.didSelect(calculated: nil)
-    }
+//
+//    override func viewDidDisappear(_ animated: Bool) {
+//        super.viewDidDisappear(animated)
+//        /// Ушли с экрана - рассказали
+//        self.delegate?.didSelect(calculated: nil)
+//    }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
