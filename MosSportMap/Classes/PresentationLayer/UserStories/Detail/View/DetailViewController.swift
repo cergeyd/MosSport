@@ -38,6 +38,7 @@ class DetailViewController: TableViewController {
     private var filterDetails: [Detail] = []
     weak var delegate: DetailViewDelegate?
     
+    /// Если успею - добавлю рейтинг по всем позициям. Пока просто рандом, чтобы не ломать интерфейс
     var randomPlace: Int = {
         return Int(arc4random_uniform(12) + 1)
     }()
