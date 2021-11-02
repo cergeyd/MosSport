@@ -11,11 +11,13 @@ import UIKit
 class MapRouter {
     private weak var viewController: MapViewController?
     private let detailFactory: DetailFactory
+    private let ratingInitialFactory: RatingInitialFactory
     private let listInitialFactory: ListInitialFactory
 
-    init(viewController: MapViewController, detailFactory: DetailFactory, listInitialFactory: ListInitialFactory) {
+    init(viewController: MapViewController, detailFactory: DetailFactory, listInitialFactory: ListInitialFactory, ratingInitialFactory: RatingInitialFactory) {
         self.viewController = viewController
         self.detailFactory = detailFactory
+        self.ratingInitialFactory = ratingInitialFactory
         self.listInitialFactory = listInitialFactory
     }
 
@@ -24,7 +26,7 @@ class MapRouter {
         detailController.report = report
         self.show(detailController: detailController)
     }
-    
+
     func didTapShow(sportObjects: [SportObject], type: SportType) {
         let detailController = self.detailFactory.instantiateModule()
         detailController.sportTypeSection = SportTypeSection(type: type, sportObjects: sportObjects)
@@ -37,6 +39,11 @@ class MapRouter {
         detailController.section = DepartmentSection(department: department, sportObjects: sportObjects)
         detailController.delegate = self.viewController
         self.show(detailController: detailController)
+    }
+
+    func didTapShowRating() {
+        let ratingController = self.ratingInitialFactory.instantiateModule()
+        self.show(detailController: ratingController)
     }
 
     private func show(detailController: UIViewController) {

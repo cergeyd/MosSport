@@ -12,6 +12,7 @@ class LocalService {
 
     private let localeJSONHelper: LocaleJSONHelper
     private let fileNameSportObjects = "sportObjects"
+    private let fileNameOSMSportObjects = "OSMSportObjects"
     private let fileNameSportTypes = "sportTypes"
     private let fileNameDepartments = "departments"
     private let fileNamePopulation = "moscowPopulation"
@@ -23,6 +24,15 @@ class LocalService {
     func loadSportObjects() -> Observable<SportObjectResponse> {
         return self.localeJSONHelper
             .loadJson(with: self.fileNameSportObjects)
+            .map { (json) -> SportObjectResponse in
+            let result = try CodableMapper<SportObjectResponse>().map(JSONObject: json as! [String: Any])
+            return result
+        }
+    }
+    
+    func loadOSMSportObjects() -> Observable<SportObjectResponse> {
+        return self.localeJSONHelper
+            .loadJson(with: self.fileNameOSMSportObjects)
             .map { (json) -> SportObjectResponse in
             let result = try CodableMapper<SportObjectResponse>().map(JSONObject: json as! [String: Any])
             return result

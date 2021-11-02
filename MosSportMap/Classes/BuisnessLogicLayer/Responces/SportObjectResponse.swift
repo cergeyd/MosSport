@@ -10,7 +10,7 @@ import RxSwift
 import CoreLocation
 
 struct SportObjectResponse: CodableMappable {
-    let objects: [SportObject]
+    var objects: [SportObject]
 }
 
 struct SportObject: CodableMappable {

@@ -169,30 +169,9 @@ extension RecommendationViewController: MapViewDataSource {
         }
     }
 
-    /// Получаем корректные промежутки заданного района
-    private func getRectangle(inside polygon: GMSPolygon) -> Rectangle {
-        var minLeft: Double = 90.0
-        var topLeft: Double = 0.0
-        var maxRight: Double = 0.0
-        var bottomRight: Double = 90.0
-        if let allCoordinates = polygon.path?.allCoordinates {
-            for coordinate in allCoordinates {
-                let latitude = coordinate.latitude
-                let longitude = coordinate.longitude
-                if (longitude < minLeft) { minLeft = longitude }
-                if (latitude > topLeft) { topLeft = latitude }
-                if (longitude > maxRight) { maxRight = longitude }
-                if (latitude < bottomRight) { bottomRight = latitude }
-            }
-        }
-        let topLeftCoord = CLLocationCoordinate2D(latitude: topLeft, longitude: minLeft)
-        let bottomRightCoord = CLLocationCoordinate2D(latitude: bottomRight, longitude: maxRight)
-        return Rectangle(topLeft: topLeftCoord, bottomRight: bottomRightCoord)
-    }
-
     private func calculateRecommendation(in polygon: GMSPolygon, availabilityType: SportObject.AvailabilityType) -> Recommendation {
         /// Границы региона
-        let rectangle = self.getRectangle(inside: polygon)
+        let rectangle = SharedManager.shared.getRectangle(inside: polygon)
         /// Объекты, которые уже есть в регионе
         let objects = SharedManager.shared.objects(for: polygon, with: availabilityType)
         /// Виды спорта, которых не хватает

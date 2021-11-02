@@ -171,13 +171,6 @@ class SharedManager {
         let report = SquareReport(
             population: population,
             departments: departments.sorted(by: { $0.id < $1.id }),
-            placeBySquare: 0,
-            placebySportObjects: 0,
-            placeBySportSquare: 0,
-            placeBySportTypes: 0,
-            placeBySquareForOne: 0,
-            placeBySportForOne: 0,
-            placeByObjectForOne: 0,
             objects: objects,
             sports: sports,
             sportTypes: sportTypes,
@@ -247,5 +240,26 @@ class SharedManager {
             }
         }
         return objects
+    }
+    
+    /// Получаем корректные промежутки заданного района
+    func getRectangle(inside polygon: GMSPolygon) -> Rectangle {
+        var minLeft: Double = 90.0
+        var topLeft: Double = 0.0
+        var maxRight: Double = 0.0
+        var bottomRight: Double = 90.0
+        if let allCoordinates = polygon.path?.allCoordinates {
+            for coordinate in allCoordinates {
+                let latitude = coordinate.latitude
+                let longitude = coordinate.longitude
+                if (longitude < minLeft) { minLeft = longitude }
+                if (latitude > topLeft) { topLeft = latitude }
+                if (longitude > maxRight) { maxRight = longitude }
+                if (latitude < bottomRight) { bottomRight = latitude }
+            }
+        }
+        let topLeftCoord = CLLocationCoordinate2D(latitude: topLeft, longitude: minLeft)
+        let bottomRightCoord = CLLocationCoordinate2D(latitude: bottomRight, longitude: maxRight)
+        return Rectangle(topLeft: topLeftCoord, bottomRight: bottomRightCoord)
     }
 }

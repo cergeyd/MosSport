@@ -39,12 +39,16 @@ class MenuRouter {
         switch listType {
         case .filterAreas:
             controller.type = .filterAreas
+        case .filterDepartments:
+            controller.type = .filterDepartments
         case .filterSportTypes:
             controller.type = .filterSportTypes
         case .filterObjects:
             controller.type = .filterObjects(items: gSportObjectResponse.objects)
-        default:
+        case .recNewObjects:
             controller.type = .filterDepartments
+        default:
+            controller.type = .rating
         }
         self.viewController?.push(controller)
     }

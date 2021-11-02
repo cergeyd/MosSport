@@ -7,6 +7,7 @@
 //
 
 import GoogleMapsUtils
+import UIKit
 
 protocol MapViewDataSource: AnyObject {
     func didCalculated(report: SquareReport)
@@ -131,6 +132,9 @@ extension MapViewController {
             for object in gSportObjectResponse.objects { // Все объекты
                 let marker = GMSMarker()
                 marker.userData = object
+                if (object.id > 999_999) {
+                    marker.icon = UIImage(named: "location-pin")
+                }
                 marker.title = object.title
                 marker.snippet = object.department.title
                 marker.appearAnimation = .pop
@@ -163,6 +167,10 @@ extension MapViewController: MenuDelegate, DetailViewDelegate, ListViewDelegate 
 
     func didTapClearBorders() {
         self.clearHandsBorders(isFullClear: true)
+    }
+
+    func didTapShowRating() {
+        self.output.didTapShowRating()
     }
 
     /// Указали регион, с экрана 'Рекомендация'

@@ -23,6 +23,10 @@ extension MapPresenter: MapViewOutput {
         self.router.didTapShow(detail: report)
     }
     
+    func didTapShowRating() {
+        self.router.didTapShowRating()
+    }
+    
     func didTapShow(sportObjects: [SportObject], department: Department) {
         self.router.didTapShow(sportObjects: sportObjects, department: department)
     }

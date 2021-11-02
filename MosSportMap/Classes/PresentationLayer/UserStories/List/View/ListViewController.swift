@@ -20,6 +20,7 @@ enum ListType {
     case filterSportTypes
     case sports(items: [SportObject.Sport])
     case sportObjectsAround(around: SportObjectsAround)
+    case rating
 }
 
 protocol ListViewDelegate: AnyObject {

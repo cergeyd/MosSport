@@ -24,7 +24,7 @@ enum MenuType: Int {
     case filterSportTypes = 23
     /// Рекомендации
     case recNewObjects = 30
-    case recNewsTypes = 31
+    case recNewRating = 31
 }
 
 protocol MenuDelegate: AnyObject {
@@ -32,6 +32,7 @@ protocol MenuDelegate: AnyObject {
     func didUpdate(map type: MenuType)
     func didSelect(calculated type: CalculateAreaType?)
     func didTapShow(detail report: SquareReport)
+    func didTapShowRating()
     func didSelect(population: Population)
     func didSelect(department: Department)
     func didTapShow(type: SportType, objects: [SportObject])
@@ -74,7 +75,9 @@ class MenuViewController: TableViewController {
             MenuItem(title: "Виды спортивных услуг", subtitle: "Фильтрация спортивных объектов по видам спорта", isDetailed: true, type: .filterSportTypes)
             ]),
         MenuSection(title: "Рекомендации", items: [
-            MenuItem(title: "Новые спортивные объекты", subtitle: "Оснащению территории новыми спортивными объектами", isDetailed: true, type: .filterDepartments)
+            MenuItem(title: "Новые спортивные объекты", subtitle: "Оснащению территории новыми спортивными объектами", isDetailed: true, type: .recNewObjects),
+            MenuItem(title: "Рейтинговая система", subtitle: "Положение района в таблице на основе его данных о спортивных объектах. Районы лидера,а также проблемные районы.", isDetailed: true, type: .recNewRating)
+
             ])
     ]
 
@@ -157,8 +160,14 @@ extension MenuViewController {
             self.calculatedViewController.type = type
             self.push(self.calculatedViewController)
         case 3:
-            self.recommendationViewController.type = type
-            self.push(self.recommendationViewController)
+            /// Экран с рейтингом
+            if (type == .recNewRating) {
+                self.delegate?.didTapShowRating()
+            } else {
+                /// Экран с рекомендациями
+                self.recommendationViewController.type = type
+                self.push(self.recommendationViewController)
+            }
         default:
             self.output.didTapShow(listType: type)
         }

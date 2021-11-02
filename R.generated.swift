@@ -130,8 +130,10 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
 
-  /// This `R.file` struct is generated, and contains static references to 5 files.
+  /// This `R.file` struct is generated, and contains static references to 6 files.
   struct file {
+    /// Resource file `OSMSportObjects.json`.
+    static let osmSportObjectsJson = Rswift.FileResource(bundle: R.hostingBundle, name: "OSMSportObjects", pathExtension: "json")
     /// Resource file `departments.json`.
     static let departmentsJson = Rswift.FileResource(bundle: R.hostingBundle, name: "departments", pathExtension: "json")
     /// Resource file `mo.kml`.
@@ -142,6 +144,12 @@ struct R: Rswift.Validatable {
     static let sportObjectsJson = Rswift.FileResource(bundle: R.hostingBundle, name: "sportObjects", pathExtension: "json")
     /// Resource file `sportTypes.json`.
     static let sportTypesJson = Rswift.FileResource(bundle: R.hostingBundle, name: "sportTypes", pathExtension: "json")
+
+    /// `bundle.url(forResource: "OSMSportObjects", withExtension: "json")`
+    static func osmSportObjectsJson(_: Void = ()) -> Foundation.URL? {
+      let fileResource = R.file.osmSportObjectsJson
+      return fileResource.bundle.url(forResource: fileResource)
+    }
 
     /// `bundle.url(forResource: "departments", withExtension: "json")`
     static func departmentsJson(_: Void = ()) -> Foundation.URL? {
@@ -176,7 +184,7 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
 
-  /// This `R.image` struct is generated, and contains static references to 6 images.
+  /// This `R.image` struct is generated, and contains static references to 7 images.
   struct image {
     /// Image `arrow-icon`.
     static let arrowIcon = Rswift.ImageResource(bundle: R.hostingBundle, name: "arrow-icon")
@@ -186,6 +194,8 @@ struct R: Rswift.Validatable {
     static let iconError = Rswift.ImageResource(bundle: R.hostingBundle, name: "icon-error")
     /// Image `launchLogo`.
     static let launchLogo = Rswift.ImageResource(bundle: R.hostingBundle, name: "launchLogo")
+    /// Image `location-pin`.
+    static let locationPin = Rswift.ImageResource(bundle: R.hostingBundle, name: "location-pin")
     /// Image `logo`.
     static let logo = Rswift.ImageResource(bundle: R.hostingBundle, name: "logo")
     /// Image `warning`.
@@ -216,6 +226,13 @@ struct R: Rswift.Validatable {
     /// `UIImage(named: "launchLogo", bundle: ..., traitCollection: ...)`
     static func launchLogo(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.launchLogo, compatibleWith: traitCollection)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UIImage(named: "location-pin", bundle: ..., traitCollection: ...)`
+    static func locationPin(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.locationPin, compatibleWith: traitCollection)
     }
     #endif
 

@@ -37,32 +37,6 @@ class DetailViewController: TableViewController {
     private var sections: [DetailSection] = []
     private var filterDetails: [Detail] = []
     weak var delegate: DetailViewDelegate?
-    
-    /// Если успею - добавлю рейтинг по всем позициям. Пока просто рандом, чтобы не ломать интерфейс
-    var randomPlace: Int = {
-        return Int(arc4random_uniform(12) + 1)
-    }()
-    var randomPlace1: Int = {
-        return Int(arc4random_uniform(12) + 1)
-    }()
-    var randomPlace2: Int = {
-        return Int(arc4random_uniform(12) + 1)
-    }()
-    var randomPlace3: Int = {
-        return Int(arc4random_uniform(12) + 1)
-    }()
-    var randomPlace4: Int = {
-        return Int(arc4random_uniform(12) + 1)
-    }()
-    var randomPlace5: Int = {
-        return Int(arc4random_uniform(12) + 1)
-    }()
-    var randomPlace6: Int = {
-        return Int(arc4random_uniform(12) + 1)
-    }()
-    var randomPlace7: Int = {
-        return Int(arc4random_uniform(12) + 1)
-    }()
 
     //MARK: Lifecycle
     override func viewDidLoad() {
@@ -124,26 +98,27 @@ class DetailViewController: TableViewController {
 
         /// Плотность населения
         let populationValue = Int(report.population.population)
-        let population = Detail(type: .population, title: populationValue.peoples() + "/км²", place: "\(self.randomPlace) место по Москве", subtitle: "Плотность населения на квадратный километр:")
+        let population = Detail(type: .population, title: populationValue.peoples() + "/км²", place: "\(report.population.rating.placeByPopulation) место по Москве", subtitle: "Плотность населения на квадратный километр:")
         let populationSection = DetailSection(title: "Население", details: [population])
 
         /// Площадь района
-        let square = Detail(type: .square, title: (report.population.square / gSquareToKilometers).formattedWithSeparator + " км²", place: "\(self.randomPlace1) место по Москве", subtitle: "Площадь района:")
-        let squareSportObjects = Detail(type: .sportSquare, title: (report.allSquare).formattedWithSeparator + " м²", place: "\(self.randomPlace2) место по Москве", subtitle: "Площадь спортивных объектов:")
-        let squareForOne = Detail(type: .squareForOne, title: report.squareForOne.formattedWithSeparator + " м²", place: "\(self.randomPlace3) место по Москве", subtitle: "Площадь спортивных объектов на человека:")
-        let objectForOne = Detail(type: .objectForOne, title: report.objectForOne.formattedWithSeparator + " объекта", place: "\(self.randomPlace4) место по Москве", subtitle: "Спортивные объекты для одного человека:")
-        let sportTypeForOne = Detail(type: .sportTypeForOne, title: report.sportTypeForOne.formattedWithSeparator + " вида", place: "\(self.randomPlace5) место по Москве", subtitle: "Виды спорта для одного человека:")
+        let square = Detail(type: .square, title: (report.population.square / gSquareToKilometers).formattedWithSeparator + " км²", place: "\(report.population.rating.placeBySquare) место по Москве", subtitle: "Площадь района:")
+        let squareSportObjects = Detail(type: .sportSquare, title: (report.allSquare).formattedWithSeparator + " м²", place: "\(report.population.rating.placeBySportSquare) место по Москве", subtitle: "Площадь спортивных объектов:")
+        let squareForOne = Detail(type: .squareForOne, title: report.squareForOne.formattedWithSeparator + " м²", place: "\(report.population.rating.placeBySquareForOne) место по Москве", subtitle: "Площадь спортивных объектов на человека:")
+        let objectForOne = Detail(type: .objectForOne, title: report.objectForOne.formattedWithSeparator + " объекта", place: "\(report.population.rating.placeByObjectForOne) место по Москве", subtitle: "Спортивные объекты для одного человека:")
+        let sportTypeForOne = Detail(type: .sportTypeForOne, title: report.sportTypeForOne.formattedWithSeparator + " вида", place: "\(report.population.rating.placeBySportTypes) место по Москве", subtitle: "Виды спорта для одного человека:")
         let sqareSection = DetailSection(title: "Данные", details: [square, squareSportObjects, squareForOne, objectForOne, sportTypeForOne])
 
         /// Департаменты района
-        let departments = Detail(type: .department, title: report.departments.count.departments(), place: "\(self.randomPlace6) место по Москве", subtitle: "Департаменты района:")
+        let departments = Detail(type: .department, title: report.departments.count.departments(), place: "Количество:", subtitle: "Департаменты района:")
         let departmentsSection = DetailSection(title: "Департаменты", details: [departments])
 
         /// Виды спортивных площадок
-        let sportTypes = Detail(type: .sportTypes, title: "\(report.sportTypes.count) Вида спортивных услуг", place: "\(self.randomPlace7) место по Москве", subtitle: "Типы спортивных объектов:")
+        let sportTypes = Detail(type: .sportTypes, title: "\(report.sportTypes.count) Вида спортивных услуг", place: "Количество:", subtitle: "Типы спортивных объектов:")
+        
         /// Cпортивные площадки в районе
-        let sports = Detail(type: .sportObjects, title: "\(report.objects.count) Объектов", place: "\(self.randomPlace) место по Москве", subtitle: "Cпортивныe объекты в районе:")
-        let sportZones = Detail(type: .sportZones, title: "\(report.sports.count) Спортивных зон", place: "\(self.randomPlace) место по Москве", subtitle: "Cпортивныe зоны:")
+        let sports = Detail(type: .sportObjects, title: "\(report.objects.count) Объектов", place: "Количество:", subtitle: "Cпортивныe объекты в районе:")
+        let sportZones = Detail(type: .sportZones, title: "\(report.sports.count) Спортивных зон", place: "Количество:", subtitle: "Cпортивныe зоны:")
 
         let sportsSection = DetailSection(title: "Спортивные объекты", details: [sportTypes, sports, sportZones])
 
