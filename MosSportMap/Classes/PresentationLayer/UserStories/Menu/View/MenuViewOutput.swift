@@ -11,4 +11,5 @@ protocol MenuViewOutput {
     func calculatedViewController() -> CalculatedViewController
     func recommendationViewController() -> RecommendationViewController
     func didTapShow(listType: MenuType)
+    func didTapSettings()
 }

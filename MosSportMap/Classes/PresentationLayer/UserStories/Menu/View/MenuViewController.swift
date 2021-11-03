@@ -86,6 +86,8 @@ class MenuViewController: TableViewController {
         self.configureTableView()
         super.viewDidLoad()
         self.output.didLoadView()
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Настройки", style: .plain, target: self, action: #selector(didTapSettings))
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -95,6 +97,10 @@ class MenuViewController: TableViewController {
     }
 
     //MARK: Private func
+    @objc private func didTapSettings() {
+        self.output.didTapSettings()
+    }
+    
     private func configureTableView() {
         self.tableView = UITableView(frame: .zero, style: .insetGrouped)
         self.tableView.register(MenuCell.self, forCellReuseIdentifier: MenuCell.identifier)

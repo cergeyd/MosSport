@@ -13,36 +13,8 @@ var gSportTypes: SportTypeResponse!
 var gDepartmentResponse: DepartmentResponse!
 var gSportObjectResponse: SportObjectResponse!
 var gSportOSMObjectResponse: SportObjectResponse!
+var gSportMosSportObjectResponse: SportObjectResponse!
 var gPopulationResponse: PopulationResponse!
-
-class Rating {
-    /// Район
-    var population: Population!
-    /// Место района по численности
-    var placeByPopulation: Int = 0
-    var placeByPopulationValue: Double = 0.0
-    /// Место района по площади
-    var placeBySquare: Int = 0
-    var placeBySquareValue: Double = 0.0
-    /// Место района по спортивным объектам
-    var placebySportObjects: Int = 0
-    var placebySportObjectsValue: Int = 0
-    /// Место района по площади спортивных объектов
-    var placeBySportSquare: Int = 0
-    var placeBySportSquareValue: Double = 0.0
-    /// Место района по видам спорта на одного
-    var placeBySportTypes: Int = 0
-    var placeBySportTypesValue: Int = 0
-    /// Место района по площади спортивных районов на одного
-    var placeBySquareForOne: Int = 0
-    var placeBySquareForOneValue: Double = 0.0
-    /// Место района по видам спорта на одного
-    var placeBySportForOne: Int = 0
-    var placeBySportForOneValue: Double = 0.0
-    /// Место района по спортивным объектам на одного
-    var placeByObjectForOne: Int = 0
-    var placeByObjectForOneValue: Double = 0.0
-}
 
 class MosDataProcessing {
 
@@ -53,13 +25,8 @@ class MosDataProcessing {
     init(localService: LocalService) {
         self.localService = localService
         self.processedSportObjects()
-//        Dispatch.after(10.0) {
-//            self.createPop()
-//        }
-
-//        Dispatch.after(10.0) {
-//            self.makeRectangles()
-//        }
+        /// Ранее установленная средняя плотность
+        currentCalculatePerPeoples = UserDefaults.averageDensity
     }
 
     func makeRectangles() {
@@ -256,6 +223,7 @@ class MosDataProcessing {
         self.localService
             .loadSportObjects()
             .subscribe(onNext: { response in
+            gSportMosSportObjectResponse = response
             gSportObjectResponse = response
         }).disposed(by: self.disposeBag)
     }
@@ -266,82 +234,7 @@ class MosDataProcessing {
             .loadOSMSportObjects()
             .subscribe(onNext: { response in
             gSportOSMObjectResponse = response
-                gSportObjectResponse = response
-
-                //gSportObjectResponse.objects.append(contentsOf: response.objects)
-           // self.check(response: response)
         }).disposed(by: self.disposeBag)
-    }
-
-    func check(response: SportObjectResponse) {
-        var all: [SportObject] = []
-        var objects = response.objects
-
-        for o in objects {
-            let nonUniq = gSportObjectResponse.objects.filter { object in
-                let isEqual = o.coorditate.latitude == object.coorditate.latitude && o.coorditate.longitude == object.coorditate.longitude
-
-                let existLocation = CLLocation(latitude: object.coordinate.latitude, longitude: object.coordinate.longitude)
-                let missLocation = CLLocation(latitude: o.coordinate.latitude, longitude: o.coordinate.longitude)
-
-                let distance = existLocation.distance(from: missLocation)
-//                if (distance < 135) {
-//                    print(distance)
-//                }
-                return (distance < 135) || isEqual
-            }
-            for (ind, value) in nonUniq.enumerated() {
-                //if (ind > 0) {
-                    all.append(o)
-               // }
-            }
-        }
-        print(all.count)
-
-        var new: [SportObject] = []
-
-        for (ind, value) in objects.enumerated() {
-            if (all.contains(where: { object in
-                return object.id == value.id
-            })) {
-                //objects.remove(at: ind)
-            } else {
-                new.append(value)
-            }
-        }
-        print(new.count)
-        let resp = SportObjectResponse(objects: new)
-        self.save(object: resp, filename: "newresp")
-
-//        var all: [SportObject] = []
-//        var objects = response.objects
-//
-//        for o in response.objects {
-//            let nonUniq = response.objects.filter { object in
-//                return o.coorditate.latitude == object.coorditate.latitude && o.coorditate.longitude == object.coorditate.longitude
-//            }
-//            for (ind, value) in nonUniq.enumerated() {
-//                if (ind > 0) {
-//                    all.append(value)
-//                }
-//            }
-//        }
-//        print(all.count)
-//
-//        var new: [SportObject] = []
-//
-//        for (ind, value) in objects.enumerated() {
-//            if (all.contains(where: { object in
-//                return object.id == value.id
-//            })) {
-//                //objects.remove(at: ind)
-//            } else {
-//                new.append(value)
-//            }
-//        }
-//        print(new.count)
-//        let resp = SportObjectResponse(objects: new)
-//        self.save(object: resp, filename: "newresp")
     }
 
     //MARK: Private func

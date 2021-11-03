@@ -25,6 +25,7 @@ class MapViewController: GMClusterViewController {
 
     struct Config {
         static let initialCoordinates = CLLocationCoordinate2D(latitude: 55.71, longitude: 37.62)
+        static let OSMObjectId = 999_999
     }
 
     var output: MapViewOutput!
@@ -51,9 +52,15 @@ class MapViewController: GMClusterViewController {
         self.output.didLoadView()
         /// Вначале были кластеры
         self.makeClusters(hidden: false)
+        /// Слушаем обновление, нужны ли дополнительные объекты
+        NotificationCenter.default.addObserver(self, selector: #selector(updateSportObjectsList), name: NSNotification.Name.updateSportObjectsList, object: nil)
     }
 
     //MARK: Private func
+    @objc private func updateSportObjectsList() {
+        self.makeClusters(hidden: false)
+    }
+
     @objc private func didTapShowFilter() {
         let alert = UIAlertController(title: "Спортивные объекты", message: "Доступность", preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Все", style: .default, handler: { _ in self.makeClusters(hidden: false, availabilityType: nil) }))
@@ -132,7 +139,7 @@ extension MapViewController {
             for object in gSportObjectResponse.objects { // Все объекты
                 let marker = GMSMarker()
                 marker.userData = object
-                if (object.id > 999_999) {
+                if (object.id > Config.OSMObjectId) {
                     marker.icon = UIImage(named: "location-pin")
                 }
                 marker.title = object.title

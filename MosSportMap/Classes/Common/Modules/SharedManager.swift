@@ -18,6 +18,7 @@ var hostUrl: String {
 
 let gSquareToKilometers = 1_000_000.0 /// Площадь вычесляется по границам. Крайне точно, но нам нужоны просто килОметры
 let gCalculatePerPeoples = 100_000.0 /// На 100 000 человек на выбранной территории;
+var currentCalculatePerPeoples = 0/// Установленное значение из настроек
 var lastSelectedAreaReport: SquareReport? /// Запоминаем, выбранную территорию
 
 class SharedManager {
@@ -162,7 +163,8 @@ class SharedManager {
         ///
         /// Площадь спортивных объектов на одного
         ///
-        let perPeople = population.population
+        var perPeople = population.population
+        if (currentCalculatePerPeoples != 0) { perPeople = Double(currentCalculatePerPeoples) }
         let squareForOne = allSquare / perPeople
         let sportForOne = Double(sports.count) / perPeople
         let objectForOne = Double(objects.count) / perPeople
@@ -241,7 +243,7 @@ class SharedManager {
         }
         return objects
     }
-    
+
     /// Получаем корректные промежутки заданного района
     func getRectangle(inside polygon: GMSPolygon) -> Rectangle {
         var minLeft: Double = 90.0
@@ -261,5 +263,22 @@ class SharedManager {
         let topLeftCoord = CLLocationCoordinate2D(latitude: topLeft, longitude: minLeft)
         let bottomRightCoord = CLLocationCoordinate2D(latitude: bottomRight, longitude: maxRight)
         return Rectangle(topLeft: topLeftCoord, bottomRight: bottomRightCoord)
+    }
+
+    /// Дополнительные спортвные объекты. Обновим
+    func updateSportObjectsList(isOSMObjects: Bool) {
+        //var setSportObjects: Set<SportObject> = []
+        if (isOSMObjects) {
+            gSportObjectResponse.objects.append(contentsOf: gSportOSMObjectResponse.objects)
+        } else {
+            gSportObjectResponse = gSportMosSportObjectResponse
+//            for object in gSportObjectResponse.objects {
+//                if (!gSportOSMObjectResponse.objects.contains(object)) {
+//                    setSportObjects.insert(object)
+//                }
+//            }
+//            gSportOSMObjectResponse.objects = setSportObjects.sorted(by: { $0.id < $1.id })
+        }
+        NotificationCenter.default.post(name: NSNotification.Name.updateSportObjectsList, object: nil)
     }
 }

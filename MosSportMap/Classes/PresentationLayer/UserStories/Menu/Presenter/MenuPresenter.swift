@@ -30,6 +30,10 @@ extension MenuPresenter: MenuViewOutput {
     func didTapShow(listType: MenuType)  {
         return self.router.didTapShow(listType: listType)
     }
+    
+    func didTapSettings() {
+        self.router.didTapSettings()
+    }
 }
 
 extension MenuPresenter: MenuInteractorOutput {

@@ -47,3 +47,14 @@ struct SportObject: CodableMappable {
         return CLLocationCoordinate2D(latitude: self.coordinate.latitude, longitude: self.coordinate.longitude)
     }
 }
+
+extension SportObject: Equatable, Hashable {
+
+    static func == (lhs: SportObject, rhs: SportObject) -> Bool {
+        return lhs.id == rhs.id
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(self.id)
+    }
+}

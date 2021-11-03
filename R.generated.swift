@@ -265,8 +265,10 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
 
-  /// This `R.nib` struct is generated, and contains static references to 6 nibs.
+  /// This `R.nib` struct is generated, and contains static references to 8 nibs.
   struct nib {
+    /// Nib `CalculateSettingsCell`.
+    static let calculateSettingsCell = _R.nib._CalculateSettingsCell()
     /// Nib `CalculatedAreaCell`.
     static let calculatedAreaCell = _R.nib._CalculatedAreaCell()
     /// Nib `CalculatedTypeCell`.
@@ -275,10 +277,20 @@ struct R: Rswift.Validatable {
     static let detailCell = _R.nib._DetailCell()
     /// Nib `DetailRegionCell`.
     static let detailRegionCell = _R.nib._DetailRegionCell()
+    /// Nib `OSMSettingsCell`.
+    static let osmSettingsCell = _R.nib._OSMSettingsCell()
     /// Nib `SearchHeaderView`.
     static let searchHeaderView = _R.nib._SearchHeaderView()
     /// Nib `SportObjectCell`.
     static let sportObjectCell = _R.nib._SportObjectCell()
+
+    #if os(iOS) || os(tvOS)
+    /// `UINib(name: "CalculateSettingsCell", in: bundle)`
+    @available(*, deprecated, message: "Use UINib(resource: R.nib.calculateSettingsCell) instead")
+    static func calculateSettingsCell(_: Void = ()) -> UIKit.UINib {
+      return UIKit.UINib(resource: R.nib.calculateSettingsCell)
+    }
+    #endif
 
     #if os(iOS) || os(tvOS)
     /// `UINib(name: "CalculatedAreaCell", in: bundle)`
@@ -313,6 +325,14 @@ struct R: Rswift.Validatable {
     #endif
 
     #if os(iOS) || os(tvOS)
+    /// `UINib(name: "OSMSettingsCell", in: bundle)`
+    @available(*, deprecated, message: "Use UINib(resource: R.nib.osmSettingsCell) instead")
+    static func osmSettingsCell(_: Void = ()) -> UIKit.UINib {
+      return UIKit.UINib(resource: R.nib.osmSettingsCell)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UINib(name: "SearchHeaderView", in: bundle)`
     @available(*, deprecated, message: "Use UINib(resource: R.nib.searchHeaderView) instead")
     static func searchHeaderView(_: Void = ()) -> UIKit.UINib {
@@ -327,6 +347,10 @@ struct R: Rswift.Validatable {
       return UIKit.UINib(resource: R.nib.sportObjectCell)
     }
     #endif
+
+    static func calculateSettingsCell(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> CalculateSettingsCell? {
+      return R.nib.calculateSettingsCell.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? CalculateSettingsCell
+    }
 
     static func calculatedAreaCell(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> CalculatedAreaCell? {
       return R.nib.calculatedAreaCell.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? CalculatedAreaCell
@@ -344,6 +368,10 @@ struct R: Rswift.Validatable {
       return R.nib.detailRegionCell.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? DetailRegionCell
     }
 
+    static func osmSettingsCell(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> OSMSettingsCell? {
+      return R.nib.osmSettingsCell.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? OSMSettingsCell
+    }
+
     static func searchHeaderView(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> UIKit.UIView? {
       return R.nib.searchHeaderView.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
     }
@@ -355,8 +383,10 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
 
-  /// This `R.reuseIdentifier` struct is generated, and contains static references to 5 reuse identifiers.
+  /// This `R.reuseIdentifier` struct is generated, and contains static references to 7 reuse identifiers.
   struct reuseIdentifier {
+    /// Reuse identifier `CalculateSettingsCell`.
+    static let calculateSettingsCell: Rswift.ReuseIdentifier<CalculateSettingsCell> = Rswift.ReuseIdentifier(identifier: "CalculateSettingsCell")
     /// Reuse identifier `CalculatedAreaCell`.
     static let calculatedAreaCell: Rswift.ReuseIdentifier<CalculatedAreaCell> = Rswift.ReuseIdentifier(identifier: "CalculatedAreaCell")
     /// Reuse identifier `CalculatedTypeCell`.
@@ -365,6 +395,8 @@ struct R: Rswift.Validatable {
     static let detailCell: Rswift.ReuseIdentifier<DetailCell> = Rswift.ReuseIdentifier(identifier: "DetailCell")
     /// Reuse identifier `DetailRegionCell`.
     static let detailRegionCell: Rswift.ReuseIdentifier<DetailRegionCell> = Rswift.ReuseIdentifier(identifier: "DetailRegionCell")
+    /// Reuse identifier `OSMSettingsCell`.
+    static let osmSettingsCell: Rswift.ReuseIdentifier<OSMSettingsCell> = Rswift.ReuseIdentifier(identifier: "OSMSettingsCell")
     /// Reuse identifier `SportObjectCell`.
     static let sportObjectCell: Rswift.ReuseIdentifier<SportObjectCell> = Rswift.ReuseIdentifier(identifier: "SportObjectCell")
 
@@ -434,6 +466,20 @@ struct _R: Rswift.Validatable {
 
   #if os(iOS) || os(tvOS)
   struct nib {
+    struct _CalculateSettingsCell: Rswift.NibResourceType, Rswift.ReuseIdentifierType {
+      typealias ReusableType = CalculateSettingsCell
+
+      let bundle = R.hostingBundle
+      let identifier = "CalculateSettingsCell"
+      let name = "CalculateSettingsCell"
+
+      func firstView(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> CalculateSettingsCell? {
+        return instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? CalculateSettingsCell
+      }
+
+      fileprivate init() {}
+    }
+
     struct _CalculatedAreaCell: Rswift.NibResourceType, Rswift.ReuseIdentifierType {
       typealias ReusableType = CalculatedAreaCell
 
@@ -485,6 +531,20 @@ struct _R: Rswift.Validatable {
 
       func firstView(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> DetailRegionCell? {
         return instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? DetailRegionCell
+      }
+
+      fileprivate init() {}
+    }
+
+    struct _OSMSettingsCell: Rswift.NibResourceType, Rswift.ReuseIdentifierType {
+      typealias ReusableType = OSMSettingsCell
+
+      let bundle = R.hostingBundle
+      let identifier = "OSMSettingsCell"
+      let name = "OSMSettingsCell"
+
+      func firstView(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> OSMSettingsCell? {
+        return instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? OSMSettingsCell
       }
 
       fileprivate init() {}
