@@ -10,4 +10,5 @@ import Foundation
 
 extension Notification.Name {
     static let unauthorized = Notification.Name("Unauthorized")
+    static let didChangeDisplayMode = Notification.Name("didChangeDisplayMode")
 }

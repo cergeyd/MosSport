@@ -184,20 +184,30 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
 
-  /// This `R.image` struct is generated, and contains static references to 7 images.
+  /// This `R.image` struct is generated, and contains static references to 12 images.
   struct image {
     /// Image `arrow-icon`.
     static let arrowIcon = Rswift.ImageResource(bundle: R.hostingBundle, name: "arrow-icon")
+    /// Image `highLegendArea`.
+    static let highLegendArea = Rswift.ImageResource(bundle: R.hostingBundle, name: "highLegendArea")
+    /// Image `highLegend`.
+    static let highLegend = Rswift.ImageResource(bundle: R.hostingBundle, name: "highLegend")
     /// Image `iTunesArtwork`.
     static let iTunesArtwork = Rswift.ImageResource(bundle: R.hostingBundle, name: "iTunesArtwork")
     /// Image `icon-error`.
     static let iconError = Rswift.ImageResource(bundle: R.hostingBundle, name: "icon-error")
     /// Image `launchLogo`.
     static let launchLogo = Rswift.ImageResource(bundle: R.hostingBundle, name: "launchLogo")
+    /// Image `legendBG`.
+    static let legendBG = Rswift.ImageResource(bundle: R.hostingBundle, name: "legendBG")
     /// Image `location-pin`.
     static let locationPin = Rswift.ImageResource(bundle: R.hostingBundle, name: "location-pin")
     /// Image `logo`.
     static let logo = Rswift.ImageResource(bundle: R.hostingBundle, name: "logo")
+    /// Image `lowLegendArea`.
+    static let lowLegendArea = Rswift.ImageResource(bundle: R.hostingBundle, name: "lowLegendArea")
+    /// Image `lowLegend`.
+    static let lowLegend = Rswift.ImageResource(bundle: R.hostingBundle, name: "lowLegend")
     /// Image `warning`.
     static let warning = Rswift.ImageResource(bundle: R.hostingBundle, name: "warning")
 
@@ -205,6 +215,20 @@ struct R: Rswift.Validatable {
     /// `UIImage(named: "arrow-icon", bundle: ..., traitCollection: ...)`
     static func arrowIcon(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.arrowIcon, compatibleWith: traitCollection)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UIImage(named: "highLegend", bundle: ..., traitCollection: ...)`
+    static func highLegend(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.highLegend, compatibleWith: traitCollection)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UIImage(named: "highLegendArea", bundle: ..., traitCollection: ...)`
+    static func highLegendArea(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.highLegendArea, compatibleWith: traitCollection)
     }
     #endif
 
@@ -230,6 +254,13 @@ struct R: Rswift.Validatable {
     #endif
 
     #if os(iOS) || os(tvOS)
+    /// `UIImage(named: "legendBG", bundle: ..., traitCollection: ...)`
+    static func legendBG(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.legendBG, compatibleWith: traitCollection)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "location-pin", bundle: ..., traitCollection: ...)`
     static func locationPin(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.locationPin, compatibleWith: traitCollection)
@@ -240,6 +271,20 @@ struct R: Rswift.Validatable {
     /// `UIImage(named: "logo", bundle: ..., traitCollection: ...)`
     static func logo(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.logo, compatibleWith: traitCollection)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UIImage(named: "lowLegend", bundle: ..., traitCollection: ...)`
+    static func lowLegend(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.lowLegend, compatibleWith: traitCollection)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UIImage(named: "lowLegendArea", bundle: ..., traitCollection: ...)`
+    static func lowLegendArea(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.lowLegendArea, compatibleWith: traitCollection)
     }
     #endif
 
@@ -265,7 +310,7 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
 
-  /// This `R.nib` struct is generated, and contains static references to 8 nibs.
+  /// This `R.nib` struct is generated, and contains static references to 10 nibs.
   struct nib {
     /// Nib `CalculateSettingsCell`.
     static let calculateSettingsCell = _R.nib._CalculateSettingsCell()
@@ -283,6 +328,10 @@ struct R: Rswift.Validatable {
     static let searchHeaderView = _R.nib._SearchHeaderView()
     /// Nib `SportObjectCell`.
     static let sportObjectCell = _R.nib._SportObjectCell()
+    /// Nib `YVLegendCell`.
+    static let yvLegendCell = _R.nib._YVLegendCell()
+    /// Nib `YVLegendView`.
+    static let yvLegendView = _R.nib._YVLegendView()
 
     #if os(iOS) || os(tvOS)
     /// `UINib(name: "CalculateSettingsCell", in: bundle)`
@@ -348,6 +397,22 @@ struct R: Rswift.Validatable {
     }
     #endif
 
+    #if os(iOS) || os(tvOS)
+    /// `UINib(name: "YVLegendCell", in: bundle)`
+    @available(*, deprecated, message: "Use UINib(resource: R.nib.yvLegendCell) instead")
+    static func yvLegendCell(_: Void = ()) -> UIKit.UINib {
+      return UIKit.UINib(resource: R.nib.yvLegendCell)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UINib(name: "YVLegendView", in: bundle)`
+    @available(*, deprecated, message: "Use UINib(resource: R.nib.yvLegendView) instead")
+    static func yvLegendView(_: Void = ()) -> UIKit.UINib {
+      return UIKit.UINib(resource: R.nib.yvLegendView)
+    }
+    #endif
+
     static func calculateSettingsCell(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> CalculateSettingsCell? {
       return R.nib.calculateSettingsCell.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? CalculateSettingsCell
     }
@@ -378,6 +443,14 @@ struct R: Rswift.Validatable {
 
     static func sportObjectCell(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> SportObjectCell? {
       return R.nib.sportObjectCell.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? SportObjectCell
+    }
+
+    static func yvLegendCell(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> YVLegendCell? {
+      return R.nib.yvLegendCell.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? YVLegendCell
+    }
+
+    static func yvLegendView(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> UIKit.UIView? {
+      return R.nib.yvLegendView.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
     }
 
     fileprivate init() {}
@@ -460,12 +533,19 @@ struct R: Rswift.Validatable {
 struct _R: Rswift.Validatable {
   static func validate() throws {
     #if os(iOS) || os(tvOS)
+    try nib.validate()
+    #endif
+    #if os(iOS) || os(tvOS)
     try storyboard.validate()
     #endif
   }
 
   #if os(iOS) || os(tvOS)
-  struct nib {
+  struct nib: Rswift.Validatable {
+    static func validate() throws {
+      try _YVLegendView.validate()
+    }
+
     struct _CalculateSettingsCell: Rswift.NibResourceType, Rswift.ReuseIdentifierType {
       typealias ReusableType = CalculateSettingsCell
 
@@ -570,6 +650,34 @@ struct _R: Rswift.Validatable {
 
       func firstView(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> SportObjectCell? {
         return instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? SportObjectCell
+      }
+
+      fileprivate init() {}
+    }
+
+    struct _YVLegendCell: Rswift.NibResourceType {
+      let bundle = R.hostingBundle
+      let name = "YVLegendCell"
+
+      func firstView(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> YVLegendCell? {
+        return instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? YVLegendCell
+      }
+
+      fileprivate init() {}
+    }
+
+    struct _YVLegendView: Rswift.NibResourceType, Rswift.Validatable {
+      let bundle = R.hostingBundle
+      let name = "YVLegendView"
+
+      func firstView(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> UIKit.UIView? {
+        return instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
+      }
+
+      static func validate() throws {
+        if UIKit.UIImage(named: "legendBG", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'legendBG' is used in nib 'YVLegendView', but couldn't be loaded.") }
+        if #available(iOS 11.0, tvOS 11.0, *) {
+        }
       }
 
       fileprivate init() {}

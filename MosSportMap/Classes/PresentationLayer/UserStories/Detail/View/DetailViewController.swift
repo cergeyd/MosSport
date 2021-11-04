@@ -45,16 +45,32 @@ class DetailViewController: TableViewController {
         /// Отчёт
         if let report = self.report { self.configureSection(with: report) }
         /// Объекты депртамента
-        else if let section = self.section { self.configureSection(with: section) }
+            else if let section = self.section { self.configureSection(with: section) }
         /// Виды спорта
-        else if let sportTypeSection = self.sportTypeSection { self.configureSection(with: sportTypeSection) }
+            else if let sportTypeSection = self.sportTypeSection { self.configureSection(with: sportTypeSection) }
     }
 
     //MARK: Private func
     @objc override func didTapExport() {
-        self.rightNavigationBar(isLoading: true)
-        Dispatch.after(2.0, completion: { self.rightNavigationBar(isLoading: false) })
-        self.pdfData(with: self.tableView, name: "Информация о районе \(self.report?.population.area ?? "")", sourceView: self.navigationItem.rightBarButtonItem!)
+        self.didTapShowExportFormat()
+    }
+
+    private func didTapShowExportFormat() {
+        let alert = UIAlertController(title: "Укажите формат вывода", message: "Доступность", preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "PDF", style: .default, handler: { _ in
+            self.rightNavigationBar(isLoading: true)
+            Dispatch.after(2.0, completion: { self.rightNavigationBar(isLoading: false) })
+            self.pdfData(with: self.tableView, name: "Информация о районе \(self.report?.population.area ?? "")", sourceView: self.navigationItem.rightBarButtonItem!)
+        }))
+        alert.addAction(UIAlertAction(title: "XLSX", style: .default, handler: { _ in
+            self.rightNavigationBar(isLoading: true)
+            Dispatch.after(2.0, completion: { self.rightNavigationBar(isLoading: false) })
+            if let report = self.report {
+                XLSModule.shared.createXLS(with: "Hello", report: report)
+            }
+        }))
+        alert.popoverPresentationController?.barButtonItem = self.navigationItem.rightBarButtonItem
+        self.present(alert, animated: true)
     }
 
     private func configureTableView() {
@@ -115,7 +131,7 @@ class DetailViewController: TableViewController {
 
         /// Виды спортивных площадок
         let sportTypes = Detail(type: .sportTypes, title: "\(report.sportTypes.count) Вида спортивных услуг", place: "Количество:", subtitle: "Типы спортивных объектов:")
-        
+
         /// Cпортивные площадки в районе
         let sports = Detail(type: .sportObjects, title: "\(report.objects.count) Объектов", place: "Количество:", subtitle: "Cпортивныe объекты в районе:")
         let sportZones = Detail(type: .sportZones, title: "\(report.sports.count) Спортивных зон", place: "Количество:", subtitle: "Cпортивныe зоны:")

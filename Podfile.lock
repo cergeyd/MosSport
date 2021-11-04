@@ -40,6 +40,7 @@ PODS:
   - GoogleMaps/Maps (5.1.0):
     - GoogleMaps/Base
   - KeychainAccess (4.2.2)
+  - libxlsxwriter (1.1.4)
   - Pageboy (3.6.2)
   - R.swift (5.4.0):
     - R.swift.Library (~> 5.3.0)
@@ -64,6 +65,7 @@ DEPENDENCIES:
   - Device
   - Google-Maps-iOS-Utils
   - KeychainAccess
+  - libxlsxwriter
   - Pageboy
   - R.swift
   - RxCocoa
@@ -85,6 +87,7 @@ SPEC REPOS:
     - Google-Maps-iOS-Utils
     - GoogleMaps
     - KeychainAccess
+    - libxlsxwriter
     - Pageboy
     - R.swift
     - R.swift.Library
@@ -108,6 +111,7 @@ SPEC CHECKSUMS:
   Google-Maps-iOS-Utils: a06cb5c3a0e5b2a505fed82d936ba1b935f8971f
   GoogleMaps: 086ae1dab659eaa7339bdb30fc88e2f44e7c597c
   KeychainAccess: c0c4f7f38f6fc7bbe58f5702e25f7bd2f65abf51
+  libxlsxwriter: f9f040bb01f0aabac1adb09f27c8cf542ae9a044
   Pageboy: cf121b9dd48c63f3f281b2a9ec93d02e0f23879b
   R.swift: c533450b0f7dc494e0993f5f1a1db925d84c3006
   R.swift.Library: 0fc583cb55a99e28901299cc451614cad1161962
@@ -120,6 +124,6 @@ SPEC CHECKSUMS:
   Swinject: 97112918bd7e0785dc2df7036213f3c8cbba6586
   SwipeCellKit: 3972254a826da74609926daf59b08d6c72e619ea
 
-PODFILE CHECKSUM: bf26c6419c555044705f26dfbd67b64e2b3e7f2c
+PODFILE CHECKSUM: 8f69e545aac6924fbe1281966657eb333b3b0bc9
 
 COCOAPODS: 1.11.2

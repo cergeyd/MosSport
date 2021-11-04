@@ -50,7 +50,7 @@ class RatingViewController: TableViewController {
         }
         self.tableView.reloadData()
     }
-    
+
     //MARK: Private func
     private func configureTableView() {
         self.tableView = UITableView(frame: .zero, style: .insetGrouped)
@@ -82,6 +82,11 @@ class RatingViewController: TableViewController {
         let detail = self.details[indexPath.row]
         cell.configure(with: detail, indexPath: indexPath)
         return cell
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let detail = self.details[indexPath.row]
+
     }
 }
 

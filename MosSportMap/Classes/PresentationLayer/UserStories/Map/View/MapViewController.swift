@@ -28,6 +28,17 @@ class MapViewController: GMClusterViewController {
         static let OSMObjectId = 999_999
     }
 
+    private let multipleLegendFeed: [LegendObject] = [
+        LegendObject(name: "Тепловая карта", info: [
+            infoObject(img: R.image.lowLegend()!, title: "Малая численность"),
+            infoObject(img: R.image.highLegend()!, title: "Большая численность"),
+            ]),
+        LegendObject(name: "Плотность населения", info: [
+            infoObject(img: R.image.lowLegendArea()!, title: "Малая плотность"),
+            infoObject(img: R.image.highLegendArea()!, title: "Большая плотность"),
+            ])
+    ]
+
     var output: MapViewOutput!
     /// Сохраняем последнее значения овердея, чтобы вернуть
     private var lastSelectedPolygon: GMSPolygon?
@@ -45,6 +56,8 @@ class MapViewController: GMClusterViewController {
     private var recommendationsCircles: [GMSCircle] = []
     /// Радиус с доступностью
     private var avaiavailabilityCircle: GMSCircle?
+    /// Легенда
+    private let legendView = YVLegendView()
 
     //MARK: Lifecycle
     override func viewDidLoad() {
@@ -54,11 +67,42 @@ class MapViewController: GMClusterViewController {
         self.makeClusters(hidden: false)
         /// Слушаем обновление, нужны ли дополнительные объекты
         NotificationCenter.default.addObserver(self, selector: #selector(updateSportObjectsList), name: NSNotification.Name.updateSportObjectsList, object: nil)
+        /// Смена позиции SplitController
+        NotificationCenter.default.addObserver(self, selector: #selector(didChangeDisplayMode(notification:)), name: NSNotification.Name.didChangeDisplayMode, object: nil)
+
+        self.addLegendView(legendInfoFeed: self.multipleLegendFeed)
     }
 
     //MARK: Private func
+    @objc func didChangeDisplayMode(notification: Notification) {
+        if let object = notification.object as? UISplitViewController.DisplayMode {
+            self.legendView.isHidden = object == .secondaryOnly
+        }
+    }
+
     @objc private func updateSportObjectsList() {
         self.makeClusters(hidden: false)
+    }
+
+    func addLegendView(legendInfoFeed: [LegendObject]) {
+        self.legendView.removeFromSuperview()
+        self.legendView.LegendFeed = legendInfoFeed
+
+        let offset = UIScreen.main.bounds.width * 0.35
+        let width = 250.0
+
+        self.legendView.frame = CGRect(x: UIScreen.main.bounds.width - 20.5 - offset, y: 170, width: width, height: 300)
+        self.legendView.OpenLegend = { (legendView) in
+            UIView.animate(withDuration: 1.0, animations: {
+                legendView.frame = CGRect(x: UIScreen.main.bounds.width - width - offset, y: 170, width: width, height: 300)
+            })
+        }
+        self.legendView.CloseLegend = { (legendView) in
+            UIView.animate(withDuration: 1.0, animations: {
+                legendView.frame = CGRect(x: UIScreen.main.bounds.width - 20.5 - offset, y: 170, width: width, height: 300)
+            })
+        }
+        self.view.addSubview(self.legendView)
     }
 
     @objc private func didTapShowFilter() {

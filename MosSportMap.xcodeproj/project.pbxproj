@@ -178,6 +178,11 @@
 		DB505866E2974CC5019BFF2A /* RecommendationViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B9FC8FB3D0F9D7ACB836EE /* RecommendationViewInput.swift */; };
 		DC44CA53313979C43AA71688 /* MapInteractorOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76ED2D4A970CB022F548D7A1 /* MapInteractorOutput.swift */; };
 		DE2CC49D2731C2E100640C8B /* OSMSportObjects.json in Resources */ = {isa = PBXBuildFile; fileRef = DE2CC49C2731C2E000640C8B /* OSMSportObjects.json */; };
+		DE3F7083273433F400915CDD /* YVLegendView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DE3F707D273433F400915CDD /* YVLegendView.xib */; };
+		DE3F7084273433F400915CDD /* YVLegendCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DE3F707E273433F400915CDD /* YVLegendCell.xib */; };
+		DE3F7085273433F400915CDD /* YVLegendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3F707F273433F400915CDD /* YVLegendView.swift */; };
+		DE3F7086273433F400915CDD /* YVLegendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3F7080273433F400915CDD /* YVLegendCell.swift */; };
+		DE5D60E327345FEA00080FF0 /* XLSModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5D60E227345FEA00080FF0 /* XLSModule.swift */; };
 		DE6081202732BA1900B9F32A /* OSMSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE60811F2732BA1900B9F32A /* OSMSettingsCell.swift */; };
 		DE6081222732BA4300B9F32A /* OSMSettingsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DE6081212732BA4300B9F32A /* OSMSettingsCell.xib */; };
 		DE6081242732BF8A00B9F32A /* UserDefaults+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE6081232732BF8A00B9F32A /* UserDefaults+Extension.swift */; };
@@ -386,6 +391,11 @@
 		DB0371A06A1DAEFF4003A820 /* ListRouter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ListRouter.swift; sourceTree = "<group>"; };
 		DE274074027966664ECBAF1B /* DetailPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DetailPresenter.swift; sourceTree = "<group>"; };
 		DE2CC49C2731C2E000640C8B /* OSMSportObjects.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = OSMSportObjects.json; sourceTree = "<group>"; };
+		DE3F707D273433F400915CDD /* YVLegendView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YVLegendView.xib; sourceTree = "<group>"; };
+		DE3F707E273433F400915CDD /* YVLegendCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YVLegendCell.xib; sourceTree = "<group>"; };
+		DE3F707F273433F400915CDD /* YVLegendView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YVLegendView.swift; sourceTree = "<group>"; };
+		DE3F7080273433F400915CDD /* YVLegendCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YVLegendCell.swift; sourceTree = "<group>"; };
+		DE5D60E227345FEA00080FF0 /* XLSModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XLSModule.swift; sourceTree = "<group>"; };
 		DE60811F2732BA1900B9F32A /* OSMSettingsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSMSettingsCell.swift; sourceTree = "<group>"; };
 		DE6081212732BA4300B9F32A /* OSMSettingsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OSMSettingsCell.xib; sourceTree = "<group>"; };
 		DE6081232732BF8A00B9F32A /* UserDefaults+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extension.swift"; sourceTree = "<group>"; };
@@ -486,6 +496,7 @@
 				080D003D2718441200C68345 /* UserStoriesFactory.swift */,
 				080D00472718441200C68345 /* AppStyle.swift */,
 				08A1E9B8271B5CF6004C5C43 /* SharedManager.swift */,
+				DE5D60E227345FEA00080FF0 /* XLSModule.swift */,
 			);
 			path = Modules;
 			sourceTree = "<group>";
@@ -777,6 +788,7 @@
 		08A1E990271B42B8004C5C43 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				DE3F707B273433F400915CDD /* YVLegendView */,
 				08424E86271CCB0A00B6DE98 /* SearchHeaderView */,
 				08A1E991271B42C6004C5C43 /* Banners */,
 				08C3ECD627231E630002356B /* View.swift */,
@@ -1374,6 +1386,25 @@
 			path = Rating;
 			sourceTree = "<group>";
 		};
+		DE3F707B273433F400915CDD /* YVLegendView */ = {
+			isa = PBXGroup;
+			children = (
+				DE3F707C273433F400915CDD /* Classes */,
+			);
+			path = YVLegendView;
+			sourceTree = "<group>";
+		};
+		DE3F707C273433F400915CDD /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				DE3F707D273433F400915CDD /* YVLegendView.xib */,
+				DE3F707E273433F400915CDD /* YVLegendCell.xib */,
+				DE3F707F273433F400915CDD /* YVLegendView.swift */,
+				DE3F7080273433F400915CDD /* YVLegendCell.swift */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
 		DE60811E2732BA0900B9F32A /* Cell */ = {
 			isa = PBXGroup;
 			children = (
@@ -1571,6 +1602,7 @@
 				DE2CC49D2731C2E100640C8B /* OSMSportObjects.json in Resources */,
 				08A1E9AB271B4C13004C5C43 /* sportTypes.json in Resources */,
 				DE6081222732BA4300B9F32A /* OSMSettingsCell.xib in Resources */,
+				DE3F7084273433F400915CDD /* YVLegendCell.xib in Resources */,
 				085896DA2719CADC004C6663 /* CalculatedAreaCell.xib in Resources */,
 				08A1E9AC271B4C13004C5C43 /* sportObjects.json in Resources */,
 				080D010F2718441300C68345 /* Errors.strings in Resources */,
@@ -1584,6 +1616,7 @@
 				086886B8271A0C1400B89E40 /* DetailRegionCell.xib in Resources */,
 				0870EA6C271C7076003E985C /* SportObjectCell.xib in Resources */,
 				086886BC271A0FA900B89E40 /* DetailCell.xib in Resources */,
+				DE3F7083273433F400915CDD /* YVLegendView.xib in Resources */,
 				08A1E9AE271B4C13004C5C43 /* departments.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1674,6 +1707,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				08A1E98F271B4244004C5C43 /* CodableMapper.swift in Sources */,
+				DE5D60E327345FEA00080FF0 /* XLSModule.swift in Sources */,
 				080D011E2718441300C68345 /* RequestHeadersFactory.swift in Sources */,
 				080D01262718441300C68345 /* NetworkAssembly.swift in Sources */,
 				469E63F34F0E1DE67AEF2B10 /* MapViewController.swift in Sources */,
@@ -1684,6 +1718,7 @@
 				08C3ECD9272322340002356B /* GMClusterViewController.swift in Sources */,
 				08424E8A271CCB5200B6DE98 /* LoadXibByClass.swift in Sources */,
 				086886B6271A0BFC00B89E40 /* DetailRegionCell.swift in Sources */,
+				DE3F7086273433F400915CDD /* YVLegendCell.swift in Sources */,
 				080D01272718441300C68345 /* CoreLayerAssembly.swift in Sources */,
 				6A585E3DD8D8C3CB06620CB6 /* MapViewInput.swift in Sources */,
 				085896D82719CACD004C6663 /* CalculatedAreaCell.swift in Sources */,
@@ -1819,6 +1854,7 @@
 				314CC3E90E4EC339CFDC28C6 /* RecommendationRouter.swift in Sources */,
 				DF520F2EBDF85DD05601FC87 /* RecommendationAssembly.swift in Sources */,
 				75632500173C30540AE49408 /* RecommendationFactory.swift in Sources */,
+				DE3F7085273433F400915CDD /* YVLegendView.swift in Sources */,
 				102EDCE636880A95B5B1378F /* RatingViewController.swift in Sources */,
 				C27386C65BD187A52262A2F7 /* RatingViewInput.swift in Sources */,
 				C85C33036EB4D7879F762FDC /* RatingViewOutput.swift in Sources */,

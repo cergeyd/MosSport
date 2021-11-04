@@ -137,7 +137,7 @@ class ListViewController: TableViewController {
                 }
             case .sportObjects:
                 for object in report.objects {
-                    self.details.append(Detail(type: detail.type, title: object.title, place: "ID: \(object.address)", subtitle: object.department.title))
+                    self.details.append(Detail(type: detail.type, title: object.title, place: object.address, subtitle: object.department.title))
                 }
             default: break
             }
