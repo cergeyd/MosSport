@@ -98,10 +98,10 @@ class XLSModule {
         /// Save and close editing & generate physical file in document directory, If already exist then It will replace it
         workbook_close(workbook)
 
-        Dispatch.after(8.0) {
+        //Dispatch.after(10.0) {
             if let sourceView = self.presenter.navigationItem.rightBarButtonItem {
                 self.show(sourceView: sourceView)
-            }
+         //   }
         }
     }
 

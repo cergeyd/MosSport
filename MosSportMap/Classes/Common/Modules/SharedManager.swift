@@ -25,6 +25,7 @@ class SharedManager {
 
     struct Config {
         static let maxPopultaionValue = 30_387.21
+        static let kNewObjects = "newObjects"
     }
 
     static let shared = SharedManager()
@@ -71,6 +72,21 @@ class SharedManager {
         case .city:
             return 5000.0
         }
+    }
+
+    /// Доступность
+    func availabilityType(for title: String) -> SportObject.AvailabilityType? {
+        return SportObject.AvailabilityType.init(rawValue: title)
+    }
+
+    /// Вип спорта
+    func sportType(for ID: String) -> SportType? {
+        for type in gSportTypes.types {
+            if (type.title == ID) {
+                return type
+            }
+        }
+        return nil
     }
 
     /// Название доступности
@@ -234,6 +250,15 @@ class SharedManager {
         return objects
     }
 
+    func department(for id: Int) -> Department? {
+        for object in gSportObjectResponse.objects {
+            if (object.department.id == id) {
+                return object.department
+            }
+        }
+        return nil
+    }
+
     func objects(for polygon: GMSPolygon, with availability: SportObject.AvailabilityType) -> [SportObject] {
         var objects: [SportObject] = []
         for object in gSportObjectResponse.objects {
@@ -280,5 +305,72 @@ class SharedManager {
 //            gSportOSMObjectResponse.objects = setSportObjects.sorted(by: { $0.id < $1.id })
         }
         NotificationCenter.default.post(name: NSNotification.Name.updateSportObjectsList, object: nil)
+    }
+
+    /// Объекдиним все объекты с одинаковыми играми в один объект
+    func fromMultipleSportToSingle(objects: [SportObject]) -> [SportObject] {
+        var sportObjects: [SportObject] = []
+        var dict: [SportObject: [SportObject.Sport]] = [:]
+
+        /// Идём по всем объектам и запоминаем игры
+        for object in objects {
+            if var sports = dict[object] {
+                sports.append(contentsOf: object.sport)
+                dict[object] = sports
+            } else {
+                dict[object] = object.sport
+            }
+        }
+
+        let objectKeys = dict.keys
+        for var object in objectKeys {
+            let sports = dict[object]
+            object.sport = sports ?? []
+            /// Если с таким айди ещё нет
+            if (!gSportObjectResponse.objects.contains(where: { existObject in
+                return existObject.id == object.id
+            })) {
+                sportObjects.append(object)
+            }
+        }
+     
+        let newObjects = self.getNewObjects()?.objects ?? []
+        let newResponse = SportObjectResponse(objects: sportObjects + newObjects)
+        self.save(object: newResponse, filename: Config.kNewObjects + ".json")
+        return sportObjects
+    }
+
+    //MARK: Private func
+    private func save<T: Codable>(object: T, filename: String) {
+        let filePath = self.getDocumentsDirectoryUrl().appendingPathComponent(filename)
+        print(filePath)
+        do {
+            let jsonData = try JSONEncoder().encode(object)
+            try jsonData.write(to: filePath)
+        } catch {
+            print("Error writing to JSON file: \(error)")
+        }
+    }
+
+    /// Новые объекты
+    func getNewObjects() -> SportObjectResponse? {
+        var documents = self.getDocumentsDirectoryUrl()
+        documents.appendPathComponent(Config.kNewObjects + ".json")
+        print(documents)
+        do {
+            let data = try Data(contentsOf: documents)
+            let decoder = JSONDecoder()
+            return try decoder.decode(SportObjectResponse.self, from: data)
+        } catch {
+
+        }
+        return nil
+    }
+
+    /// Директория
+    private func getDocumentsDirectoryUrl() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let documentsDirectory = paths[0]
+        return documentsDirectory
     }
 }

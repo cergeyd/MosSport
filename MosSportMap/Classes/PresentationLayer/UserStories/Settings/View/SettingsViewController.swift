@@ -16,7 +16,10 @@ class SettingsViewController: TableViewController {
     }
 
     var output: SettingsViewOutput!
-    lazy var filesBrowser: FilesBrowser = { return FilesBrowser(controller: self) }()
+    lazy var filesBrowser: FilesBrowser = {
+        let _filesBrowser = FilesBrowser(controller: self)
+        _filesBrowser.delegate = self
+        return _filesBrowser }()
     private let sections = [
         SettingSection(header: "Дополнительные спортивные объекты", type: .OSM),
         SettingSection(header: "Относительная величина расчёта", type: .calculated),
@@ -94,16 +97,31 @@ class SettingsViewController: TableViewController {
     }
 }
 
-extension SettingsViewController: SettingsViewInput, SettingsCellDelegate, CalculateSettingsCellDelegate, DownloadSettingsCellDelegate {
+extension SettingsViewController: SettingsViewInput {
 
     func setupInitialState() {
         self.title = "Настройки"
     }
-    
+}
+
+//MARK: Cell Delegates
+extension SettingsViewController: SettingsCellDelegate, CalculateSettingsCellDelegate, DownloadSettingsCellDelegate, FilesBrowserDelegate {
+
+    func didDownload(file url: URL) {
+        /// Новые объекты.
+        /// т.к. изначально формат не оптимальный (куча одинаковы объектов с разными играми лишь
+        /// сделаем нормально -> переведём в наш формат (1н объект с массивом игр))
+        let newObjects = CVSModule.parseCSV(filepath: url)
+        let objects = SharedManager.shared.fromMultipleSportToSingle(objects: newObjects)
+        self.murmur(text: "Успешно добавлено", subtitle: "\(objects.count) новых объекта")
+    }
+
+    /// Локально загружаем список объектов
     func didTapDownload() {
         self.filesBrowser.show()
     }
 
+    /// Конкретная плотность населения
     func didSetAverage(density: Int?) {
         lastSelectedAreaReport = nil
         let _density = density ?? 0
@@ -113,6 +131,7 @@ extension SettingsViewController: SettingsViewInput, SettingsCellDelegate, Calcu
         self.tableView.endUpdates()
     }
 
+    /// Обновим с будущим API
     func didUpdateAdditioOSMObjects() {
         let isOSMObjects = !UserDefaults.isOSMObjects
         UserDefaults.isOSMObjects = isOSMObjects

@@ -67,7 +67,7 @@ class DetailViewController: TableViewController {
             self.rightNavigationBar(isLoading: true)
             Dispatch.after(2.0, completion: { self.rightNavigationBar(isLoading: false) })
             if let report = self.report {
-                self.XlsModule.createXLS(with: "Отчёт о районе \(report.population.area)" report: report)
+                self.XlsModule.createXLS(with: "Отчёт о районе \(report.population.area)", report: report)
             }
         }))
         alert.popoverPresentationController?.barButtonItem = self.navigationItem.rightBarButtonItem

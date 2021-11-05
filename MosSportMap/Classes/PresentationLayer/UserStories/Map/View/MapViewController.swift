@@ -55,9 +55,11 @@ class MapViewController: GMClusterViewController {
     /// Круги рекомендаций
     private var recommendationsCircles: [GMSCircle] = []
     /// Радиус с доступностью
-    private var avaiavailabilityCircle: GMSCircle?
+    private var avaiavailabilityCircles: [GMSCircle] = []
     /// Легенда
     private let legendView = YVLegendView()
+    /// Открывать ли информацию по объекту по тапу
+    private var isNeedShowObjectInfoByTap = true
 
     //MARK: Lifecycle
     override func viewDidLoad() {
@@ -93,12 +95,12 @@ class MapViewController: GMClusterViewController {
 
         self.legendView.frame = CGRect(x: UIScreen.main.bounds.width - 20.5 - offset, y: 170, width: width, height: 300)
         self.legendView.OpenLegend = { (legendView) in
-            UIView.animate(withDuration: 1.0, animations: {
+            UIView.animate(withDuration: 0.4, animations: {
                 legendView.frame = CGRect(x: UIScreen.main.bounds.width - width - offset, y: 170, width: width, height: 300)
             })
         }
         self.legendView.CloseLegend = { (legendView) in
-            UIView.animate(withDuration: 1.0, animations: {
+            UIView.animate(withDuration: 0.4, animations: {
                 legendView.frame = CGRect(x: UIScreen.main.bounds.width - 20.5 - offset, y: 170, width: width, height: 300)
             })
         }
@@ -112,6 +114,18 @@ class MapViewController: GMClusterViewController {
         alert.addAction(UIAlertAction(title: "Районное", style: .default, handler: { _ in self.makeClusters(hidden: false, availabilityType: .district) }))
         alert.addAction(UIAlertAction(title: "Окружное", style: .default, handler: { _ in self.makeClusters(hidden: false, availabilityType: .area) }))
         alert.addAction(UIAlertAction(title: "Городское", style: .default, handler: { _ in self.makeClusters(hidden: false, availabilityType: .city) }))
+        alert.popoverPresentationController?.barButtonItem = self.navigationItem.rightBarButtonItem
+        self.present(alert, animated: true)
+    }
+
+    @objc private func didTapShowMore() {
+        let alert = UIAlertController(title: "Укажите режим", message: "Касание по маркеру объекта:", preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Информация по объекту", style: .default, handler: { _ in
+            self.isNeedShowObjectInfoByTap = true
+        }))
+        alert.addAction(UIAlertAction(title: "Радиус доступности", style: .default, handler: { _ in
+            self.isNeedShowObjectInfoByTap = false
+        }))
         alert.popoverPresentationController?.barButtonItem = self.navigationItem.rightBarButtonItem
         self.present(alert, animated: true)
     }
@@ -130,7 +144,9 @@ extension MapViewController: MapViewInput {
     func setupInitialState() {
         self.title = "Карта"
         self.configureNavigationButtons()
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "camera.filters"), style: .plain, target: self, action: #selector(didTapShowFilter))
+        let filter = UIBarButtonItem(image: UIImage(systemName: "camera.filters"), style: .plain, target: self, action: #selector(didTapShowFilter))
+        let more = UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"), style: .plain, target: self, action: #selector(didTapShowMore))
+        self.navigationItem.rightBarButtonItems = [filter, more]
     }
 }
 
@@ -204,13 +220,13 @@ extension MapViewController {
 
     /// Рисуем радиус доступности (шаговая, городская и т.д.)
     private func drawAreaCircle(with circleCenter: CLLocationCoordinate2D, type: SportObject.AvailabilityType) {
-        self.avaiavailabilityCircle?.map = nil
+//        self.avaiavailabilityCircle?.map = nil
         let circle = GMSCircle(position: circleCenter, radius: SharedManager.shared.meters(for: type))
         circle.fillColor = #colorLiteral(red: 0, green: 0.5898008943, blue: 1, alpha: 0.3589497749)
         circle.strokeColor = .clear
         circle.strokeWidth = 0.0
         circle.map = self.mapView
-        self.avaiavailabilityCircle = circle
+        self.avaiavailabilityCircles.append(circle)
     }
 }
 
@@ -315,7 +331,7 @@ extension MapViewController: MenuDelegate, DetailViewDelegate, ListViewDelegate 
         switch type {
         case .clear:
             Dispatch.after { self.navigationBar(isLoading: false) }
-            self.avaiavailabilityCircle?.map = nil
+            self.clearAvaiavailabilityCircles()
             self.makeClusters(hidden: true)
             self.makeBorders(hidden: true)
             self.makeHeatmap(hidden: true)
@@ -345,13 +361,15 @@ extension MapViewController {
 
     /// Движем к кластерам
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
-        self.avaiavailabilityCircle?.map = nil
+        // self.clearAvaiavailabilityCircles()
         mapView.animate(toLocation: marker.position)
         if let _ = marker.userData as? GMUCluster { mapView.animate(toZoom: mapView.camera.zoom + 1); return true }
         else {
             if let object = marker.userData as? SportObject {
                 self.drawAreaCircle(with: object.coorditate, type: object.availabilityType)
-                self.output.didTapShow(sport: object)
+                if (self.isNeedShowObjectInfoByTap) {
+                    self.output.didTapShow(sport: object)
+                }
             }
         }
         return false
@@ -428,13 +446,13 @@ extension MapViewController {
 
     /// Место (не точные координаты, а координаты места)
     func mapView(_ mapView: GMSMapView, didTapPOIWithPlaceID placeID: String, name: String, location: CLLocationCoordinate2D) {
-        self.avaiavailabilityCircle?.map = nil
+        self.clearAvaiavailabilityCircles()
         self.createArea(with: location)
     }
 
     /// Точные координаты на карте
     func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
-        self.avaiavailabilityCircle?.map = nil
+        self.clearAvaiavailabilityCircles()
         self.createArea(with: coordinate)
     }
 
@@ -454,7 +472,7 @@ extension MapViewController {
         self.navigationBar(isLoading: true)
         Dispatch.after {
             self.navigationBar(isLoading: false)
-            self.avaiavailabilityCircle?.map = nil
+            self.clearAvaiavailabilityCircles()
             if let polygon = overlay as? GMSPolygon, let title = overlay.title {
                 self.didTap(polygon: polygon)
                 if let population = SharedManager.shared.population(by: title) {
@@ -475,6 +493,12 @@ extension MapViewController {
                     }
                 }
             }
+        }
+    }
+
+    private func clearAvaiavailabilityCircles() {
+        for circle in self.avaiavailabilityCircles {
+            circle.map = nil
         }
     }
 }

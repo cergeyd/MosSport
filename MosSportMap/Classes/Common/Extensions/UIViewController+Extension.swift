@@ -73,24 +73,8 @@ extension UIViewController {
     }
 
     func pdfData(with tableView: UITableView, name: String, sourceView: UIBarButtonItem) {
-        let priorBounds = CGRect(x: 0.0, y: 0.0, width: tableView.bounds.width, height: tableView.bounds.height + 500.0)
-        let fittedSize = tableView.sizeThatFits(CGSize(width: priorBounds.size.width, height: tableView.contentSize.height + 500.0))
-        tableView.bounds = CGRect(x: 0, y: 0, width: fittedSize.width, height: fittedSize.height)
-        let pdfPageBounds = CGRect(x: 0, y: 0, width: tableView.frame.width, height: self.view.frame.height)
-        let pdfData = NSMutableData()
-        UIGraphicsBeginPDFContextToData(pdfData, pdfPageBounds, nil)
-        var pageOriginY: CGFloat = 0
-        while (pageOriginY < fittedSize.height) {
-            UIGraphicsBeginPDFPageWithInfo(pdfPageBounds, nil)
-            UIGraphicsGetCurrentContext()!.saveGState()
-            UIGraphicsGetCurrentContext()!.translateBy(x: 0, y: -pageOriginY)
-            tableView.layer.render(in: UIGraphicsGetCurrentContext()!)
-            UIGraphicsGetCurrentContext()!.restoreGState()
-            pageOriginY += pdfPageBounds.size.height
-        }
-        UIGraphicsEndPDFContext()
-        tableView.bounds = priorBounds
-
+        let scroll = ScrollViewSnapshotter()
+        let pdfData = scroll.PDFWithScrollView(scrollview: tableView)
         /// Share
         var docURL = (FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)).last! as URL
         docURL = docURL.appendingPathComponent(name + ".pdf")

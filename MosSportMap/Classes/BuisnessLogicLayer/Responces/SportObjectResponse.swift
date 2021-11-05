@@ -38,7 +38,7 @@ struct SportObject: CodableMappable {
     let id: Int // Не уникальный. Несколько объектов с разными видами спорта | 100002
     let title: String // Название объекта, идентичный | Спортивный комплекс «Полярная звезда»
     let address: String // Адрес, идентичный | проезд Шокальского, дом 45, корпус 3
-    let sport: [Sport] // Информация о спорте
+    var sport: [Sport] // Информация о спорте
     let department: Department // Департамент
     let availabilityType: AvailabilityType // Доступность, рассчитана на посетителей в данном покрытии | Районное
     let coordinate: Coordinate

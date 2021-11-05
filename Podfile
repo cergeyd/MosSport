@@ -26,6 +26,7 @@ target 'MosSportMap' do
   pod 'collection-view-layouts/TagsLayout'
   pod 'Google-Maps-iOS-Utils'
   pod 'libxlsxwriter'
+  pod "SwiftCSV"
   
   #DI
   pod 'Swinject'

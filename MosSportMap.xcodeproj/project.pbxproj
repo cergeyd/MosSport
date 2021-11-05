@@ -182,6 +182,7 @@
 		DE3F7084273433F400915CDD /* YVLegendCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DE3F707E273433F400915CDD /* YVLegendCell.xib */; };
 		DE3F7085273433F400915CDD /* YVLegendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3F707F273433F400915CDD /* YVLegendView.swift */; };
 		DE3F7086273433F400915CDD /* YVLegendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3F7080273433F400915CDD /* YVLegendCell.swift */; };
+		DE4EB6E5273569A6009301C8 /* CVSModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE4EB6E4273569A6009301C8 /* CVSModule.swift */; };
 		DE5D60E327345FEA00080FF0 /* XLSModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5D60E227345FEA00080FF0 /* XLSModule.swift */; };
 		DE5D60E62734880300080FF0 /* DownloadSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5D60E52734880300080FF0 /* DownloadSettingsCell.swift */; };
 		DE5D60E82734883A00080FF0 /* DownloadSettingsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DE5D60E72734883A00080FF0 /* DownloadSettingsCell.xib */; };
@@ -192,6 +193,7 @@
 		DE6081262732C31C00B9F32A /* NSNotificationName+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE6081252732C31C00B9F32A /* NSNotificationName+Extension.swift */; };
 		DE60812A2732C95400B9F32A /* CalculateSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE6081292732C95400B9F32A /* CalculateSettingsCell.swift */; };
 		DE60812C2732C95900B9F32A /* CalculateSettingsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DE60812B2732C95900B9F32A /* CalculateSettingsCell.xib */; };
+		DE6335EB2735BE0500E8D99C /* ScrollViewSnapshotter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE6335EA2735BE0500E8D99C /* ScrollViewSnapshotter.swift */; };
 		DEC970AC2732DD650052745E /* SettingSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEC970AB2732DD650052745E /* SettingSection.swift */; };
 		DEC970AE2732DD870052745E /* Rating.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEC970AD2732DD870052745E /* Rating.swift */; };
 		DF520F2EBDF85DD05601FC87 /* RecommendationAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E8E97759AC364FA6EDAFD52 /* RecommendationAssembly.swift */; };
@@ -398,6 +400,7 @@
 		DE3F707E273433F400915CDD /* YVLegendCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YVLegendCell.xib; sourceTree = "<group>"; };
 		DE3F707F273433F400915CDD /* YVLegendView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YVLegendView.swift; sourceTree = "<group>"; };
 		DE3F7080273433F400915CDD /* YVLegendCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YVLegendCell.swift; sourceTree = "<group>"; };
+		DE4EB6E4273569A6009301C8 /* CVSModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVSModule.swift; sourceTree = "<group>"; };
 		DE5D60E227345FEA00080FF0 /* XLSModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XLSModule.swift; sourceTree = "<group>"; };
 		DE5D60E52734880300080FF0 /* DownloadSettingsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadSettingsCell.swift; sourceTree = "<group>"; };
 		DE5D60E72734883A00080FF0 /* DownloadSettingsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DownloadSettingsCell.xib; sourceTree = "<group>"; };
@@ -408,6 +411,7 @@
 		DE6081252732C31C00B9F32A /* NSNotificationName+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSNotificationName+Extension.swift"; sourceTree = "<group>"; };
 		DE6081292732C95400B9F32A /* CalculateSettingsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculateSettingsCell.swift; sourceTree = "<group>"; };
 		DE60812B2732C95900B9F32A /* CalculateSettingsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CalculateSettingsCell.xib; sourceTree = "<group>"; };
+		DE6335EA2735BE0500E8D99C /* ScrollViewSnapshotter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewSnapshotter.swift; sourceTree = "<group>"; };
 		DEC970AB2732DD650052745E /* SettingSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingSection.swift; sourceTree = "<group>"; };
 		DEC970AD2732DD870052745E /* Rating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rating.swift; sourceTree = "<group>"; };
 		E1533B8160241014E120828B /* CalculatedRouter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CalculatedRouter.swift; sourceTree = "<group>"; };
@@ -504,6 +508,8 @@
 				08A1E9B8271B5CF6004C5C43 /* SharedManager.swift */,
 				DE5D60E227345FEA00080FF0 /* XLSModule.swift */,
 				DE5D60E927348AE600080FF0 /* FilesBrowser.swift */,
+				DE4EB6E4273569A6009301C8 /* CVSModule.swift */,
+				DE6335EA2735BE0500E8D99C /* ScrollViewSnapshotter.swift */,
 			);
 			path = Modules;
 			sourceTree = "<group>";
@@ -1832,6 +1838,7 @@
 				086886BA271A0F9A00B89E40 /* DetailCell.swift in Sources */,
 				68E6CC7141A4033324E912E2 /* DetailViewInput.swift in Sources */,
 				08C3ECDD272326E70002356B /* Recommendation.swift in Sources */,
+				DE4EB6E5273569A6009301C8 /* CVSModule.swift in Sources */,
 				F5CBCB477F288A2A0357F3BA /* DetailViewOutput.swift in Sources */,
 				32B40CCEBED477EA9FF203F1 /* DetailPresenter.swift in Sources */,
 				1A31FC90B1C8F476BD5FB297 /* DetailInteractor.swift in Sources */,
@@ -1896,6 +1903,7 @@
 				AB760B6C5D6DFE453FACEB7C /* RatingInitialRouter.swift in Sources */,
 				166B0C7C45189FF6C6875930 /* RatingInitialAssembly.swift in Sources */,
 				53F8D0B345A88C642EB85D40 /* RatingInitialFactory.swift in Sources */,
+				DE6335EB2735BE0500E8D99C /* ScrollViewSnapshotter.swift in Sources */,
 				2DB00856796B6901AC94636F /* SettingsViewController.swift in Sources */,
 				77160389EC175296D850A43A /* SettingsViewInput.swift in Sources */,
 				75C0D7F122C2AFE92A77DC5A /* SettingsViewOutput.swift in Sources */,

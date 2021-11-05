@@ -14,6 +14,7 @@ ${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework
 ${BUILT_PRODUCTS_DIR}/SPAlert/SPAlert.framework
 ${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework
 ${BUILT_PRODUCTS_DIR}/Squircle/Squircle.framework
+${BUILT_PRODUCTS_DIR}/SwiftCSV/SwiftCSV.framework
 ${BUILT_PRODUCTS_DIR}/Swinject/Swinject.framework
 ${BUILT_PRODUCTS_DIR}/SwipeCellKit/SwipeCellKit.framework
 ${BUILT_PRODUCTS_DIR}/collection-view-layouts/collection_view_layouts.framework
