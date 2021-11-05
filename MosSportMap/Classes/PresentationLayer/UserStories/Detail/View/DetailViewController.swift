@@ -36,6 +36,7 @@ class DetailViewController: TableViewController {
     var sportTypeSection: SportTypeSection?
     private var sections: [DetailSection] = []
     private var filterDetails: [Detail] = []
+    private lazy var XlsModule = XLSModule(presenter: self)
     weak var delegate: DetailViewDelegate?
 
     //MARK: Lifecycle
@@ -62,11 +63,11 @@ class DetailViewController: TableViewController {
             Dispatch.after(2.0, completion: { self.rightNavigationBar(isLoading: false) })
             self.pdfData(with: self.tableView, name: "Информация о районе \(self.report?.population.area ?? "")", sourceView: self.navigationItem.rightBarButtonItem!)
         }))
-        alert.addAction(UIAlertAction(title: "XLSX", style: .default, handler: { _ in
+        alert.addAction(UIAlertAction(title: "Exel", style: .default, handler: { _ in
             self.rightNavigationBar(isLoading: true)
             Dispatch.after(2.0, completion: { self.rightNavigationBar(isLoading: false) })
             if let report = self.report {
-                XLSModule.shared.createXLS(with: "Hello", report: report)
+                self.XlsModule.createXLS(with: "Отчёт о районе \(report.population.area)" report: report)
             }
         }))
         alert.popoverPresentationController?.barButtonItem = self.navigationItem.rightBarButtonItem

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DownloadSettingsCell" rowHeight="251" id="oBt-4g-ITr" customClass="DownloadSettingsCell" customModule="MosSportMap" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="493" height="251"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="oBt-4g-ITr" id="vec-y9-kg5">
+                <rect key="frame" x="0.0" y="0.0" width="493" height="251"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="249" text="Укажите путь к файлу формата XLSX" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fE7-rK-DjO">
+                        <rect key="frame" x="16" y="49" width="465" height="34"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <color key="textColor" red="0.37055522200000002" green="0.37056469920000001" blue="0.37055957319999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pKs-YS-acw">
+                        <rect key="frame" x="16" y="99" width="461" height="37"/>
+                        <color key="backgroundColor" systemColor="linkColor"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="37" id="crr-6q-8Sz"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                        <state key="normal" title="Локальное хранилище"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                <integer key="value" value="6"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                        <connections>
+                            <action selector="didTapDownload" destination="oBt-4g-ITr" eventType="touchUpInside" id="dgZ-uC-dEw"/>
+                        </connections>
+                    </button>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cG7-17-728">
+                        <rect key="frame" x="16" y="152" width="477" height="1"/>
+                        <color key="backgroundColor" red="0.96661780106712036" green="0.97618827434501265" blue="0.97618827434501265" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="azG-y1-oWU"/>
+                        </constraints>
+                    </view>
+                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M5g-Hg-Qur" customClass="ActivityButton" customModule="MosSportMap" customModuleProvider="target">
+                        <rect key="frame" x="16" y="198" width="461" height="37"/>
+                        <color key="backgroundColor" systemColor="systemGreenColor"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="37" id="Cuy-5W-ASW"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                        <state key="normal" title="Обновить"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                <integer key="value" value="6"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                        <connections>
+                            <action selector="didTapUpdateWithSender:" destination="oBt-4g-ITr" eventType="touchUpInside" id="RY2-Ky-6T6"/>
+                        </connections>
+                    </button>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Обновить данные о спортивных объектах (API)" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l7S-wi-Tkh">
+                        <rect key="frame" x="16" y="169" width="461" height="17"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <color key="textColor" red="0.37055522200000002" green="0.37056469920000001" blue="0.37055957319999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Новые объекты" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i1c-tD-Dy1">
+                        <rect key="frame" x="16" y="16" width="461" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="fE7-rK-DjO" firstAttribute="leading" secondItem="i1c-tD-Dy1" secondAttribute="leading" id="01L-hf-WP8"/>
+                    <constraint firstAttribute="trailing" secondItem="pKs-YS-acw" secondAttribute="trailing" constant="16" id="26b-uv-Yfy"/>
+                    <constraint firstItem="M5g-Hg-Qur" firstAttribute="top" secondItem="l7S-wi-Tkh" secondAttribute="bottom" constant="12" id="4kC-6M-Pez"/>
+                    <constraint firstAttribute="trailing" secondItem="l7S-wi-Tkh" secondAttribute="trailing" constant="16" id="BGt-H6-yF2"/>
+                    <constraint firstItem="l7S-wi-Tkh" firstAttribute="top" secondItem="cG7-17-728" secondAttribute="bottom" constant="16" id="DYg-Bw-g67"/>
+                    <constraint firstAttribute="trailing" secondItem="cG7-17-728" secondAttribute="trailing" id="Edf-42-zLI"/>
+                    <constraint firstAttribute="trailing" secondItem="fE7-rK-DjO" secondAttribute="trailing" constant="12" id="Esf-R3-hdR"/>
+                    <constraint firstItem="pKs-YS-acw" firstAttribute="top" secondItem="fE7-rK-DjO" secondAttribute="bottom" constant="16" id="H9F-Rn-4mG"/>
+                    <constraint firstItem="cG7-17-728" firstAttribute="leading" secondItem="pKs-YS-acw" secondAttribute="leading" id="N60-xe-gCg"/>
+                    <constraint firstAttribute="trailing" secondItem="i1c-tD-Dy1" secondAttribute="trailing" constant="16" id="PDk-9D-Czh"/>
+                    <constraint firstItem="M5g-Hg-Qur" firstAttribute="leading" secondItem="pKs-YS-acw" secondAttribute="leading" id="PaH-Do-F3B"/>
+                    <constraint firstAttribute="bottom" secondItem="M5g-Hg-Qur" secondAttribute="bottom" constant="16" id="S9R-nO-aJV"/>
+                    <constraint firstItem="pKs-YS-acw" firstAttribute="leading" secondItem="fE7-rK-DjO" secondAttribute="leading" id="W37-1C-G8G"/>
+                    <constraint firstItem="i1c-tD-Dy1" firstAttribute="leading" secondItem="vec-y9-kg5" secondAttribute="leading" constant="16" id="cci-Nw-vJi"/>
+                    <constraint firstItem="i1c-tD-Dy1" firstAttribute="top" secondItem="vec-y9-kg5" secondAttribute="top" constant="16" id="dex-ih-WWe"/>
+                    <constraint firstItem="M5g-Hg-Qur" firstAttribute="width" secondItem="pKs-YS-acw" secondAttribute="width" id="gSI-O2-mgh"/>
+                    <constraint firstItem="cG7-17-728" firstAttribute="top" secondItem="pKs-YS-acw" secondAttribute="bottom" constant="16" id="j1V-VH-7y3"/>
+                    <constraint firstItem="l7S-wi-Tkh" firstAttribute="leading" secondItem="fE7-rK-DjO" secondAttribute="leading" id="mS3-3s-XNI"/>
+                    <constraint firstItem="fE7-rK-DjO" firstAttribute="top" secondItem="i1c-tD-Dy1" secondAttribute="bottom" constant="12" id="mfE-AG-X0n"/>
+                </constraints>
+            </tableViewCellContentView>
+            <point key="canvasLocation" x="154" y="93"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <systemColor name="linkColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemGreenColor">
+            <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

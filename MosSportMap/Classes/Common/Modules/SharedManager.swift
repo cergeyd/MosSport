@@ -138,7 +138,7 @@ class SharedManager {
     func calculateReport(for population: Population, polygon: GMSPolygon? = nil, path: GMSMutablePath? = nil) -> SquareReport {
         var objects: [SportObject] = []
         var sports: [SportObject.Sport] = []
-        var sportTypes: [SportType] = []
+        var sportTypes: Set<SportType> = []
         var departments: Set<Department> = []
         var allSquare = 0.0
 
@@ -154,7 +154,7 @@ class SharedManager {
                 departments.insert(object.department)
                 for sport in object.sport {
                     sports.append(sport)
-                    sportTypes.append(sport.sportType)
+                    sportTypes.insert(sport.sportType)
                     allSquare += sport.square
                 }
             }
@@ -175,7 +175,7 @@ class SharedManager {
             departments: departments.sorted(by: { $0.id < $1.id }),
             objects: objects,
             sports: sports,
-            sportTypes: sportTypes,
+            sportTypes: sportTypes.sorted(by: { $0.id < $1.id }),
             allSquare: allSquare,
             squareForOne: squareForOne,
             sportForOne: sportForOne,

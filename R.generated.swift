@@ -310,7 +310,7 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
 
-  /// This `R.nib` struct is generated, and contains static references to 10 nibs.
+  /// This `R.nib` struct is generated, and contains static references to 11 nibs.
   struct nib {
     /// Nib `CalculateSettingsCell`.
     static let calculateSettingsCell = _R.nib._CalculateSettingsCell()
@@ -322,6 +322,8 @@ struct R: Rswift.Validatable {
     static let detailCell = _R.nib._DetailCell()
     /// Nib `DetailRegionCell`.
     static let detailRegionCell = _R.nib._DetailRegionCell()
+    /// Nib `DownloadSettingsCell`.
+    static let downloadSettingsCell = _R.nib._DownloadSettingsCell()
     /// Nib `OSMSettingsCell`.
     static let osmSettingsCell = _R.nib._OSMSettingsCell()
     /// Nib `SearchHeaderView`.
@@ -370,6 +372,14 @@ struct R: Rswift.Validatable {
     @available(*, deprecated, message: "Use UINib(resource: R.nib.detailRegionCell) instead")
     static func detailRegionCell(_: Void = ()) -> UIKit.UINib {
       return UIKit.UINib(resource: R.nib.detailRegionCell)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UINib(name: "DownloadSettingsCell", in: bundle)`
+    @available(*, deprecated, message: "Use UINib(resource: R.nib.downloadSettingsCell) instead")
+    static func downloadSettingsCell(_: Void = ()) -> UIKit.UINib {
+      return UIKit.UINib(resource: R.nib.downloadSettingsCell)
     }
     #endif
 
@@ -433,6 +443,10 @@ struct R: Rswift.Validatable {
       return R.nib.detailRegionCell.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? DetailRegionCell
     }
 
+    static func downloadSettingsCell(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> DownloadSettingsCell? {
+      return R.nib.downloadSettingsCell.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? DownloadSettingsCell
+    }
+
     static func osmSettingsCell(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> OSMSettingsCell? {
       return R.nib.osmSettingsCell.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? OSMSettingsCell
     }
@@ -456,7 +470,7 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
 
-  /// This `R.reuseIdentifier` struct is generated, and contains static references to 7 reuse identifiers.
+  /// This `R.reuseIdentifier` struct is generated, and contains static references to 8 reuse identifiers.
   struct reuseIdentifier {
     /// Reuse identifier `CalculateSettingsCell`.
     static let calculateSettingsCell: Rswift.ReuseIdentifier<CalculateSettingsCell> = Rswift.ReuseIdentifier(identifier: "CalculateSettingsCell")
@@ -468,6 +482,8 @@ struct R: Rswift.Validatable {
     static let detailCell: Rswift.ReuseIdentifier<DetailCell> = Rswift.ReuseIdentifier(identifier: "DetailCell")
     /// Reuse identifier `DetailRegionCell`.
     static let detailRegionCell: Rswift.ReuseIdentifier<DetailRegionCell> = Rswift.ReuseIdentifier(identifier: "DetailRegionCell")
+    /// Reuse identifier `DownloadSettingsCell`.
+    static let downloadSettingsCell: Rswift.ReuseIdentifier<DownloadSettingsCell> = Rswift.ReuseIdentifier(identifier: "DownloadSettingsCell")
     /// Reuse identifier `OSMSettingsCell`.
     static let osmSettingsCell: Rswift.ReuseIdentifier<OSMSettingsCell> = Rswift.ReuseIdentifier(identifier: "OSMSettingsCell")
     /// Reuse identifier `SportObjectCell`.
@@ -611,6 +627,20 @@ struct _R: Rswift.Validatable {
 
       func firstView(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> DetailRegionCell? {
         return instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? DetailRegionCell
+      }
+
+      fileprivate init() {}
+    }
+
+    struct _DownloadSettingsCell: Rswift.NibResourceType, Rswift.ReuseIdentifierType {
+      typealias ReusableType = DownloadSettingsCell
+
+      let bundle = R.hostingBundle
+      let identifier = "DownloadSettingsCell"
+      let name = "DownloadSettingsCell"
+
+      func firstView(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> DownloadSettingsCell? {
+        return instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? DownloadSettingsCell
       }
 
       fileprivate init() {}

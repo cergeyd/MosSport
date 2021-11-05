@@ -83,11 +83,6 @@ class RatingViewController: TableViewController {
         cell.configure(with: detail, indexPath: indexPath)
         return cell
     }
-
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let detail = self.details[indexPath.row]
-
-    }
 }
 
 extension RatingViewController: RatingViewInput {

@@ -71,7 +71,7 @@ extension UIViewController {
     @objc func dismissKeyboard() {
         self.view.endEditing(true)
     }
-    
+
     func pdfData(with tableView: UITableView, name: String, sourceView: UIBarButtonItem) {
         let priorBounds = CGRect(x: 0.0, y: 0.0, width: tableView.bounds.width, height: tableView.bounds.height + 500.0)
         let fittedSize = tableView.sizeThatFits(CGSize(width: priorBounds.size.width, height: tableView.contentSize.height + 500.0))
@@ -90,6 +90,8 @@ extension UIViewController {
         }
         UIGraphicsEndPDFContext()
         tableView.bounds = priorBounds
+
+        /// Share
         var docURL = (FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)).last! as URL
         docURL = docURL.appendingPathComponent(name + ".pdf")
         pdfData.write(to: docURL as URL, atomically: true)

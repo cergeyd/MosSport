@@ -77,7 +77,6 @@ class MenuViewController: TableViewController {
         MenuSection(title: "Рекомендации", items: [
             MenuItem(title: "Новые спортивные объекты", subtitle: "Оснащению территории новыми спортивными объектами", isDetailed: true, type: .recNewObjects),
             MenuItem(title: "Рейтинговая система", subtitle: "Положение района в таблице на основе его данных о спортивных объектах. Районы лидера,а также проблемные районы.", isDetailed: true, type: .recNewRating)
-
             ])
     ]
 

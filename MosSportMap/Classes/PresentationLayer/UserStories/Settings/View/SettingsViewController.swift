@@ -16,9 +16,11 @@ class SettingsViewController: TableViewController {
     }
 
     var output: SettingsViewOutput!
+    lazy var filesBrowser: FilesBrowser = { return FilesBrowser(controller: self) }()
     private let sections = [
         SettingSection(header: "Дополнительные спортивные объекты", type: .OSM),
         SettingSection(header: "Относительная величина расчёта", type: .calculated),
+        SettingSection(header: "Загрузить новые объекты", type: .download),
     ]
 
     //MARK: Lifecycle
@@ -40,6 +42,7 @@ class SettingsViewController: TableViewController {
         self.tableView = UITableView(frame: .zero, style: .insetGrouped)
         self.tableView.register(UINib(nibName: CalculateSettingsCell.identifier, bundle: nil), forCellReuseIdentifier: CalculateSettingsCell.identifier)
         self.tableView.register(UINib(nibName: OSMSettingsCell.identifier, bundle: nil), forCellReuseIdentifier: OSMSettingsCell.identifier)
+        self.tableView.register(UINib(nibName: DownloadSettingsCell.identifier, bundle: nil), forCellReuseIdentifier: DownloadSettingsCell.identifier)
     }
 
     //MARK: TableView
@@ -50,7 +53,7 @@ class SettingsViewController: TableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if (indexPath.section == 1) {
             let isFull = currentCalculatePerPeoples != 0
-            return isFull ? 180.0 : 120.0
+            return isFull ? 180.0 : 110.0
         }
         return UITableView.automaticDimension
     }
@@ -82,14 +85,23 @@ class SettingsViewController: TableViewController {
             let density = UserDefaults.averageDensity
             calculateCell.configure(with: density == 0, value: density)
             return calculateCell
+        case .download:
+            let downloadCell = tableView.dequeueReusableCell(withIdentifier: DownloadSettingsCell.identifier) as! DownloadSettingsCell
+            downloadCell.delegate = self
+            downloadCell.configure(with: "hello")
+            return downloadCell
         }
     }
 }
 
-extension SettingsViewController: SettingsViewInput, SettingsCellDelegate, CalculateSettingsCellDelegate {
+extension SettingsViewController: SettingsViewInput, SettingsCellDelegate, CalculateSettingsCellDelegate, DownloadSettingsCellDelegate {
 
     func setupInitialState() {
         self.title = "Настройки"
+    }
+    
+    func didTapDownload() {
+        self.filesBrowser.show()
     }
 
     func didSetAverage(density: Int?) {

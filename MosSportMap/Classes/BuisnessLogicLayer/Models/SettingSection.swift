@@ -12,6 +12,7 @@ struct SettingSection {
     enum `Type` {
         case OSM
         case calculated
+        case download
     }
 
     let header: String
