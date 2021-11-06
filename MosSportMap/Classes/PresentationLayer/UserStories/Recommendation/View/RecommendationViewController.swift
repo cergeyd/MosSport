@@ -12,9 +12,22 @@ protocol RecommendationDelegate: AnyObject {
     func didSelect(calculated type: CalculateAreaType?)
     func didCalculate(recommendation: Recommendation)
     func didSelect(population: Population, polygon: GMSPolygon)
+    func didSelect(sport object: SportObject)
+}
+
+enum RecommendationType {
+    case area
+    case availability(area: Population, polygon: GMSPolygon)
+    case objects(area: Population, availability: SportObject.AvailabilityType, recommendation: Recommendation)
+    case exist(objects: [SportObject])
 }
 
 class RecommendationViewController: TableViewController {
+
+    struct Config {
+        static let animationDuration = 0.4
+        static let width = 0.4
+    }
 
     var output: RecommendationViewOutput!
     //var type: MenuType!
@@ -31,6 +44,13 @@ class RecommendationViewController: TableViewController {
         self.configureSections()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        UIView.animate(withDuration: Config.animationDuration) {
+            self.splitViewController?.preferredPrimaryColumnWidthFraction = Config.width
+        }
+    }
+    
     //MARK: Private func
     private func configureTableView() {
         self.tableView = UITableView(frame: .zero, style: .insetGrouped)
@@ -76,6 +96,13 @@ class RecommendationViewController: TableViewController {
             self.sections.append(DetailSection(title: "Регион", details: [area]))
             self.sections.append(DetailSection(title: "Доступность", details: [availability]))
             self.sections.append(DetailSection(title: "Отсутствующие виды спорта", details: details))
+        case .exist(objects: let objects):
+            self.title = "Объекты"
+            var details: [Detail] = []
+            for object in objects {
+                details.append(Detail(type: .filter, title: object.title, place: object.address, subtitle: object.department.title))
+            }
+            self.sections.append(DetailSection(title: "Объекты", details: details))
         }
     }
 
@@ -147,6 +174,7 @@ extension RecommendationViewController: MapViewDataSource {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.navigationBar(isLoading: true)
+        Dispatch.after(3.0) { self.navigationBar(isLoading: false) }
         switch self.recommendationType {
         case .area:
             let area = self.detail(at: indexPath)
@@ -155,17 +183,20 @@ extension RecommendationViewController: MapViewDataSource {
                 self.output.didSelect(recommendationType: .availability(area: population, polygon: polygon))
             }
         case .availability(area: let area, polygon: let polygon):
-            self.navigationBar(isLoading: true)
             Dispatch.after {
                 let availability = self.detail(at: indexPath)
                 if let type = SportObject.AvailabilityType.init(rawValue: availability.title) {
                     let recommendation = SharedManager.shared.calculateRecommendation(in: polygon, availabilityType: type)
                     self.output.didSelect(recommendationType: .objects(area: area, availability: type, recommendation: recommendation))
                 }
-                self.navigationBar(isLoading: false)
             }
-        case .objects:
-            break
+        case .objects(_, _, let recommendations):
+            if (indexPath.section == 1) {
+                let existObjects = recommendations.existObjects
+                self.output.didSelect(recommendationType: .exist(objects: existObjects))
+            }
+        case .exist(objects: let objects):
+            self.delegate?.didSelect(sport: objects[indexPath.row])
         }
     }
 }

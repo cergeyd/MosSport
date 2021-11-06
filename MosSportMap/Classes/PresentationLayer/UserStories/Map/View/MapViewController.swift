@@ -264,10 +264,18 @@ extension MapViewController: MenuDelegate, DetailViewDelegate, ListViewDelegate 
         }
     }
 
+    func didSelect(objects: [SportObject]) {
+        if (objects.isEmpty) { self.makeClusters(hidden: false) } else { self.makeClusters(hidden: false, objects: objects) }
+    }
+
     /// Выбираем объект с экрана меню "Департамент" или с экрана "Площадки рядом", движем камеру
     func didSelect(sport object: SportObject) {
+        for circle in self.avaiavailabilityCircles { circle.map = nil }
         self.mapView.animate(to: GMSCameraPosition(latitude: object.coordinate.latitude, longitude: object.coordinate.longitude, zoom: self.mapView.camera.zoom))
-        let _ = self.drawAreaCircle(with: object.coorditate, type: object.availabilityType)
+        let circle = self.drawAreaCircle(with: object.coorditate, type: object.availabilityType)
+        if (circle.position.latitude == object.coordinate.latitude && circle.position.longitude == object.coordinate.longitude) {
+            self.output.didTapShow(sport: object)
+        }
     }
 
     /// Показываем объекты для определённого вида игр
@@ -337,6 +345,7 @@ extension MapViewController: MenuDelegate, DetailViewDelegate, ListViewDelegate 
             Dispatch.after { self.navigationBar(isLoading: false) }
             self.clearAvaiavailabilityCircles()
             self.clearHandsBorders(isFullClear: true)
+            self.firstCircle = nil
             self.makeClusters(hidden: true)
             self.makeBorders(hidden: true)
             self.makeHeatmap(hidden: true)
@@ -371,16 +380,25 @@ extension MapViewController {
         if let _ = marker.userData as? GMUCluster { mapView.animate(toZoom: mapView.camera.zoom + 1); return true }
         else {
             if let object = marker.userData as? SportObject {
-                let circle = self.drawAreaCircle(with: object.coorditate, type: object.availabilityType)
                 if (self.isNeedShowObjectInfoByTap) {
+                    for circle in self.avaiavailabilityCircles { circle.map = nil }
+                   // let circle = self.drawAreaCircle(with: object.coorditate, type: object.availabilityType)
                     self.output.didTapShow(sport: object)
                 } else {
+                    let circle = self.drawAreaCircle(with: object.coorditate, type: object.availabilityType)
                     if let firstCircle = self.firstCircle {
                         let points = CircleInterception.interceptions(between: firstCircle, second: circle)
-                        self.createAvailability(with: points)
+                        let polygon = self.createAvailability(with: points)
                         if let point = points.first {
                             if (self.byHandPopulation == nil) { self.population(for: point, in: SharedManager.shared.allPolygons) }
-                            self.didTapHandsBorders()
+
+                            if let population = self.byHandPopulation {
+                                let report = SharedManager.shared.calculateReport(for: population, polygon: polygon)
+                                for dataSource in self.dataSources {
+                                    dataSource.didCalculated(report: report)
+                                }
+                            }
+
                         }
                         self.firstCircle = nil
                     } else {
@@ -393,16 +411,15 @@ extension MapViewController {
     }
 
     /// Рисуем границу достпуности
-    func createAvailability(with coordinates: [CLLocationCoordinate2D]) {
+    func createAvailability(with coordinates: [CLLocationCoordinate2D]) -> GMSPolygon {
         self.drawPolygon.removeAllCoordinates()
         for coord in coordinates { self.drawPolygon.add(coord) }
         /// Полигон
         let polygon = GMSPolygon(path: self.drawPolygon)
-        polygon.fillColor = AppStyle.color(for: .coloured)
-        //polygon.strokeColor = .black
-        //polygon.strokeWidth = 2
+        polygon.fillColor = AppStyle.color(for: .coloured).withAlphaComponent(0.8)
         polygon.map = self.mapView
         self.polygons.append(polygon)
+        return polygon
     }
 
     /// Рисуем границу вручную

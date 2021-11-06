@@ -20,13 +20,10 @@ class CircleInterception {
     /// Шаг
     static let step = 0.0001
     static let offset = 5.0
-
     static private var drawPolygon = GMSMutablePath()
-
     /// Есть  n окружностей
     /// Знаем центр и радиус
     /// Пересечения - массив координат, на границе окружности, которых входят в другую окружность
-
     static func interceptions(between circle: GMSCircle, second: GMSCircle) -> [CLLocationCoordinate2D] {
         let firstBorders = self.edgeCoordinates(of: circle)
         let secondBorders = self.edgeCoordinates(of: second)
@@ -57,7 +54,7 @@ class CircleInterception {
         return points
     }
 
-    /// Рисуем границу достпуности
+    /// Рисуем границу доступности
     static private func createAvailability(with coordinates: [CLLocationCoordinate2D]) -> GMSPolygon {
         for coord in coordinates { self.drawPolygon.add(coord) }
         let polygon = GMSPolygon(path: self.drawPolygon)
@@ -73,11 +70,8 @@ class CircleInterception {
         var points: [CLLocationCoordinate2D] = []
 
         if let circleEdge = self.edges(of: circle) {
-
-
             /// Множество точек на границах окружности
             /// Не зря же Apple процессоры улучшает
-
             /// TOP -> RIGHT
             for i in stride(from: circleEdge.top.longitude, to: circleEdge.right.longitude, by: step) {
                 for j in stride(from: circleEdge.right.latitude, to: circleEdge.top.latitude, by: step) {
@@ -133,9 +127,7 @@ class CircleInterception {
         return points
     }
 
-// Широта: 55.7522200° latitude
-// Долгота: 37.6155600° longitude
-
+    /// Границы окружностей
     static private func edges(of circle: GMSCircle) -> CircleEdge? {
         /// Центр и Радиус
         let center = circle.position

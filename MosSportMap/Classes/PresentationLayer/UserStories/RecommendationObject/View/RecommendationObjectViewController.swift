@@ -8,18 +8,21 @@
 
 import GoogleMapsUtils
 
+protocol RecommendationObjectDelegate: AnyObject {
+    func needShowAreas()
+    func didCalculate(recommendation: Recommendation)
+    func didSelect(population: Population, polygon: GMSPolygon)
+    func didSelect(sport object: SportObject)
+    func didSelect(objects: [SportObject])
+}
+
 enum RecommendationSportObjectType {
     case sportTypes
     case availability(type: SportType)
     case populations(type: SportType, avalability: SportObject.AvailabilityType)
     case result(type: SportType, avalability: SportObject.AvailabilityType, population: Population, recommendation: Recommendation)
     case missing(populations: [Population], type: SportType, isMissing: Bool)
-}
-
-protocol RecommendationObjectDelegate: AnyObject {
-    func needShowAreas()
-    func didCalculate(recommendation: Recommendation)
-    func didSelect(population: Population, polygon: GMSPolygon)
+    case exist(objects: [SportObject])
 }
 
 class RecommendationObjectViewController: TableViewController {
@@ -46,6 +49,13 @@ class RecommendationObjectViewController: TableViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
+        switch self.recommendationType {
+        case .result:
+            self.delegate?.didSelect(objects: [])
+        default: break
+        }
+
         UIView.animate(withDuration: Config.animationDuration) {
             self.splitViewController?.preferredPrimaryColumnWidthFraction = Config.width
         }
@@ -69,19 +79,16 @@ class RecommendationObjectViewController: TableViewController {
             self.sections.append(DetailSection(title: "Районы", details: details))
         case .availability(type: let type):
             self.title = type.title
-
             /// Отсутствует
             var details: [Detail] = []
             let populations = SharedManager.shared.emptyPopulations(sportType: type)
             details.append(Detail(type: .filter, title: "Районы в которых данный вид спорта отсутствует", place: "", subtitle: populations.count.populations()))
             self.sections.append(DetailSection(title: "Районы, в которых не представлен данный вид спорта", details: details))
-
             /// Присутствует
             var detailzs: [Detail] = []
             let populationz = SharedManager.shared.existPopulations(sportType: type)
             detailzs.append(Detail(type: .filter, title: "Районы в которых данный вид спорта присутствует", place: "", subtitle: populationz.count.populations()))
             self.sections.append(DetailSection(title: "Районы, в которых представлен данный вид спорта", details: detailzs))
-
             /// Доступность
             var detailz: [Detail] = []
             detailz.append(Detail(type: .filter, title: "Шаговая доступность", place: "", subtitle: "В радиусе 500 м."))
@@ -89,7 +96,7 @@ class RecommendationObjectViewController: TableViewController {
             detailz.append(Detail(type: .filter, title: "Окружное", place: "", subtitle: "В радиусе 3000 м."))
             detailz.append(Detail(type: .filter, title: "Городское", place: "", subtitle: "В радиусе 5000 м."))
             self.sections.append(DetailSection(title: "Доступность нового объекта", details: detailz))
-        case .result(type: let type, avalability: let availability, let area, let recommendations):
+        case .result(_, let availability, let area, let recommendations):
             self.title = "Рекомендация"
             self.delegate?.didCalculate(recommendation: recommendations)
             /// Регион
@@ -104,12 +111,10 @@ class RecommendationObjectViewController: TableViewController {
             for missing in recommendations.missingTypes {
                 details.append(Detail(type: .filter, title: missing.title, place: "Идентификатор: \(missing.id)", subtitle: "Вид спорта"))
             }
-
             self.sections.append(DetailSection(title: "Регион", details: [area]))
             self.sections.append(DetailSection(title: "Доступность", details: [availability]))
             self.sections.append(DetailSection(title: "Отсутствующие виды спорта", details: details))
-
-        case .missing(populations: let populations, type: let type, let isMissing):
+        case .missing(let populations, type: _, let isMissing):
             /// Районы, в которых не представлен данный вид спорта
             self.title = "Районы"
             var details: [Detail] = []
@@ -117,13 +122,20 @@ class RecommendationObjectViewController: TableViewController {
                 details.append(Detail(type: .filter, title: population.area, place: String(ind + 1), subtitle: "Плотность населения: " + population.population.formattedWithSeparator))
             }
             self.sections.append(DetailSection(title: isMissing ? "Районы, в которых не представлен данный вид спорта" : "Районы, в которых представлен данный вид спорта", details: details))
-        case .populations(type: let type, avalability: let avalability):
+        case .populations:
             self.title = "Район"
             var details: [Detail] = []
             for (ind, population) in gPopulationResponse.populations.enumerated() {
                 details.append(Detail(type: .filter, title: population.area, place: "\(String(ind + 1)) Место", subtitle: population.population.formattedWithSeparator))
             }
             self.sections.append(DetailSection(title: "Укажите конкретный район, для которого необходимо произвести расчёт для оптимального места сооружения нового спортивного объекта", details: details))
+        case .exist(objects: let objects):
+            self.title = "Объекты"
+            var details: [Detail] = []
+            for object in objects {
+                details.append(Detail(type: .filter, title: object.title, place: object.address, subtitle: object.department.title))
+            }
+            self.sections.append(DetailSection(title: "Объекты", details: details))
         }
     }
 
@@ -155,9 +167,9 @@ extension RecommendationObjectViewController: RecommendationObjectViewInput {
 extension RecommendationObjectViewController: MapViewDataSource {
 
     func didSelect(polygon: GMSPolygon) {
-        if let population = SharedManager.shared.population(by: polygon.title) {
-            // self.output.didSelect(recommendationType: .availability(area: population, polygon: polygon))
-        }
+//        if let population = SharedManager.shared.population(by: polygon.title) {
+//            // self.output.didSelect(recommendationType: .availability(area: population, polygon: polygon))
+//        }
     }
 
     private func detail(at indexPath: IndexPath) -> Detail {
@@ -216,9 +228,13 @@ extension RecommendationObjectViewController: MapViewDataSource {
                     self.output.didSelect(recommendationType: .populations(type: type, avalability: availability))
                 }
             }
-        case .result:
-            break
-        case .missing(populations: let populations, type: let type, _):
+        case .result(_, _, _, let recommendations):
+            if (indexPath.section == 1) {
+                let existObjects = recommendations.existObjects
+                self.delegate?.didSelect(objects: existObjects)
+                self.output.didSelect(recommendationType: .exist(objects: existObjects))
+            }
+        case .missing:
             if let population = SharedManager.shared.population(by: detail.title), let polygon = SharedManager.shared.polygon(by: population) {
                 self.delegate?.didSelect(population: population, polygon: polygon)
             }
@@ -228,6 +244,8 @@ extension RecommendationObjectViewController: MapViewDataSource {
                 self.output.didSelect(recommendationType: .result(type: type, avalability: avalability, population: population, recommendation: recommendation))
                 self.delegate?.didSelect(population: population, polygon: polygon)
             }
+        case .exist(objects: let objects):
+            self.delegate?.didSelect(sport: objects[indexPath.row])
         }
     }
 

@@ -31,9 +31,3 @@ struct Recommendation {
     let existObjects: [SportObject]
     let coordinates: [CLLocationCoordinate2D]
 }
-
-enum RecommendationType {
-    case area
-    case availability(area: Population, polygon: GMSPolygon)
-    case objects(area: Population, availability: SportObject.AvailabilityType, recommendation: Recommendation)
-}

@@ -41,6 +41,8 @@ protocol MenuDelegate: AnyObject {
     func didTapClearBorders()
     func didCalculate(recommendation: Recommendation)
     func didSelect(population: Population, polygon: GMSPolygon)
+    func didSelect(sport object: SportObject)
+    func didSelect(objects: [SportObject])
 }
 
 class MenuViewController: TableViewController {
@@ -188,6 +190,10 @@ extension MenuViewController {
 }
 
 extension MenuViewController: CalculatedDelegate, RecommendationDelegate, ListViewDelegate, RecommendationObjectDelegate {
+    
+    func didSelect(objects: [SportObject]) {
+        self.delegate?.didSelect(objects: objects)
+    }
 
     /// Нужно показать границы районов
     func needShowAreas() {
@@ -204,6 +210,10 @@ extension MenuViewController: CalculatedDelegate, RecommendationDelegate, ListVi
 
     func didTapClearBorders() {
         self.delegate?.didTapClearBorders()
+    }
+    
+    func didSelect(sport object: SportObject) {
+        self.delegate?.didSelect(sport: object)
     }
 
     func didSelect(filter sport: SportObject) {

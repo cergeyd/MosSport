@@ -403,7 +403,7 @@ class SharedManager {
                             minDistance = distance
                         }
                     }
-                    if (minDistance + 150.0 > range) { /// Сто метров offset
+                    if (minDistance > range) { /// Сто метров offset
                         emptyCoordinates.append(missCoordinates)
                     }
                 }
