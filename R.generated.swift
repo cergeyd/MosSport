@@ -130,12 +130,14 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
 
-  /// This `R.file` struct is generated, and contains static references to 6 files.
+  /// This `R.file` struct is generated, and contains static references to 7 files.
   struct file {
     /// Resource file `OSMSportObjects.json`.
     static let osmSportObjectsJson = Rswift.FileResource(bundle: R.hostingBundle, name: "OSMSportObjects", pathExtension: "json")
     /// Resource file `departments.json`.
     static let departmentsJson = Rswift.FileResource(bundle: R.hostingBundle, name: "departments", pathExtension: "json")
+    /// Resource file `missingSportTypesResponse.json`.
+    static let missingSportTypesResponseJson = Rswift.FileResource(bundle: R.hostingBundle, name: "missingSportTypesResponse", pathExtension: "json")
     /// Resource file `mo.kml`.
     static let moKml = Rswift.FileResource(bundle: R.hostingBundle, name: "mo", pathExtension: "kml")
     /// Resource file `moscowPopulation.json`.
@@ -154,6 +156,12 @@ struct R: Rswift.Validatable {
     /// `bundle.url(forResource: "departments", withExtension: "json")`
     static func departmentsJson(_: Void = ()) -> Foundation.URL? {
       let fileResource = R.file.departmentsJson
+      return fileResource.bundle.url(forResource: fileResource)
+    }
+
+    /// `bundle.url(forResource: "missingSportTypesResponse", withExtension: "json")`
+    static func missingSportTypesResponseJson(_: Void = ()) -> Foundation.URL? {
+      let fileResource = R.file.missingSportTypesResponseJson
       return fileResource.bundle.url(forResource: fileResource)
     }
 

@@ -131,7 +131,7 @@ class ListViewController: TableViewController {
                         if (!exist.contains(where: { detail in
                             return detail.title == type.title
                         })) {
-                            self.details.append(Detail(type: detail.type, title: type.title, place: "ID: \(type.id)", subtitle: "Спорт:"))
+                            self.details.append(Detail(type: .region, title: type.title, place: "ID: \(type.id)", subtitle: "Спорт:"))
                         }
                     }
                 }

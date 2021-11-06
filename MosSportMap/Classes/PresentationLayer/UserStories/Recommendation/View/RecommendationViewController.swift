@@ -17,7 +17,7 @@ protocol RecommendationDelegate: AnyObject {
 class RecommendationViewController: TableViewController {
 
     var output: RecommendationViewOutput!
-    var type: MenuType!
+    //var type: MenuType!
     weak var delegate: RecommendationDelegate?
     var recommendationType: RecommendationType = .area
     private var sections: [DetailSection] = []
@@ -159,7 +159,7 @@ extension RecommendationViewController: MapViewDataSource {
             Dispatch.after {
                 let availability = self.detail(at: indexPath)
                 if let type = SportObject.AvailabilityType.init(rawValue: availability.title) {
-                    let recommendation = self.calculateRecommendation(in: polygon, availabilityType: type)
+                    let recommendation = SharedManager.shared.calculateRecommendation(in: polygon, availabilityType: type)
                     self.output.didSelect(recommendationType: .objects(area: area, availability: type, recommendation: recommendation))
                 }
                 self.navigationBar(isLoading: false)
@@ -167,39 +167,5 @@ extension RecommendationViewController: MapViewDataSource {
         case .objects:
             break
         }
-    }
-
-    private func calculateRecommendation(in polygon: GMSPolygon, availabilityType: SportObject.AvailabilityType) -> Recommendation {
-        /// Границы региона
-        let rectangle = SharedManager.shared.getRectangle(inside: polygon)
-        /// Объекты, которые уже есть в регионе
-        let objects = SharedManager.shared.objects(for: polygon, with: availabilityType)
-        /// Виды спорта, которых не хватает
-        let missingTypes = SharedManager.shared.missingSportTypes(objects: objects)
-        /// Координаты, где можно разместить объект
-        var emptyCoordinates: [CLLocationCoordinate2D] = []
-        let range = SharedManager.shared.meters(for: availabilityType)
-
-        for i in stride(from: rectangle.topLeft.longitude, to: rectangle.bottomRight.longitude, by: 0.002) {
-            for j in stride(from: rectangle.bottomRight.latitude, to: rectangle.topLeft.latitude, by: 0.001) {
-                let missCoordinates = CLLocationCoordinate2D(latitude: j, longitude: i)
-                if (polygon.contains(coordinate: missCoordinates)) {
-                    var minDistance = 5000.0
-                    for object in objects {
-                        let existLocation = CLLocation(latitude: object.coordinate.latitude, longitude: object.coordinate.longitude)
-                        let missLocation = CLLocation(latitude: missCoordinates.latitude, longitude: missCoordinates.longitude)
-
-                        let distance = existLocation.distance(from: missLocation)
-                        if (distance < minDistance) {
-                            minDistance = distance
-                        }
-                    }
-                    if (minDistance + 100.0 > range) { /// Сто метров offset
-                        emptyCoordinates.append(missCoordinates)
-                    }
-                }
-            }
-        }
-        return Recommendation(availabilityType: availabilityType, missingTypes: missingTypes, existObjects: objects, coordinates: emptyCoordinates)
     }
 }

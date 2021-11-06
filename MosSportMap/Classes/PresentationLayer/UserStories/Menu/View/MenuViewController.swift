@@ -24,7 +24,8 @@ enum MenuType: Int {
     case filterSportTypes = 23
     /// Рекомендации
     case recNewObjects = 30
-    case recNewRating = 31
+    case recNewSportObject = 31
+    case recNewRating = 32
 }
 
 protocol MenuDelegate: AnyObject {
@@ -55,6 +56,8 @@ class MenuViewController: TableViewController {
     /// Контроллеры, храним так, чтобы удобно было добавить в dataSource
     lazy var calculatedViewController = self.output.calculatedViewController()
     lazy var recommendationViewController = self.output.recommendationViewController()
+    lazy var recommendationObjectViewController = self.output.recommendationObjectViewController()
+
     /// Меню
     let sections = [
         MenuSection(title: "Карта", items: [
@@ -76,6 +79,7 @@ class MenuViewController: TableViewController {
             ]),
         MenuSection(title: "Рекомендации", items: [
             MenuItem(title: "Новые спортивные объекты", subtitle: "Оснащению территории новыми спортивными объектами", isDetailed: true, type: .recNewObjects),
+            MenuItem(title: "Новый спортивный объект на основе определённой игры", subtitle: "Оснащение территории конткретным спортивным объектом", isDetailed: true, type: .recNewSportObject),
             MenuItem(title: "Рейтинговая система", subtitle: "Положение района в таблице на основе его данных о спортивных объектах. Районы лидера,а также проблемные районы.", isDetailed: true, type: .recNewRating)
             ])
     ]
@@ -99,7 +103,7 @@ class MenuViewController: TableViewController {
     @objc private func didTapSettings() {
         self.output.didTapSettings()
     }
-    
+
     private func configureTableView() {
         self.tableView = UITableView(frame: .zero, style: .insetGrouped)
         self.tableView.register(MenuCell.self, forCellReuseIdentifier: MenuCell.identifier)
@@ -125,6 +129,7 @@ extension MenuViewController: MenuViewInput {
         self.navigationItem.title = "Меню"
         self.delegate?.addToDataSource(controller: self.calculatedViewController)
         self.delegate?.addToDataSource(controller: self.recommendationViewController)
+        self.delegate?.addToDataSource(controller: self.recommendationObjectViewController)
     }
 }
 
@@ -170,8 +175,11 @@ extension MenuViewController {
                 self.delegate?.didTapShowRating()
             } else {
                 /// Экран с рекомендациями
-                self.recommendationViewController.type = type
-                self.push(self.recommendationViewController)
+                if (type == .recNewObjects) {
+                    self.push(self.recommendationViewController)
+                } else {
+                    self.push(self.recommendationObjectViewController)
+                }
             }
         default:
             self.output.didTapShow(listType: type)
@@ -179,8 +187,13 @@ extension MenuViewController {
     }
 }
 
-extension MenuViewController: CalculatedDelegate, RecommendationDelegate, ListViewDelegate {
+extension MenuViewController: CalculatedDelegate, RecommendationDelegate, ListViewDelegate, RecommendationObjectDelegate {
 
+    /// Нужно показать границы районов
+    func needShowAreas() {
+        self.delegate?.didUpdate(map: .population)
+    }
+    
     func didSelect(population: Population, polygon: GMSPolygon) {
         self.delegate?.didSelect(population: population, polygon: polygon)
     }

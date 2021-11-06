@@ -213,7 +213,7 @@ class SharedManager {
             let location = CLLocation(latitude: object.coordinate.latitude, longitude: object.coordinate.longitude)
             let distance = currentLocation.distance(from: location)
             switch distance {
-            case 1..<501:
+            case 5..<501:
                 sportObjectsWalking.append(object)
             case 500..<1001:
                 sportObjectsDistrict.append(object)
@@ -269,6 +269,30 @@ class SharedManager {
         return objects
     }
 
+    /// Районы, в которых нет данного вида спорта
+    func emptyPopulations(sportType: SportType) -> [Population] {
+        var missings: [Population] = []
+        for missing in gMissingSportTypesResponse {
+            if (missing.missingSports.contains(sportType)) {
+                missings.append(missing.population)
+                continue
+            }
+        }
+        return missings
+    }
+
+    /// Районы, в которых есть данный вид спорта
+    func existPopulations(sportType: SportType) -> [Population] {
+        var exist: [Population] = []
+        for missing in gMissingSportTypesResponse {
+            if (missing.existingSports.contains(sportType)) {
+                exist.append(missing.population)
+                continue
+            }
+        }
+        return exist
+    }
+
     /// Получаем корректные промежутки заданного района
     func getRectangle(inside polygon: GMSPolygon) -> Rectangle {
         var minLeft: Double = 90.0
@@ -307,7 +331,7 @@ class SharedManager {
         NotificationCenter.default.post(name: NSNotification.Name.updateSportObjectsList, object: nil)
     }
 
-    /// Объекдиним все объекты с одинаковыми играми в один объект
+    /// Объединим все объекты с одинаковыми играми в один объект
     func fromMultipleSportToSingle(objects: [SportObject]) -> [SportObject] {
         var sportObjects: [SportObject] = []
         var dict: [SportObject: [SportObject.Sport]] = [:]
@@ -327,21 +351,69 @@ class SharedManager {
             let sports = dict[object]
             object.sport = sports ?? []
             /// Если с таким айди ещё нет
-            if (!gSportObjectResponse.objects.contains(where: { existObject in
-                return existObject.id == object.id
-            })) {
-                sportObjects.append(object)
-            }
+//            if (!gSportObjectResponse.objects.contains(where: { existObject in
+//                return existObject.id == object.id
+//            })) {
+            sportObjects.append(object)
+            //  }
         }
-     
+
         let newObjects = self.getNewObjects()?.objects ?? []
         let newResponse = SportObjectResponse(objects: sportObjects + newObjects)
         self.save(object: newResponse, filename: Config.kNewObjects + ".json")
         return sportObjects
     }
 
+    /// Рекомендация
+    func calculateRecommendation(in polygon: GMSPolygon, availabilityType: SportObject.AvailabilityType, sportType: SportType? = nil) -> Recommendation {
+        /// Границы региона
+        let rectangle = SharedManager.shared.getRectangle(inside: polygon)
+        /// Объекты, которые уже есть в регионе
+        var objects = SharedManager.shared.objects(for: polygon, with: availabilityType)
+        /// Виды спорта, которых не хватает
+        let missingTypes = SharedManager.shared.missingSportTypes(objects: objects)
+        /// Координаты, где можно разместить объект
+        var emptyCoordinates: [CLLocationCoordinate2D] = []
+        let range = SharedManager.shared.meters(for: availabilityType)
+
+        /// Если нужна конкретная игра
+        if let sportType = sportType {
+            objects = objects.filter { object in
+                return object.sport.contains(where: { sport in
+                    return sport.sportType == sportType
+                })
+            }
+        }
+
+        let by = sportType == nil ? 0.003 : 0.003
+        let by1 = sportType == nil ? 0.002 : 0.003
+
+        for i in stride(from: rectangle.topLeft.longitude, to: rectangle.bottomRight.longitude, by: by) {
+            for j in stride(from: rectangle.bottomRight.latitude, to: rectangle.topLeft.latitude, by: by1) {
+                let missCoordinates = CLLocationCoordinate2D(latitude: j, longitude: i)
+                if (polygon.contains(coordinate: missCoordinates)) {
+                    var minDistance = 5000.0
+
+                    for object in objects {
+                        let existLocation = CLLocation(latitude: object.coordinate.latitude, longitude: object.coordinate.longitude)
+                        let missLocation = CLLocation(latitude: missCoordinates.latitude, longitude: missCoordinates.longitude)
+
+                        let distance = existLocation.distance(from: missLocation)
+                        if (distance < minDistance) {
+                            minDistance = distance
+                        }
+                    }
+                    if (minDistance + 150.0 > range) { /// Сто метров offset
+                        emptyCoordinates.append(missCoordinates)
+                    }
+                }
+            }
+        }
+        return Recommendation(availabilityType: availabilityType, missingTypes: missingTypes, existObjects: objects, coordinates: emptyCoordinates)
+    }
+
     //MARK: Private func
-    private func save<T: Codable>(object: T, filename: String) {
+    func save<T: Codable>(object: T, filename: String) {
         let filePath = self.getDocumentsDirectoryUrl().appendingPathComponent(filename)
         print(filePath)
         do {

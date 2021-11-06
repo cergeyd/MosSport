@@ -13,6 +13,7 @@ var gSportTypes: SportTypeResponse!
 var gDepartmentResponse: DepartmentResponse!
 var gSportObjectResponse: SportObjectResponse!
 var gSportOSMObjectResponse: SportObjectResponse!
+var gMissingSportTypesResponse: [MissingSportTypesResponse]!
 var gSportMosSportObjectResponse: SportObjectResponse!
 var gPopulationResponse: PopulationResponse!
 
@@ -37,6 +38,11 @@ class MosDataProcessing {
         self.loadPopulation()
         self.loadOSMSportObjects()
         self.getNewObjects()
+        self.loadMissingSportTypesResponse()
+        
+//        Dispatch.after(10.0) {
+//            self.emptyPopulations()
+//        }
     }
 
     /// Доабвим новые объекты
@@ -89,6 +95,39 @@ class MosDataProcessing {
             .subscribe(onNext: { response in
             gSportOSMObjectResponse = response
         }).disposed(by: self.disposeBag)
+    }
+    
+    /// Отсутствующие игры
+    func loadMissingSportTypesResponse() {
+        self.localService
+            .loadMissingSportTypesResponse()
+            .subscribe(onNext: { response in
+                gMissingSportTypesResponse = response
+        }).disposed(by: self.disposeBag)
+    }
+    
+    /// Районы, в которых нет данного вида спорта
+    func emptyPopulations() {
+        var missResponse: [MissingSportTypesResponse] = []
+        for polygon in SharedManager.shared.allPolygons {
+            if let population = SharedManager.shared.population(by: polygon.title) {
+                /// Существующие
+                var existing: [SportObject] = []
+                for object in gSportObjectResponse.objects {
+                    if (polygon.contains(coordinate: object.coorditate)) {
+                        existing.append(object)
+                    }
+                }
+                let miss = SharedManager.shared.missingSportTypes(objects: existing)
+
+                let sports = existing.flatMap({ $0.sport })
+                let exist = sports.compactMap({ $0.sportType })
+
+                missResponse.append(MissingSportTypesResponse(population: population, existingSports: exist, missingSports: miss))
+            }
+        }
+        
+        SharedManager.shared.save(object: missResponse, filename: "MissingSportTypesResponse")
     }
 }
 

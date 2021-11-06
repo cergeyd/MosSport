@@ -60,6 +60,8 @@ class MapViewController: GMClusterViewController {
     private let legendView = YVLegendView()
     /// Открывать ли информацию по объекту по тапу
     private var isNeedShowObjectInfoByTap = true
+    /// Выбради первую окружность
+    var firstCircle: GMSCircle?
 
     //MARK: Lifecycle
     override func viewDidLoad() {
@@ -219,14 +221,16 @@ extension MapViewController {
     }
 
     /// Рисуем радиус доступности (шаговая, городская и т.д.)
-    private func drawAreaCircle(with circleCenter: CLLocationCoordinate2D, type: SportObject.AvailabilityType) {
+    private func drawAreaCircle(with circleCenter: CLLocationCoordinate2D, type: SportObject.AvailabilityType) -> GMSCircle {
 //        self.avaiavailabilityCircle?.map = nil
         let circle = GMSCircle(position: circleCenter, radius: SharedManager.shared.meters(for: type))
         circle.fillColor = #colorLiteral(red: 0, green: 0.5898008943, blue: 1, alpha: 0.3589497749)
         circle.strokeColor = .clear
+        circle.isTappable = true
         circle.strokeWidth = 0.0
         circle.map = self.mapView
         self.avaiavailabilityCircles.append(circle)
+        return circle
     }
 }
 
@@ -263,7 +267,7 @@ extension MapViewController: MenuDelegate, DetailViewDelegate, ListViewDelegate 
     /// Выбираем объект с экрана меню "Департамент" или с экрана "Площадки рядом", движем камеру
     func didSelect(sport object: SportObject) {
         self.mapView.animate(to: GMSCameraPosition(latitude: object.coordinate.latitude, longitude: object.coordinate.longitude, zoom: self.mapView.camera.zoom))
-        self.drawAreaCircle(with: object.coorditate, type: object.availabilityType)
+        let _ = self.drawAreaCircle(with: object.coorditate, type: object.availabilityType)
     }
 
     /// Показываем объекты для определённого вида игр
@@ -275,7 +279,7 @@ extension MapViewController: MenuDelegate, DetailViewDelegate, ListViewDelegate 
     /// Отфильтрованный объект спорта
     func didSelect(filter sport: SportObject) {
         self.mapView.animate(to: GMSCameraPosition(latitude: sport.coordinate.latitude, longitude: sport.coordinate.longitude, zoom: self.mapView.camera.zoom))
-        self.drawAreaCircle(with: sport.coorditate, type: sport.availabilityType)
+        let _ = self.drawAreaCircle(with: sport.coorditate, type: sport.availabilityType)
         self.output.didTapShow(sport: sport)
     }
 
@@ -332,6 +336,7 @@ extension MapViewController: MenuDelegate, DetailViewDelegate, ListViewDelegate 
         case .clear:
             Dispatch.after { self.navigationBar(isLoading: false) }
             self.clearAvaiavailabilityCircles()
+            self.clearHandsBorders(isFullClear: true)
             self.makeClusters(hidden: true)
             self.makeBorders(hidden: true)
             self.makeHeatmap(hidden: true)
@@ -366,13 +371,38 @@ extension MapViewController {
         if let _ = marker.userData as? GMUCluster { mapView.animate(toZoom: mapView.camera.zoom + 1); return true }
         else {
             if let object = marker.userData as? SportObject {
-                self.drawAreaCircle(with: object.coorditate, type: object.availabilityType)
+                let circle = self.drawAreaCircle(with: object.coorditate, type: object.availabilityType)
                 if (self.isNeedShowObjectInfoByTap) {
                     self.output.didTapShow(sport: object)
+                } else {
+                    if let firstCircle = self.firstCircle {
+                        let points = CircleInterception.interceptions(between: firstCircle, second: circle)
+                        self.createAvailability(with: points)
+                        if let point = points.first {
+                            if (self.byHandPopulation == nil) { self.population(for: point, in: SharedManager.shared.allPolygons) }
+                            self.didTapHandsBorders()
+                        }
+                        self.firstCircle = nil
+                    } else {
+                        self.firstCircle = circle
+                    }
                 }
             }
         }
         return false
+    }
+
+    /// Рисуем границу достпуности
+    func createAvailability(with coordinates: [CLLocationCoordinate2D]) {
+        self.drawPolygon.removeAllCoordinates()
+        for coord in coordinates { self.drawPolygon.add(coord) }
+        /// Полигон
+        let polygon = GMSPolygon(path: self.drawPolygon)
+        polygon.fillColor = AppStyle.color(for: .coloured)
+        //polygon.strokeColor = .black
+        //polygon.strokeWidth = 2
+        polygon.map = self.mapView
+        self.polygons.append(polygon)
     }
 
     /// Рисуем границу вручную
@@ -402,7 +432,7 @@ extension MapViewController {
         }
     }
 
-    /// Очистимь ручные границы
+    /// Очистим ручные границы
     private func clearHandsBorders(isFullClear: Bool = false) {
         if (isFullClear) {
             self.coordinates.removeAll()

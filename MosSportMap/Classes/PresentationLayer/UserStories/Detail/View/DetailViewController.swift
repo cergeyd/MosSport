@@ -46,12 +46,37 @@ class DetailViewController: TableViewController {
         /// Отчёт
         if let report = self.report { self.configureSection(with: report) }
         /// Объекты депртамента
-            else if let section = self.section { self.configureSection(with: section) }
+            else if let section = self.section {
+                self.configureSection(with: section)
+//                let filter = UIBarButtonItem(image: UIImage(systemName: "camera.filters"), style: .plain, target: self, action: #selector(didTapShowFilter))
+//                self.parentViewController?.navigationItem.rightBarButtonItem = filter
+            }
         /// Виды спорта
             else if let sportTypeSection = self.sportTypeSection { self.configureSection(with: sportTypeSection) }
     }
 
     //MARK: Private func
+    @objc private func didTapShowFilter() {
+        let alert = UIAlertController(title: "Спортивные объекты", message: "Доступность", preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Все", style: .default, handler: { _ in
+            self.configureSection(with: self.section!)
+        }))
+        alert.addAction(UIAlertAction(title: "Шаговая доступность", style: .default, handler: { _ in
+            self.configureSection(with: self.section!, availabilityType: .walking)
+        }))
+        alert.addAction(UIAlertAction(title: "Районное", style: .default, handler: { _ in
+            self.configureSection(with: self.section!, availabilityType: .district)
+        }))
+        alert.addAction(UIAlertAction(title: "Окружное", style: .default, handler: { _ in
+            self.configureSection(with: self.section!, availabilityType: .area)
+        }))
+        alert.addAction(UIAlertAction(title: "Городское", style: .default, handler: { _ in
+            self.configureSection(with: self.section!, availabilityType: .city)
+        }))
+        alert.popoverPresentationController?.barButtonItem = self.navigationItem.rightBarButtonItem
+        self.present(alert, animated: true)
+    }
+
     @objc override func didTapExport() {
         self.didTapShowExportFormat()
     }
@@ -63,7 +88,7 @@ class DetailViewController: TableViewController {
             Dispatch.after(2.0, completion: { self.rightNavigationBar(isLoading: false) })
             self.pdfData(with: self.tableView, name: "Информация о районе \(self.report?.population.area ?? "")", sourceView: self.navigationItem.rightBarButtonItem!)
         }))
-        alert.addAction(UIAlertAction(title: "Exel", style: .default, handler: { _ in
+        alert.addAction(UIAlertAction(title: "Excel", style: .default, handler: { _ in
             self.rightNavigationBar(isLoading: true)
             Dispatch.after(2.0, completion: { self.rightNavigationBar(isLoading: false) })
             if let report = self.report {
@@ -95,11 +120,21 @@ class DetailViewController: TableViewController {
     }
 
     /// Фильтрация по департаментам
-    private func configureSection(with departmentSection: DepartmentSection) {
+    private func configureSection(with departmentSection: DepartmentSection, availabilityType: SportObject.AvailabilityType? = nil) {
+        self.sections.removeAll()
         var details: [Detail] = []
-        for sportObject in departmentSection.sportObjects {
-            let detail = Detail(type: .sportObjects, title: sportObject.title, place: sportObject.address, subtitle: sportObject.availabilityType.rawValue)
-            details.append(detail)
+        if let availabilityType = availabilityType {
+            for sportObject in departmentSection.sportObjects {
+                if (sportObject.availabilityType == availabilityType) {
+                    let detail = Detail(type: .sportObjects, title: sportObject.title, place: sportObject.address, subtitle: sportObject.availabilityType.rawValue)
+                    details.append(detail)
+                }
+            }
+        } else {
+            for sportObject in departmentSection.sportObjects {
+                let detail = Detail(type: .sportObjects, title: sportObject.title, place: sportObject.address, subtitle: sportObject.availabilityType.rawValue)
+                details.append(detail)
+            }
         }
         let departmentSection = DetailSection(title: "Департамент", details: [Detail(type: .departmentHeader, title: departmentSection.department.title, place: "Идентификатор: \(departmentSection.department.id)", subtitle: "Название департамента")])
         let sportSection = DetailSection(title: "Спортивные объекты", details: details)

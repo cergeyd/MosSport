@@ -10,6 +10,7 @@ protocol MenuViewOutput {
     func didLoadView()
     func calculatedViewController() -> CalculatedViewController
     func recommendationViewController() -> RecommendationViewController
+    func recommendationObjectViewController() -> RecommendationObjectViewController
     func didTapShow(listType: MenuType)
     func didTapSettings()
 }

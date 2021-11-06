@@ -27,6 +27,10 @@ extension MenuPresenter: MenuViewOutput {
         return self.router.recommendationViewController()
     }
     
+    func recommendationObjectViewController() -> RecommendationObjectViewController {
+        return self.router.recommendationObjectViewController()
+    }
+    
     func didTapShow(listType: MenuType)  {
         return self.router.didTapShow(listType: listType)
     }

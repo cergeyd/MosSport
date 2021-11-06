@@ -12,20 +12,28 @@ class MenuRouter {
     private weak var viewController: MenuViewController?
     private let calculatedFactory: CalculatedFactory
     private let recommendationFactory: RecommendationFactory
+    private let recommendationObjectFactory: RecommendationObjectFactory
     private let listFactory: ListFactory
     private let settingsFactory: SettingsFactory
 
-    init(viewController: MenuViewController, calculatedFactory: CalculatedFactory, listFactory: ListFactory, recommendationFactory: RecommendationFactory, settingsFactory: SettingsFactory) {
+    init(viewController: MenuViewController, calculatedFactory: CalculatedFactory, listFactory: ListFactory, recommendationFactory: RecommendationFactory, settingsFactory: SettingsFactory, recommendationObjectFactory: RecommendationObjectFactory) {
         self.viewController = viewController
         self.recommendationFactory = recommendationFactory
         self.calculatedFactory = calculatedFactory
         self.settingsFactory = settingsFactory
+        self.recommendationObjectFactory = recommendationObjectFactory
         self.listFactory = listFactory
     }
-    
+
     func recommendationViewController() -> RecommendationViewController {
         let controller = self.recommendationFactory.instantiateModule()
-      controller.delegate = self.viewController
+        controller.delegate = self.viewController
+        return controller
+    }
+
+    func recommendationObjectViewController() -> RecommendationObjectViewController {
+        let controller = self.recommendationObjectFactory.instantiateModule()
+        controller.delegate = self.viewController
         return controller
     }
 
@@ -34,7 +42,7 @@ class MenuRouter {
         controller.delegate = self.viewController
         return controller
     }
-    
+
     func didTapSettings() {
         let controller = self.settingsFactory.instantiateModule()
         self.viewController?.push(controller)

@@ -14,7 +14,7 @@ protocol UserStoriesFactory {
 }
 
 extension UserStoriesFactory {
-    
+
     func instantiateModuleNavigation() -> UINavigationController {
         let viewController = self.instantiateModule()
         let navigationController = UINavigationController(rootViewController: viewController)

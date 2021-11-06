@@ -34,4 +34,13 @@ extension Int {
         if 11...14 ~= self % 100 { dayString = "Объектов" }
         return "\(self) " + dayString
     }
+    
+    func populations() -> String {
+        var dayString: String!
+        if "1".contains("\(self % 10)") { dayString = "Район" }
+        if "234".contains("\(self % 10)") { dayString = "Района" }
+        if "567890".contains("\(self % 10)") { dayString = "Районов" }
+        if 11...14 ~= self % 100 { dayString = "Районов" }
+        return "\(self) " + dayString
+    }
 }
