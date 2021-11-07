@@ -385,8 +385,8 @@ class SharedManager {
             }
         }
 
-        let by = sportType == nil ? 0.003 : 0.003
-        let by1 = sportType == nil ? 0.002 : 0.003
+        let by = 0.003//sportType == nil ? 0.003 : 0.003
+        let by1 = 0.003//sportType == nil ? 0.002 : 0.002
 
         for i in stride(from: rectangle.topLeft.longitude, to: rectangle.bottomRight.longitude, by: by) {
             for j in stride(from: rectangle.bottomRight.latitude, to: rectangle.topLeft.latitude, by: by1) {

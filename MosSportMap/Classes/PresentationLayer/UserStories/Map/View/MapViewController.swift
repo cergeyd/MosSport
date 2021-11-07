@@ -237,6 +237,7 @@ extension MapViewController {
 extension MapViewController: MenuDelegate, DetailViewDelegate, ListViewDelegate {
 
     func didTapClearBorders() {
+        self.byHandPopulation = nil
         self.clearHandsBorders(isFullClear: true)
     }
 
@@ -344,6 +345,7 @@ extension MapViewController: MenuDelegate, DetailViewDelegate, ListViewDelegate 
         case .clear:
             Dispatch.after { self.navigationBar(isLoading: false) }
             self.clearAvaiavailabilityCircles()
+            for oldRecommendations in self.recommendationsCircles { oldRecommendations.map = nil }
             self.clearHandsBorders(isFullClear: true)
             self.firstCircle = nil
             self.makeClusters(hidden: true)
@@ -382,7 +384,7 @@ extension MapViewController {
             if let object = marker.userData as? SportObject {
                 if (self.isNeedShowObjectInfoByTap) {
                     for circle in self.avaiavailabilityCircles { circle.map = nil }
-                   // let circle = self.drawAreaCircle(with: object.coorditate, type: object.availabilityType)
+                    let _ = self.drawAreaCircle(with: object.coorditate, type: object.availabilityType)
                     self.output.didTapShow(sport: object)
                 } else {
                     let circle = self.drawAreaCircle(with: object.coorditate, type: object.availabilityType)
