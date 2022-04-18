@@ -50,7 +50,7 @@ class ListInitialViewController: PageboyViewController, SegmentProtocol, Pageboy
         return _searchController
     }()
 
-    //MARK: Lifecycle
+    // MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.output.didLoadView()
@@ -73,7 +73,7 @@ class ListInitialViewController: PageboyViewController, SegmentProtocol, Pageboy
         self.isModalInPresentation = children > 1
     }
 
-    //MARK: Private func
+    // MARK: Private func
     private func setupDelegate() {
         for controller in self.viewControllers as! [ListViewController] {
             controller.delegate = self.listViewDelegate

@@ -13,7 +13,7 @@ class DetailRegionCell: TableViewCell {
     @IBOutlet var regionPeopes: UILabel!
     @IBOutlet var regionSquare: UILabel!
 
-    //MARK: Func
+    // MARK: Func
     func configure(with report: SquareReport) {
         self.regionTitle.setTitle(report.population.area, for: .normal)
         let population = Int(report.population.population)

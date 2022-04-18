@@ -22,7 +22,7 @@ class MosDataProcessing {
     private let localService: LocalService
     let disposeBag = DisposeBag()
 
-    //MARK: Init
+    // MARK: Init
     init(localService: LocalService) {
         self.localService = localService
         self.processedSportObjects()

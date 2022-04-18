@@ -86,7 +86,7 @@ class MenuViewController: TableViewController {
             ])
     ]
 
-    //MARK: Lifecycle
+    // MARK: Lifecycle
     override func viewDidLoad() {
         self.configureTableView()
         super.viewDidLoad()
@@ -101,7 +101,7 @@ class MenuViewController: TableViewController {
         self.delegate?.didSelect(calculated: nil)
     }
 
-    //MARK: Private func
+    // MARK: Private func
     @objc private func didTapSettings() {
         self.output.didTapSettings()
     }
@@ -135,7 +135,7 @@ extension MenuViewController: MenuViewInput {
     }
 }
 
-//MARK: TableView
+// MARK: TableView
 extension MenuViewController {
 
     private func menuItem(at indexPath: IndexPath) -> MenuItem {

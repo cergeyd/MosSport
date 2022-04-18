@@ -18,7 +18,7 @@ class CalculateSettingsCell: TableViewCell {
 
     weak var delegate: CalculateSettingsCellDelegate?
 
-    //MARK: Func
+    // MARK: Func
     func configure(with isAverage: Bool, value: Int? = nil) {
         self.densitySwitch.setOn(isAverage, animated: true)
         if let value = value {
@@ -26,7 +26,7 @@ class CalculateSettingsCell: TableViewCell {
         }
     }
 
-    //MARK: Action
+    // MARK: Action
     @IBAction func didChangeSwitch(sender: UISwitch) {
         if (sender.isOn) {
             self.delegate?.didSetAverage(density: nil)

@@ -25,7 +25,7 @@ class MenuCell: TableViewCell {
         return label
     }()
     
-    //MARK: Lifecycle
+    // MARK: Lifecycle
     override func setUpLayout() {
         self.title.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(12.0)
@@ -40,7 +40,7 @@ class MenuCell: TableViewCell {
         }
     }
     
-    //MARK: Func
+    // MARK: Func
     func configure(with menu: MenuItem) {
         self.title.text = menu.title
         self.subtitle.text = menu.subtitle

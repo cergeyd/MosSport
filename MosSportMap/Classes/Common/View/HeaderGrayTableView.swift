@@ -18,7 +18,7 @@ class HeaderGrayTableView: View {
         return label
     }()
 
-    //MARK: Lifecycle
+    // MARK: Lifecycle
     override func setUpLayout() {
         super.setUpLayout()
         self.backgroundColor = .clear

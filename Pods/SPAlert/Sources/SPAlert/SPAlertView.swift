@@ -36,19 +36,32 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 open class SPAlertView: UIView {
     
-    // MARK: - Properties
-    
-    open var dismissByTap: Bool = true
     open var completion: (() -> Void)? = nil
     
-    // MARK: - UIAppearance
+    // MARK: - Properties
     
+    /**
+     SPAlert: Wrapper of corner radius of alert.
+     */
     @objc dynamic open var cornerRadius: CGFloat = 8 {
         didSet {
             layer.cornerRadius = self.cornerRadius
         }
     }
     
+    /**
+     SPAlert: Dismiss alert by tap in any place inside. By default is on.
+     */
+    @objc dynamic open var dismissByTap: Bool = true
+    
+    /**
+     SPAlert: Automatically dismiss in time or not. Duration of dismiss can be changed by property `duration`.
+     */
+    @objc dynamic open var dismissInTime: Bool = true
+    
+    /**
+     SPAlert: Duration for showing alert. If `dismissInTime` disabled, this property ignoring.
+     */
     @objc dynamic open var duration: TimeInterval = 1.5
     
     // MARK: - Views
@@ -73,15 +86,28 @@ open class SPAlertView: UIView {
     
     // MARK: - Init
     
-    public init(title: String, message: String? = nil, preset: SPAlertIconPreset) {
-        super.init(frame: CGRect.zero)
-        commonInit()
-        layout = SPAlertLayout(for: preset)
+    public convenience init(title: String, message: String? = nil, preset: SPAlertIconPreset) {
+        self.init(preset: preset)
         setTitle(title)
         if let message = message {
             setMessage(message)
         }
         setIcon(for: preset)
+        
+        switch preset {
+        case .spinner:
+            dismissInTime = false
+            dismissByTap = false
+        default:
+            dismissInTime = true
+            dismissByTap = true
+        }
+    }
+    
+    public init(preset: SPAlertIconPreset) {
+        super.init(frame: CGRect.zero)
+        commonInit()
+        layout = SPAlertLayout(for: preset)
     }
     
     public init(message: String) {
@@ -89,11 +115,15 @@ open class SPAlertView: UIView {
         commonInit()
         layout = SPAlertLayout.message()
         setMessage(message)
+        dismissInTime = true
+        dismissByTap = true
     }
     
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
+        dismissInTime = true
+        dismissByTap = true
     }
     
     private func commonInit() {
@@ -105,11 +135,6 @@ open class SPAlertView: UIView {
         layer.masksToBounds = true
         backgroundColor = .clear
         addSubview(backgroundView)
-        
-        if dismissByTap {
-            let tapGesterRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismiss))
-            addGestureRecognizer(tapGesterRecognizer)
-        }
         
         setCornerRadius(self.cornerRadius)
     }
@@ -124,6 +149,7 @@ open class SPAlertView: UIView {
         style.lineSpacing = 3
         style.alignment = .center
         label.attributedText = NSAttributedString(string: text, attributes: [.paragraphStyle: style])
+        label.textColor = defaultContentColor
         titleLabel = label
         addSubview(label)
     }
@@ -136,12 +162,14 @@ open class SPAlertView: UIView {
         style.lineSpacing = 2
         style.alignment = .center
         label.attributedText = NSAttributedString(string: text, attributes: [.paragraphStyle: style])
+        label.textColor = defaultContentColor
         subtitleLabel = label
         addSubview(label)
     }
     
     private func setIcon(for preset: SPAlertIconPreset) {
         let view = preset.createView()
+        view.tintColor = defaultContentColor
         self.iconView = view
         addSubview(view)
     }
@@ -174,10 +202,6 @@ open class SPAlertView: UIView {
     }
     
     open func present(haptic: SPAlertHaptic = .success, completion: (() -> Void)? = nil) {
-        present(duration: self.duration, haptic: haptic, completion: completion)
-    }
-    
-    open func present(duration: TimeInterval, haptic: SPAlertHaptic = .success, completion: (() -> Void)? = nil) {
         
         if self.presentWindow == nil {
             self.presentWindow = UIApplication.shared.keyWindow
@@ -191,14 +215,14 @@ open class SPAlertView: UIView {
         
         self.completion = completion
         
-        let contentСolor = defaultContentColor
-        titleLabel?.textColor = contentСolor
-        subtitleLabel?.textColor = contentСolor
-        iconView?.tintColor = contentСolor
-        
         alpha = 0
         setFrame()
         transform = transform.scaledBy(x: self.presentDismissScale, y: self.presentDismissScale)
+        
+        if dismissByTap {
+            let tapGesterRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismiss))
+            addGestureRecognizer(tapGesterRecognizer)
+        }
         
         // Present
         
@@ -207,12 +231,17 @@ open class SPAlertView: UIView {
         UIView.animate(withDuration: presentDismissDuration, animations: {
             self.alpha = 1
             self.transform = CGAffineTransform.identity
-        }, completion: { finished in
+        }, completion: { [weak self] finished in
+            guard let self = self else { return }
+            
             if let iconView = self.iconView as? SPAlertIconAnimatable {
                 iconView.animate()
             }
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + duration) {
-                self.dismiss()
+            
+            if self.dismissInTime {
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + self.duration) {
+                    self.dismiss()
+                }
             }
         })
     }

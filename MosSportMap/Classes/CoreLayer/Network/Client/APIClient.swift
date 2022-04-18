@@ -9,7 +9,7 @@
 import RxSwift
 
 protocol APIClient {
-    func HTTPRequestObservable(requestPattern: RequestPattern) -> Observable<Any>
+    func HTTPRequestObservable<T: Decodable>(requestPattern: RequestPattern) -> Observable<T>
     func MultipartRequestObservable(requestPattern: RequestPattern, filename: String?, mimeType: String?) -> Observable<Any>?
 }
 

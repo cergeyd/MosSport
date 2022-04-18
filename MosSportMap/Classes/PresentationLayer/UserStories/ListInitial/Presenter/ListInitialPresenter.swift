@@ -18,7 +18,7 @@ extension ListInitialPresenter: ListInitialViewOutput {
         self.view.setupInitialState()
     }
     
-    //MARK: Router
+    // MARK: Router
     func listViewController(type: ListType, index: Int) -> ListViewController {
         return self.router.listViewController(type: type, index: index)
     }

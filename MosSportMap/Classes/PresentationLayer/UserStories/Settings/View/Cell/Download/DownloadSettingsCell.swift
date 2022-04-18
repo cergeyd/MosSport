@@ -15,12 +15,12 @@ class DownloadSettingsCell: TableViewCell {
 
     weak var delegate: DownloadSettingsCellDelegate?
 
-    //MARK: Func
+    // MARK: Func
     func configure(with titles: String) {
 
     }
 
-    //MARK: Action
+    // MARK: Action
     @IBAction func didTapDownload() {
         self.delegate?.didTapDownload()
     }

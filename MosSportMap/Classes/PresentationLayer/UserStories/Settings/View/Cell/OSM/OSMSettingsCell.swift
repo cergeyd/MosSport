@@ -17,12 +17,12 @@ class OSMSettingsCell: TableViewCell {
     
     weak var delegate: SettingsCellDelegate?
 
-    //MARK: Func
+    // MARK: Func
     func configure(with isOSM: Bool) {
         self.OSMswitch.setOn(isOSM, animated: true)
     }
 
-    //MARK: Action
+    // MARK: Action
     @IBAction func didChangeSwitch(sender: UISwitch) {
         self.delegate?.didUpdateAdditioOSMObjects()
     }

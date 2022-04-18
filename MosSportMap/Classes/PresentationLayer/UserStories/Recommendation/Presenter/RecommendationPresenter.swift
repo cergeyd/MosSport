@@ -18,7 +18,7 @@ extension RecommendationPresenter: RecommendationViewOutput {
         self.view.setupInitialState()
     }
     
-    //MARK: Router
+    // MARK: Router
     func didSelect(recommendationType: RecommendationType) {
         self.router.didSelect(recommendationType: recommendationType)
     }

@@ -29,7 +29,7 @@ class AppDelegateUnauthorizedService: AppDelegateService, UISplitViewControllerD
         self.showSplit(with: window)
     }
 
-    //MARK: Private func
+    // MARK: Private func
     private func showSplit(with window: UIWindow) {
         let masterController = self.menuFactory.instantiateModule()
         let masterNavigationController = UINavigationController(rootViewController: masterController)

@@ -30,7 +30,7 @@ class ListRouter {
         }
     }
 
-    //MARK: Private func
+    // MARK: Private func
     private func showInitialListDetailScreen(with type: ListType) {
         let controller = self.listInitialFactory.instantiateModule()
         controller.type = type

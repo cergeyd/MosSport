@@ -18,7 +18,7 @@ extension MapPresenter: MapViewOutput {
         self.view.setupInitialState()
     }
     
-    //MARK: Router
+    // MARK: Router
     func didTapShow(detail report: SquareReport) {
         self.router.didTapShow(detail: report)
     }

@@ -35,7 +35,7 @@ class TableViewCell: UITableViewCell {
         super.init(coder: coder)
     }
 
-    //MARK: Liecycle
+    // MARK: Liecycle
     override func awakeFromNib() {
         super.awakeFromNib()
         self.selectionStyle = .none
@@ -50,7 +50,4 @@ class TableViewCell: UITableViewCell {
     open func setUpLayout() {
 
     }
-
-    //MARK: Func
-
 }

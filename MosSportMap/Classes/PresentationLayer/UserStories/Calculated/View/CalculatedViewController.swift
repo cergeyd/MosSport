@@ -29,7 +29,7 @@ class CalculatedViewController: TableViewController {
     /// Текущие границы, указанные пользователем на экране Карт
     private var borders: [Detail] = []
 
-    //MARK: Lifecycle
+    // MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.configureTableView()
@@ -58,7 +58,7 @@ class CalculatedViewController: TableViewController {
         }
     }
 
-    //MARK: Private func
+    // MARK: Private func
     private func configureTableView() {
         self.tableView = UITableView(frame: .zero, style: .insetGrouped)
         self.tableView.register(UINib(nibName: CalculatedTypeCell.identifier, bundle: nil), forCellReuseIdentifier: CalculatedTypeCell.identifier)
@@ -66,7 +66,7 @@ class CalculatedViewController: TableViewController {
         self.tableView.register(UINib(nibName: DetailCell.identifier, bundle: nil), forCellReuseIdentifier: DetailCell.identifier)
     }
 
-    //MARK: TableView
+    // MARK: TableView
     override func numberOfSections(in tableView: UITableView) -> Int {
         switch self.calculateAreaType {
         case .borders: return self.report == nil ? 1 : 2

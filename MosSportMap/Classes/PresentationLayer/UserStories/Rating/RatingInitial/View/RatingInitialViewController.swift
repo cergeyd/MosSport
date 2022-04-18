@@ -25,7 +25,7 @@ class RatingInitialViewController: PageboyViewController, SegmentProtocol, Pageb
     lazy var viewControllers: [UIViewController] = { return [self.ratingSquareForOne, self.ratingSportForOne, self.ratingObjectForOne] }()
     private var isAscending = true
 
-    //MARK: Lifecycle
+    // MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.output.didLoadView()
@@ -38,7 +38,7 @@ class RatingInitialViewController: PageboyViewController, SegmentProtocol, Pageb
         self.isModalInPresentation = children > 1
     }
 
-    //MARK: Private func
+    // MARK: Private func
     @objc private func didTapShowAscending() {
         let alert = UIAlertController(title: "Направление сортировки", message: "Доступность", preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Восходящий", style: .default, handler: { _ in self.updateSort() }))

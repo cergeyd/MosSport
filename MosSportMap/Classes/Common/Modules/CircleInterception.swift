@@ -25,33 +25,35 @@ class CircleInterception {
     /// Знаем центр и радиус
     /// Пересечения - массив координат, на границе окружности, которых входят в другую окружность
     static func interceptions(between circle: GMSCircle, second: GMSCircle) -> [CLLocationCoordinate2D] {
-        let firstBorders = self.edgeCoordinates(of: circle)
-        let secondBorders = self.edgeCoordinates(of: second)
-
-        let firstPolygon = self.createAvailability(with: firstBorders)
-        self.drawPolygon.removeAllCoordinates()
-        let secondPolygon = self.createAvailability(with: secondBorders)
-        self.drawPolygon.removeAllCoordinates()
-
-        var points: [CLLocationCoordinate2D] = []
-
-        if let path = firstPolygon.path {
-            for point in path.allCoordinates {
-                if (secondPolygon.contains(coordinate: point)) {
-                    points.append(point)
-                }
-            }
-        }
-        
-        if let path = secondPolygon.path {
-            for point in path.allCoordinates {
-                if (firstPolygon.contains(coordinate: point)) {
-                    points.append(point)
-                }
-            }
-        }
-        
-        return points
+        // TODO: allCoordinates у Path пропал куда то
+        return []
+//        let firstBorders = self.edgeCoordinates(of: circle)
+//        let secondBorders = self.edgeCoordinates(of: second)
+//
+//        let firstPolygon = self.createAvailability(with: firstBorders)
+//        self.drawPolygon.removeAllCoordinates()
+//        let secondPolygon = self.createAvailability(with: secondBorders)
+//        self.drawPolygon.removeAllCoordinates()
+//
+//        var points: [CLLocationCoordinate2D] = []
+//
+//        if let path = firstPolygon.path {
+//            for point in path.allCoordinates {
+//                if (secondPolygon.contains(coordinate: point)) {
+//                    points.append(point)
+//                }
+//            }
+//        }
+//
+//        if let path = secondPolygon.path {
+//            for point in path.allCoordinates {
+//                if (firstPolygon.contains(coordinate: point)) {
+//                    points.append(point)
+//                }
+//            }
+//        }
+//
+//        return points
     }
 
     /// Рисуем границу доступности

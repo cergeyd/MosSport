@@ -16,13 +16,13 @@ class ActivityButton: UIButton {
     var originButtonImageInsets: UIEdgeInsets?
     lazy var activityIndicator: UIActivityIndicatorView = { return self.createActivityIndicator(isFilled: self.isFilled) }()
 
-    //MARK: Lifecycle
+    // MARK: Lifecycle
     override func awakeFromNib() {
         super.awakeFromNib()
         self.layer.cornerRadius = 6.0
     }
 
-    //MARK: Func
+    // MARK: Func
     func standart(with title: String) {
         self.backgroundColor = AppStyle.color(for: .background)
         self.titleLabel?.font = AppStyle.font(size: .title, width: .semibold)
@@ -31,7 +31,7 @@ class ActivityButton: UIButton {
     }
 }
 
-//MARK: Activity
+// MARK: Activity
 extension ActivityButton {
 
     func loading(isBegin: Bool, color: UIColor = .white, newTitle: String? = nil, image: UIImage? = nil, isCircle: Bool = false) {

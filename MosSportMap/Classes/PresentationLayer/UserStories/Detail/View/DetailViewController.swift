@@ -39,7 +39,7 @@ class DetailViewController: TableViewController {
     private lazy var XlsModule = XLSModule(presenter: self)
     weak var delegate: DetailViewDelegate?
 
-    //MARK: Lifecycle
+    // MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.output.didLoadView()
@@ -55,7 +55,7 @@ class DetailViewController: TableViewController {
             else if let sportTypeSection = self.sportTypeSection { self.configureSection(with: sportTypeSection) }
     }
 
-    //MARK: Private func
+    // MARK: Private func
     @objc private func didTapShowFilter() {
         let alert = UIAlertController(title: "Спортивные объекты", message: "Доступность", preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Все", style: .default, handler: { _ in
@@ -180,7 +180,7 @@ class DetailViewController: TableViewController {
         self.sections.append(sportsSection)
     }
 
-    //MARK: Search
+    // MARK: Search
     override func updateSearchResults(for searchController: UISearchController) {
         if let text = searchController.searchBar.text?.lowercased() {
             self.isSearchActive = !text.isEmpty
@@ -206,7 +206,7 @@ extension DetailViewController: DetailViewInput {
     }
 }
 
-//MARK: TableView
+// MARK: TableView
 extension DetailViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {

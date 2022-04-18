@@ -27,7 +27,7 @@ class SportObjectCell: TableViewCell {
     weak var delegate: SportObjectDelegate?
     private var object: SportObject!
 
-    //MARK: Func
+    // MARK: Func
     func configure(with object: SportObject, isObjectsAroundHidden: Bool) {
         self.object = object
         self.idLabel.text = "Идентификатор объекта: \(object.id)"
@@ -39,7 +39,7 @@ class SportObjectCell: TableViewCell {
         self.department.setTitle(object.department.title, for: .normal)
     }
 
-    //MARK: Action
+    // MARK: Action
     @IBAction func didTapDepartment(sender: UIButton) {
         self.delegate?.didTapShowDepartment(sport: self.object)
     }

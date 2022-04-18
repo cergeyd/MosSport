@@ -27,53 +27,56 @@ import SwiftUI
 @available(iOSApplicationExtension, unavailable)
 extension View {
     
-    public func spAlert(
+    public func SPAlert(
         isPresent: Binding<Bool>,
         alertView: SPAlertView,
         duration: TimeInterval = 2.0,
         haptic: SPAlertHaptic = .none
     ) -> some View {
+        
         if isPresent.wrappedValue {
             let alertCompletion = alertView.completion
             let alertDismiss = {
                 isPresent.wrappedValue = false
                 alertCompletion?()
             }
-            alertView.present(duration: duration, haptic: haptic, completion: alertDismiss)
+            alertView.duration = duration
+            alertView.present(haptic: haptic, completion: alertDismiss)
         }
         return self
     }
     
-    public func spAlert(isPresent: Binding<Bool>,
-                        title: String = "",
-                        message: String? = nil,
-                        duration: TimeInterval = 2.0,
-                        dismissOnTap: Bool = true,
-                        preset: SPAlertIconPreset = .done,
-                        haptic: SPAlertHaptic = .none,
-                        layout: SPAlertLayout? = nil,
-                        completion: (()-> Void)? = nil
+    public func SPAlert(
+        isPresent: Binding<Bool>,
+        title: String = "",
+        message: String? = nil,
+        duration: TimeInterval = 2.0,
+        dismissOnTap: Bool = true,
+        preset: SPAlertIconPreset = .done,
+        haptic: SPAlertHaptic = .none,
+        layout: SPAlertLayout? = nil,
+        completion: (()-> Void)? = nil
     ) -> some View {
+        
         let alertView = SPAlertView(title: title, message: message, preset: preset)
         alertView.dismissByTap = dismissOnTap
         alertView.layout = layout ??  SPAlertLayout(for: preset)
         alertView.completion = completion
-        
-        return spAlert(isPresent: isPresent, alertView: alertView, duration: duration, haptic: haptic)
+        return SPAlert(isPresent: isPresent, alertView: alertView, duration: duration, haptic: haptic)
     }
     
-    public func spAlert(isPresent: Binding<Bool>,
-                        message: String,
-                        duration: TimeInterval = 2.0,
-                        dismissOnTap: Bool = true,
-                        haptic: SPAlertHaptic = .none,
-                        completion: (()-> Void)? = nil
+    public func SPAlert(
+        isPresent: Binding<Bool>,
+        message: String,
+        duration: TimeInterval = 2.0,
+        dismissOnTap: Bool = true,
+        haptic: SPAlertHaptic = .none,
+        completion: (()-> Void)? = nil
     ) -> some View {
         
         let alertView = SPAlertView(message: message)
         alertView.dismissByTap = dismissOnTap
         alertView.completion = completion
-        
-        return spAlert(isPresent: isPresent, alertView: alertView, duration: duration, haptic: haptic)
+        return SPAlert(isPresent: isPresent, alertView: alertView, duration: duration, haptic: haptic)
     }
 }

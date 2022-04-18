@@ -34,7 +34,7 @@ class HudView: UIView {
     var backgroundBlurView: UIVisualEffectView!
     var activityIndicator: UIActivityIndicatorView!
 
-    //MARK: Init
+    // MARK: Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setup()
@@ -45,7 +45,7 @@ class HudView: UIView {
         self.setup()
     }
 
-    //MARK: Private func
+    // MARK: Private func
     private func setup() {
         self.backgroundColor = UIColor.clear
         self.backgroundBlurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))

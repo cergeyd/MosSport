@@ -34,7 +34,7 @@ class SharedManager {
     var allPolygons: [GMSPolygon] = []
     let geoCoder = CLGeocoder()
 
-    //MARK: Func
+    // MARK: Func
     /// Население по области
     func population(by area: String?) -> Population? {
         for population in gPopulationResponse.populations { if (population.area.lowercased() == area?.lowercased()) { return population } }
@@ -295,23 +295,25 @@ class SharedManager {
 
     /// Получаем корректные промежутки заданного района
     func getRectangle(inside polygon: GMSPolygon) -> Rectangle {
-        var minLeft: Double = 90.0
-        var topLeft: Double = 0.0
-        var maxRight: Double = 0.0
-        var bottomRight: Double = 90.0
-        if let allCoordinates = polygon.path?.allCoordinates {
-            for coordinate in allCoordinates {
-                let latitude = coordinate.latitude
-                let longitude = coordinate.longitude
-                if (longitude < minLeft) { minLeft = longitude }
-                if (latitude > topLeft) { topLeft = latitude }
-                if (longitude > maxRight) { maxRight = longitude }
-                if (latitude < bottomRight) { bottomRight = latitude }
-            }
-        }
-        let topLeftCoord = CLLocationCoordinate2D(latitude: topLeft, longitude: minLeft)
-        let bottomRightCoord = CLLocationCoordinate2D(latitude: bottomRight, longitude: maxRight)
-        return Rectangle(topLeft: topLeftCoord, bottomRight: bottomRightCoord)
+        // TODO: allCoordinates у Path пропал куда то
+        return Rectangle(topLeft: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), bottomRight: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0))
+//        var minLeft: Double = 90.0
+//        var topLeft: Double = 0.0
+//        var maxRight: Double = 0.0
+//        var bottomRight: Double = 90.0
+//        if let allCoordinates = polygon.path?.allCoordinates {
+//            for coordinate in allCoordinates {
+//                let latitude = coordinate.latitude
+//                let longitude = coordinate.longitude
+//                if (longitude < minLeft) { minLeft = longitude }
+//                if (latitude > topLeft) { topLeft = latitude }
+//                if (longitude > maxRight) { maxRight = longitude }
+//                if (latitude < bottomRight) { bottomRight = latitude }
+//            }
+//        }
+//        let topLeftCoord = CLLocationCoordinate2D(latitude: topLeft, longitude: minLeft)
+//        let bottomRightCoord = CLLocationCoordinate2D(latitude: bottomRight, longitude: maxRight)
+//        return Rectangle(topLeft: topLeftCoord, bottomRight: bottomRightCoord)
     }
 
     /// Дополнительные спортвные объекты. Обновим
@@ -412,7 +414,7 @@ class SharedManager {
         return Recommendation(availabilityType: availabilityType, missingTypes: missingTypes, existObjects: objects, coordinates: emptyCoordinates)
     }
 
-    //MARK: Private func
+    // MARK: Private func
     func save<T: Codable>(object: T, filename: String) {
         let filePath = self.getDocumentsDirectoryUrl().appendingPathComponent(filename)
         print(filePath)

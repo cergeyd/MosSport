@@ -1,5 +1,5 @@
 PODS:
-  - Alamofire (5.4.4)
+  - Alamofire (5.6.1)
   - Bulletin (1.3.0):
     - Espresso (~> 2.2.0)
   - BusyNavigationBar (2.0.0)
@@ -15,46 +15,46 @@ PODS:
   - Espresso/Core (2.2.4):
     - Director (~> 1.0.0)
     - SnapKit (~> 5.0.0)
-  - Google-Maps-iOS-Utils (4.0.0):
-    - Google-Maps-iOS-Utils/Clustering (= 4.0.0)
-    - Google-Maps-iOS-Utils/Geometry (= 4.0.0)
-    - Google-Maps-iOS-Utils/GeometryUtils (= 4.0.0)
-    - Google-Maps-iOS-Utils/Heatmap (= 4.0.0)
-    - Google-Maps-iOS-Utils/QuadTree (= 4.0.0)
+  - Google-Maps-iOS-Utils (4.1.0):
+    - Google-Maps-iOS-Utils/Clustering (= 4.1.0)
+    - Google-Maps-iOS-Utils/Geometry (= 4.1.0)
+    - Google-Maps-iOS-Utils/GeometryUtils (= 4.1.0)
+    - Google-Maps-iOS-Utils/Heatmap (= 4.1.0)
+    - Google-Maps-iOS-Utils/QuadTree (= 4.1.0)
     - GoogleMaps
-  - Google-Maps-iOS-Utils/Clustering (4.0.0):
+  - Google-Maps-iOS-Utils/Clustering (4.1.0):
     - Google-Maps-iOS-Utils/QuadTree
     - GoogleMaps
-  - Google-Maps-iOS-Utils/Geometry (4.0.0):
+  - Google-Maps-iOS-Utils/Geometry (4.1.0):
     - GoogleMaps
-  - Google-Maps-iOS-Utils/GeometryUtils (4.0.0):
+  - Google-Maps-iOS-Utils/GeometryUtils (4.1.0):
     - GoogleMaps
-  - Google-Maps-iOS-Utils/Heatmap (4.0.0):
+  - Google-Maps-iOS-Utils/Heatmap (4.1.0):
     - Google-Maps-iOS-Utils/QuadTree
     - GoogleMaps
-  - Google-Maps-iOS-Utils/QuadTree (4.0.0):
+  - Google-Maps-iOS-Utils/QuadTree (4.1.0):
     - GoogleMaps
-  - GoogleMaps (5.1.0):
-    - GoogleMaps/Maps (= 5.1.0)
-  - GoogleMaps/Base (5.1.0)
-  - GoogleMaps/Maps (5.1.0):
+  - GoogleMaps (6.1.1):
+    - GoogleMaps/Maps (= 6.1.1)
+  - GoogleMaps/Base (6.1.1)
+  - GoogleMaps/Maps (6.1.1):
     - GoogleMaps/Base
   - KeychainAccess (4.2.2)
   - libxlsxwriter (1.1.4)
   - Pageboy (3.6.2)
-  - R.swift (5.4.0):
+  - R.swift (6.1.0):
     - R.swift.Library (~> 5.3.0)
   - R.swift.Library (5.3.0)
-  - RxCocoa (6.2.0):
-    - RxRelay (= 6.2.0)
-    - RxSwift (= 6.2.0)
-  - RxRelay (6.2.0):
-    - RxSwift (= 6.2.0)
-  - RxSwift (6.2.0)
+  - RxCocoa (6.5.0):
+    - RxRelay (= 6.5.0)
+    - RxSwift (= 6.5.0)
+  - RxRelay (6.5.0):
+    - RxSwift (= 6.5.0)
+  - RxSwift (6.5.0)
   - SnapKit (5.0.1)
-  - SPAlert (3.4.1)
+  - SPAlert (4.2.0)
   - Squircle (2.2.0)
-  - SwiftCSV (0.6.0)
+  - SwiftCSV (0.6.1)
   - Swinject (2.8.1)
   - SwipeCellKit (2.7.1)
 
@@ -104,30 +104,30 @@ SPEC REPOS:
     - SwipeCellKit
 
 SPEC CHECKSUMS:
-  Alamofire: f3b09a368f1582ab751b3fff5460276e0d2cf5c9
+  Alamofire: 87bd8c952f9a4454320fce00d9cc3de57bcadaf5
   Bulletin: eceb668260e34931808a2f1cea1aaf3f4dfa3fa4
   BusyNavigationBar: b73fd434b95f6198809dcf048b0245ad89ec1b37
   collection-view-layouts: 474ec4cce601a26247737227a97fa6a4eb30213f
   Device: 0738862dd8a30856b4bd9e21cb9b728873d21392
   Director: ed6f4d3b2bc404ff16b83816daf81b18126b6892
   Espresso: a1c57cdd3556ed6fd69e086e8c9682e4c561231d
-  Google-Maps-iOS-Utils: a06cb5c3a0e5b2a505fed82d936ba1b935f8971f
-  GoogleMaps: 086ae1dab659eaa7339bdb30fc88e2f44e7c597c
+  Google-Maps-iOS-Utils: 3343332b18dfd5be8f1f44edd7d481ace3da4d9a
+  GoogleMaps: 94e6e0851beece6678af9f508f4918b7a7c61722
   KeychainAccess: c0c4f7f38f6fc7bbe58f5702e25f7bd2f65abf51
   libxlsxwriter: f9f040bb01f0aabac1adb09f27c8cf542ae9a044
   Pageboy: cf121b9dd48c63f3f281b2a9ec93d02e0f23879b
-  R.swift: c533450b0f7dc494e0993f5f1a1db925d84c3006
+  R.swift: ec98ff71c4ab2f6fd01dd077e5afd15e63a4834c
   R.swift.Library: 0fc583cb55a99e28901299cc451614cad1161962
-  RxCocoa: 4baf94bb35f2c0ab31bc0cb9f1900155f646ba42
-  RxRelay: e72dbfd157807478401ef1982e1c61c945c94b2f
-  RxSwift: d356ab7bee873611322f134c5f9ef379fa183d8f
+  RxCocoa: 94f817b71c07517321eb4f9ad299112ca8af743b
+  RxRelay: 1de1523e604c72b6c68feadedd1af3b1b4d0ecbd
+  RxSwift: 5710a9e6b17f3c3d6e40d6e559b9fa1e813b2ef8
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
-  SPAlert: 5738ac9368870ada154af03ce70d0542b80c676e
+  SPAlert: 735da1f16a887e294719217572ce1f936d8c8782
   Squircle: 94bae5770fc84e16b8cf66f3630a563b39ee2544
-  SwiftCSV: ebc63cacc3820042537288c0cc647946261f7c2c
+  SwiftCSV: f0108ec3e85c69ca7d7707645a4d044a222dc10c
   Swinject: 97112918bd7e0785dc2df7036213f3c8cbba6586
   SwipeCellKit: 3972254a826da74609926daf59b08d6c72e619ea
 
-PODFILE CHECKSUM: 0a119dd7fcc13075e030033938fcf7eb2d6afb5f
+PODFILE CHECKSUM: eab38d335d981b786c8abcea38a1f756786bac8c
 
 COCOAPODS: 1.11.2

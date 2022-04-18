@@ -52,8 +52,7 @@ public enum SPAlert {
      */
     public static func present(title: String, message: String? = nil, preset: SPAlertIconPreset, completion: (() -> Void)? = nil) {
         let alertView = SPAlertView(title: title, message: message, preset: preset)
-        let haptic = preset.getHaptic()
-        alertView.present(haptic: haptic, completion: completion)
+        alertView.present(haptic: preset.haptic, completion: completion)
     }
     
     /**
@@ -66,5 +65,41 @@ public enum SPAlert {
     public static func present(message: String, haptic: SPAlertHaptic, completion: (() -> Void)? = nil) {
         let alertView = SPAlertView(message: message)
         alertView.present(haptic: haptic, completion: completion)
+    }
+    
+    /**
+     SPAlert: Show present only.
+     
+     - parameter completion: Will call with dismiss alert.
+     */
+    public static func present(preset: SPAlertIconPreset, completion: (() -> Void)? = nil) {
+        let alertView = SPAlertView(preset: preset)
+        alertView.present(haptic: preset.haptic, completion: completion)
+    }
+    
+    /**
+     SPAlert: Dismiss all `SPAlert` views.
+     */
+    public static func dismiss() {
+        if #available(iOS 13.0, *) {
+            for scene in UIApplication.shared.connectedScenes {
+                if let windowScene = scene as? UIWindowScene {
+                    windowScene.windows.forEach { window in
+                        for view in window.subviews {
+                            if let alertView = view as? SPAlertView {
+                                alertView.dismiss()
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            guard let window = UIApplication.shared.keyWindow else { return }
+            for view in window.subviews {
+                if let alertView = view as? SPAlertView {
+                    alertView.dismiss()
+                }
+            }
+        }
     }
 }

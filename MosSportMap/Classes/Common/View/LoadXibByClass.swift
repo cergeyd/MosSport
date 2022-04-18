@@ -9,7 +9,7 @@ import UIKit
 
 class LoadXibByClass: UIView {
 
-    //MARK: Lifecycle
+    // MARK: Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.initialize()
@@ -20,7 +20,7 @@ class LoadXibByClass: UIView {
         self.initialize()
     }
 
-    //MARK: Private func
+    // MARK: Private func
     private func initialize() {
         let nibName = NSStringFromClass(type(of: self)).components(separatedBy: ".").last!
         guard let view = Bundle.main.loadNibNamed(nibName, owner: self, options: nil)?[0] as? UIView else {

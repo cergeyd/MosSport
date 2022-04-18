@@ -33,13 +33,13 @@ class TableViewController: UITableViewController, UISearchResultsUpdating, UISea
         return searchHeader
     }()
 
-    //MARK: Lifecycle
+    // MARK: Lifecycle
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.configureModalStyle()
     }
 
-    //MARK: Private func
+    // MARK: Private func
     /// Если это не парент - сворачивать нельзя
     private func configureModalStyle() {
         let children = (self.navigationController?.children.count ?? 1)
@@ -54,7 +54,7 @@ class TableViewController: UITableViewController, UISearchResultsUpdating, UISea
         }
     }
 
-    //MARK: Func
+    // MARK: Func
     func exportRightNavigationBar(isLoading: Bool = false) {
         if (isLoading) {
             self.navigationActivity()

@@ -23,15 +23,18 @@ class APIClientDefault: APIClient {
         self.sessionManager = sessionManager
     }
 
-    //MARK: Function
-    func HTTPRequestObservable(requestPattern: RequestPattern) -> Observable<Any> {
+    // MARK: Function
+    func HTTPRequestObservable<T: Decodable>(requestPattern: RequestPattern) -> Observable<T> {
         return Observable.create { observer in
             let requestBuilder = self.requestConvertibleFactory.request(with: requestPattern)
             print(requestBuilder.urlRequest ?? "requestBuilder.urlRequest")
 
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .iso8601
+
             let request = self.sessionManager
                 .request(requestBuilder)
-                .responseJSON { response in
+                .responseDecodable(decoder: decoder) { (response: DataResponse<T, AFError>) in
                 print("API RESPONSE ________________")
                 print(response)
                 print("________________")
@@ -49,16 +52,15 @@ class APIClientDefault: APIClient {
                     if (httpUrlResponse.statusCode == 401 && !requestPattern.path.hasPrefix("auth")) {
                         self.notifications.post(name: Notification.Name.unauthorized, object: true, userInfo: nil)
                     }
-                    if let jsonDictionary = response.value as? [String: Any] {
-                        observer.onNext(jsonDictionary)
-                        observer.onCompleted()
-                    } else if let jsonArray = response.value as? [[String: Any]] {
-                        observer.onNext(jsonArray)
+                    if let value = response.value {
+                        observer.onNext(value)
                         observer.onCompleted()
                     } else {
-                        observer.onCompleted()
+                        if let error = response.error {
+                            print(error)
+                            observer.onError(error)
+                        }
                     }
-                    break
                 default:
                     if let error = response.error {
                         observer.onError(error)
@@ -80,60 +82,6 @@ class APIClientDefault: APIClient {
 
             return Disposables.create {
                 request.cancel()
-            }
-        }
-    }
-
-    func upload(requestPattern: RequestPattern, image: Data) -> Observable<Any>? {
-        return Observable.create { observer in
-            let url = self.multipartRequestFactory.url(with: requestPattern)
-            //let headers = self.multipartRequestFactory.headers(with: requestPattern)
-            let successRequest = self.sessionManager.upload(multipartFormData: { multipartFormData in
-                if let parameters = requestPattern.parameters {
-                    for (key, value) in parameters {
-                        if let temp = value as? String {
-                            multipartFormData.append(temp.data(using: .utf8)!, withName: key)
-                        }
-                        if let temp = value as? Int {
-                            multipartFormData.append("\(temp)".data(using: .utf8)!, withName: key)
-                        }
-                        if let temp = value as? NSArray {
-                            temp.forEach({ element in
-                                let keyObj = key + "[]"
-                                if let string = element as? String {
-                                    multipartFormData.append(string.data(using: .utf8)!, withName: keyObj)
-                                } else
-                                if let num = element as? Int {
-                                    let value = "\(num)"
-                                    multipartFormData.append(value.data(using: .utf8)!, withName: keyObj)
-                                }
-                            })
-                        }
-                    }
-                }
-                multipartFormData.append(image, withName: "file", fileName: "file.png", mimeType: "image/png")
-            }, with: url as! URLRequestConvertible)
-                .uploadProgress(queue: .main, closure: { progress in
-                //Current upload progress of file
-                print("Upload Progress: \(progress.fractionCompleted)")
-            })
-                .responseJSON(completionHandler: { response in
-                if let error = response.error {
-                    observer.onError(error)
-                } else {
-                    print("API RESPONSE ________________")
-                    print(response)
-                    print("________________")
-                    if let jsonDictionary = response.value as? [String: Any] {
-                        observer.onNext(jsonDictionary)
-                        observer.onCompleted()
-                    } else {
-                        observer.onError(APIClientError(error: "R.string.common.responseError()"))
-                    }
-                }
-            })
-            return Disposables.create {
-                successRequest.cancel()
             }
         }
     }

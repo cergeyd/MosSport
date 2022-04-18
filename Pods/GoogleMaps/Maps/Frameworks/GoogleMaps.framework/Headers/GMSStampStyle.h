@@ -1,5 +1,5 @@
 //
-//  GMSStampStyle+Premium.h
+//  GMSStampStyle.h
 //  Google Maps SDK for iOS
 //
 //  Copyright 2020 Google LLC
@@ -38,15 +38,16 @@ NS_ASSUME_NONNULL_BEGIN
  * Returns a texture stamp style with the given image.
  *
  * @param image A @c UIImage object to use as the stamp image.
- * @return An initialized sprite stamp style.
+ * @return An initialized texture stamp style.
  */
-+ (instancetype)textureStyleWithImage:(UIImage *)image NS_SWIFT_UNAVAILABLE("Use initializer instead");
++ (instancetype)textureStyleWithImage:(UIImage *)image
+    NS_SWIFT_UNAVAILABLE("Use initializer instead");
 
 /**
  * Returns an initialized texture stamp style with the given image.
  *
  * @param image A @c UIImage object to use as the stamp image.
- * @return An initialized sprite stamp style.
+ * @return An initialized texture stamp style.
  */
 - (instancetype)initWithImage:(UIImage *)image NS_DESIGNATED_INITIALIZER;
 

@@ -16,7 +16,7 @@ class NetworkAssembly: Assembly {
     private let networkAssemblyTimeoutInterval: TimeInterval = 12.0
 
     func assemble(container: Container) {
-        //MARK: Default
+        // MARK: Default
         container.register(RequestConvertibleFactory.self, name: NetworkAssembly.networkClientAssemblyDefault) { r in
             let config = r.resolve(Config.self)!
             let headersFactory = RequestHeadersFactory(config: config)
@@ -43,7 +43,7 @@ class NetworkAssembly: Assembly {
             )
             return apiClient
         }
-        //MARK: SessionManager
+        // MARK: SessionManager
         container.register(Alamofire.Session.self) { r in
             let configuration = URLSessionConfiguration.default
             configuration.timeoutIntervalForRequest = self.networkAssemblyTimeoutInterval

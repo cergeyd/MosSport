@@ -13,7 +13,7 @@ class View: UIView {
         return String(describing: self)
     }
 
-    //MARK: Lifecycle
+    // MARK: Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setUpLayout()

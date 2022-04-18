@@ -15,14 +15,14 @@ class RatingViewController: TableViewController {
 
     private var details: [Detail] = []
 
-    //MARK: Lifecycle
+    // MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.output.didLoadView()
         self.configureDetails()
     }
 
-    //MARK: Funcs
+    // MARK: Funcs
     func configureDetails(isAscending: Bool = true) {
         self.details.removeAll()
         switch self.type! {
@@ -51,13 +51,13 @@ class RatingViewController: TableViewController {
         self.tableView.reloadData()
     }
 
-    //MARK: Private func
+    // MARK: Private func
     private func configureTableView() {
         self.tableView = UITableView(frame: .zero, style: .insetGrouped)
         self.tableView.register(UINib(nibName: DetailCell.identifier, bundle: nil), forCellReuseIdentifier: DetailCell.identifier)
     }
 
-    //MARK: TableView
+    // MARK: TableView
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }

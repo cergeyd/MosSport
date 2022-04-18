@@ -33,13 +33,13 @@ class CalculatedAreaCell: TableViewCell {
     weak var delegate: CalculatedAreaDelegate?
     private var report: SquareReport!
 
-    //MARK: Lifecycle
+    // MARK: Lifecycle
     override func awakeFromNib() {
         super.awakeFromNib()
         self.calculateButton.squircle()
     }
 
-    //MARK: Func
+    // MARK: Func
     func configure(with report: SquareReport, type: MenuType, borders: [Detail]) {
         self.report = report
         self.areaButton.setTitle(report.population.area, for: .normal)        
@@ -84,7 +84,7 @@ class CalculatedAreaCell: TableViewCell {
         }
     }
 
-    //MARK: Action
+    // MARK: Action
     @IBAction func didTapCalculating(sender: ActivityButton) {
         self.delegate?.didTapShow(detail: self.report)
     }

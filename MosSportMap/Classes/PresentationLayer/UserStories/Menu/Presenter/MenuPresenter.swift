@@ -18,7 +18,7 @@ extension MenuPresenter: MenuViewOutput {
         self.view.setupInitialState()
     }
     
-    //MARK: Router
+    // MARK: Router
     func calculatedViewController() -> CalculatedViewController {
         return self.router.calculatedViewController()
     }

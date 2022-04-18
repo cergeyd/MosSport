@@ -18,7 +18,7 @@ extension ListPresenter: ListViewOutput {
         self.view.setupInitialState()
     }
     
-    //MARK: Router
+    // MARK: Router
     func showListDetailScreen(with type: ListType) {
         self.router.showListDetailScreen(with: type)
     }

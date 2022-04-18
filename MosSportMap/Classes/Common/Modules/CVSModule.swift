@@ -17,8 +17,7 @@ class CVSModule {
             let csv: CSV = try CSV(url: filepath, delimiter: ";", encoding: .utf8, loadColumns: true)
             var objects: [SportObject] = []
             /// Парсим в нашу модель. Вцелом тайой себе подход, но если начальная модель не меняется то норм.
-
-            try csv.enumerateAsArray { array in
+            try csv.enumerateAsArray(startAt: 0, rowLimit: nil, { array in
                 if (array.count == 17) {
                     /// Айди объекта
                     let id = array[0]
@@ -68,14 +67,14 @@ class CVSModule {
                         }
                     }
                 }
-            }
+            })
             return objects
         } catch {
             return []
         }
     }
 
-    //MARK: Private func
+    // MARK: Private func
     private static func openCSV(filepath: URL) -> String! {
         do {
             let contents = try String(contentsOf: filepath)

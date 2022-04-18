@@ -62,14 +62,14 @@ class ListViewController: TableViewController {
         }
     }()
 
-    //MARK: Lifecycle
+    // MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.output.didLoadView()
         self.configureTableView()
     }
 
-    //MARK: Private func
+    // MARK: Private func
     private func configureTableView() {
         self.tableView = UITableView(frame: .zero, style: .insetGrouped)
         self.tableView.register(UINib(nibName: DetailCell.identifier, bundle: nil), forCellReuseIdentifier: DetailCell.identifier)
@@ -183,7 +183,7 @@ class ListViewController: TableViewController {
         }
     }
 
-    //MARK: TableView
+    // MARK: TableView
     override func numberOfSections(in tableView: UITableView) -> Int {
         switch self.type! {
         case .department:
@@ -353,7 +353,7 @@ class ListViewController: TableViewController {
         }
     }
 
-    //MARK: Search
+    // MARK: Search
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         let searchText = searchText.lowercased()
         self.isSearchActive = !searchText.isEmpty

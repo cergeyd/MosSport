@@ -39,7 +39,7 @@ class RecommendationObjectViewController: TableViewController {
     private var sections: [DetailSection] = []
     private var filterDetails: [Detail] = []
 
-    //MARK: Lifecycle
+    // MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.output.didLoadView()
@@ -61,7 +61,7 @@ class RecommendationObjectViewController: TableViewController {
         }
     }
 
-    //MARK: Private func
+    // MARK: Private func
     private func configureTableView() {
         self.tableView = UITableView(frame: .zero, style: .insetGrouped)
         self.tableView.register(UINib(nibName: DetailCell.identifier, bundle: nil), forCellReuseIdentifier: DetailCell.identifier)
@@ -139,7 +139,7 @@ class RecommendationObjectViewController: TableViewController {
         }
     }
 
-    //MARK: Search
+    // MARK: Search
     override func updateSearchResults(for searchController: UISearchController) {
         if let text = searchController.searchBar.text?.lowercased() {
             self.isSearchActive = !text.isEmpty
@@ -163,7 +163,7 @@ extension RecommendationObjectViewController: RecommendationObjectViewInput {
     }
 }
 
-//MARK: TableView
+// MARK: TableView
 extension RecommendationObjectViewController: MapViewDataSource {
 
     func didSelect(polygon: GMSPolygon) {

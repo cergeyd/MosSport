@@ -26,7 +26,7 @@ class SettingsViewController: TableViewController {
         SettingSection(header: "Загрузить новые объекты", type: .download),
     ]
 
-    //MARK: Lifecycle
+    // MARK: Lifecycle
     override func viewDidLoad() {
         self.configureTableView()
         super.viewDidLoad()
@@ -40,7 +40,7 @@ class SettingsViewController: TableViewController {
         }
     }
 
-    //MARK: Private func
+    // MARK: Private func
     private func configureTableView() {
         self.tableView = UITableView(frame: .zero, style: .insetGrouped)
         self.tableView.register(UINib(nibName: CalculateSettingsCell.identifier, bundle: nil), forCellReuseIdentifier: CalculateSettingsCell.identifier)
@@ -48,7 +48,7 @@ class SettingsViewController: TableViewController {
         self.tableView.register(UINib(nibName: DownloadSettingsCell.identifier, bundle: nil), forCellReuseIdentifier: DownloadSettingsCell.identifier)
     }
 
-    //MARK: TableView
+    // MARK: TableView
     override func numberOfSections(in tableView: UITableView) -> Int {
         return self.sections.count
     }
@@ -104,7 +104,7 @@ extension SettingsViewController: SettingsViewInput {
     }
 }
 
-//MARK: Cell Delegates
+// MARK: Cell Delegates
 extension SettingsViewController: SettingsCellDelegate, CalculateSettingsCellDelegate, DownloadSettingsCellDelegate, FilesBrowserDelegate {
 
     func didDownload(file url: URL) {

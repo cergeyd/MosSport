@@ -1,37 +1,15 @@
 # SPAlert
 
-**Popup from Apple Music & Feedback in AppStore**. Contains `Done`, `Heart`, `Error` and other presets. Supports Dark Mode. I tried to recreate Apple's alerts as much as possible. You can find these alerts in the AppStore after feedback and after you add a song to your library in Apple Music. Support `SwiftUI`.
-
 <p float="left">
-<img src="https://github.com/ivanvorobei/SPAlert/blob/main/Assets/Readme/Animatable/Done.gif" width="230">
-<img src="https://github.com/ivanvorobei/SPAlert/blob/main/Assets/Readme/Animatable/Heart.gif" width="230">
-<img src="https://github.com/ivanvorobei/SPAlert/blob/main/Assets/Readme/Animatable/Message.gif" width="230">
+<img src="https://cdn.ivanvorobei.by/github/spalert/done.gif" width="230">
+<img src="https://cdn.ivanvorobei.by/github/spalert/heart.gif" width="230">
+<img src="https://cdn.ivanvorobei.by/github/spalert/message.gif" width="230">
 </p>
 
-You can create more with custom images and [SFSymbols](https://developer.apple.com/sf-symbols/) more:
+**Popup from Apple Music & Feedback in AppStore**. Contains `Done`, `Heart`, `Error` and other. Supports Dark Mode and `SwiftUI`.
+I tried to recreate Apple's alerts as much as possible. You can find these alerts in the AppStore after feedback and after you add a song to your library in Apple Music.
 
-<p float="left">
-<img src="https://github.com/ivanvorobei/SPAlert/blob/main/Assets/Readme/Miniatures/Bookmark.svg" width="50">
-<img src="https://github.com/ivanvorobei/SPAlert/blob/main/Assets/Readme/Miniatures/Moon.svg" width="50">
-<img src="https://github.com/ivanvorobei/SPAlert/blob/main/Assets/Readme/Miniatures/Star.svg" width="50">
-<img src="https://github.com/ivanvorobei/SPAlert/blob/main/Assets/Readme/Miniatures/Exclamation.svg" width="50">
-<img src="https://github.com/ivanvorobei/SPAlert/blob/main/Assets/Readme/Miniatures/Bolt.svg" width="50">
-<img src="https://github.com/ivanvorobei/SPAlert/blob/main/Assets/Readme/Miniatures/Cart.svg" width="50">
-<img src="https://github.com/ivanvorobei/SPAlert/blob/main/Assets/Readme/Miniatures/Like.svg" width="50">
-<img src="https://github.com/ivanvorobei/SPAlert/blob/main/Assets/Readme/Miniatures/Dislike.svg" width="50">
-<img src="https://github.com/ivanvorobei/SPAlert/blob/main/Assets/Readme/Miniatures/Privacy.svg" width="50">
-<img src="https://github.com/ivanvorobei/SPAlert/blob/main/Assets/Readme/Miniatures/Search.svg" width="50">
-<img src="https://github.com/ivanvorobei/SPAlert/blob/main/Assets/Readme/Miniatures/Add.svg" width="50">
-<img src="https://github.com/ivanvorobei/SPAlert/blob/main/Assets/Readme/Miniatures/Error.svg" width="50">
-</p>
-
-If you like the project, don't forget to `put star ★`<br>Check out my other libraries:
-
-<p float="left">
-    <a href="https://opensource.ivanvorobei.by">
-        <img src="https://github.com/ivanvorobei/Readme/blob/main/Buttons/more-libraries.svg">
-    </a>
-</p>
+For get alert from switch silent mode, check library [SPIndicator](https://github.com/ivanvorobei/SPIndicator).
 
 ## Navigate
 
@@ -42,33 +20,34 @@ If you like the project, don't forget to `put star ★`<br>Check out my other li
 - [Quick Start](#quick-start)
 - [Usage](#usage)
     - [Duration](#duration)
+    - [Dismiss](#dismiss)
     - [Layout](#layout)
-    - [Dismiss by Tap](#dismiss-by-tap)
     - [Haptic](#haptic)
-    - [Shared Configuration](#shared-configuration)
+    - [Spinner](#spinner)
+    - [Colors](#colors)
+    - [Global Appearance](#global-appearance)
 - [SwiftUI](#swiftui)
-- [Other Projects](#other-projects)
 - [Russian Community](#russian-community)
 
 ## Installation
 
-Ready for use on iOS 11+. Works with Swift 5+. Required Xcode 12.0 and higher.
-
-<img align="right" src="https://github.com/ivanvorobei/SPAlert/blob/main/Assets/Readme/spm-install-preview.png" width="520"/>
+Ready for use on iOS 11+.
 
 ### Swift Package Manager
 
-The [Swift Package Manager](https://swift.org/package-manager/) is a tool for managing the distribution of Swift code. It’s integrated with the Swift build system to automate the process of downloading, compiling, and linking dependencies.
+The [Swift Package Manager](https://swift.org/package-manager/) is a tool for automating the distribution of Swift code and is integrated into the `swift` compiler. It’s integrated with the Swift build system to automate the process of downloading, compiling, and linking dependencies.
 
-To integrate using Xcode 12, specify it in `File > Swift Packages > Add Package Dependency...`:
+Once you have your Swift package set up, adding as a dependency is as easy as adding it to the `dependencies` value of your `Package.swift`.
 
-```ogdl
-https://github.com/ivanvorobei/SPAlert
+```swift
+dependencies: [
+    .package(url: "https://github.com/ivanvorobei/SPAlert", .upToNextMajor(from: "4.1.0"))
+]
 ```
 
 ### CocoaPods:
 
-[CocoaPods](https://cocoapods.org) is a dependency manager for Cocoa projects. For usage and installation instructions, visit their website. To integrate using CocoaPods, specify it in your `Podfile`:
+[CocoaPods](https://cocoapods.org) is a dependency manager. For usage and installation instructions, visit their website. To integrate using CocoaPods, specify it in your `Podfile`:
 
 ```ruby
 pod 'SPAlert'
@@ -106,7 +85,30 @@ For change duration of present time, create alert view and call `present` method
 
 ```swift
 let alertView = SPAlertView(title: "Complete", preset: .done)
-alertView.present(duration: 3)
+alertView.duration = 4
+alertView.present()
+```
+
+If you don't want to dimiss alert in time, disable `dismissInTime`. After it `duration` property will be ignored.
+
+```swift
+alertView.dismissInTime = false
+```
+
+In this case you shoud dismiss alert manually.
+
+### Dismiss
+
+If you tap the alert, it will disappear. This can be disabled:
+
+```swift
+alertView.dismissByTap = false
+```
+
+Also you can manually dismiss all alerts, simple call this:
+
+```swift
+SPAlert.dismiss()
 ```
 
 ### Layout
@@ -119,13 +121,6 @@ alertView.layout.margins.top = 12
 alertView.layout.spaceBetweenIconAndTitle = 8
 ```
 
-### Dismiss by Tap
-
-If you tap the alert, it will disappear. This can be disabled:
-
-```swift
-alertView.dismissByTap = false
-```
 ### Haptic
 
 For manage haptic, you shoud pass it in present method:
@@ -136,7 +131,37 @@ alertView.present(duration: 1.5, haptic: .success, completion: nil)
 
 You can remove duration and completion, its have default values.
 
-### Shared Configuration
+### Spinner
+
+I added preset `.spinner`, for use it simple call this:
+
+```swift
+let alertView = SPAlertView(title: "Please, wait", preset: .spinner)
+alertView.present()
+```
+
+By default for this preset `dismissInTime` disabled and need manually dismiss alert. You can do it only for one view or dimiss all alerts:
+
+```swift
+// For one alert
+alertView.dismiss()
+
+// For all alerts
+SPAlert.dismiss()
+```
+
+### Colors
+
+For change color of icon, simple set tint color for any preset:
+
+```swift
+alertView.iconView?.tintColor = .systemRed
+
+//If you set custom image, don't forget set rendering mode:
+UIImage(systemName: "pencil.and.outline")!.withRenderingMode(.alwaysTemplate)
+```
+
+### Global Appearance
 
 Also you can change some default values for alerts. For example you can change default duration and corner radius for alert with next code:
 
@@ -154,7 +179,7 @@ Use like system alert only show message tips:
 ```swift
 Button("Show alert") {
     showAlert = true
-}.spAlert(isPresent: $showAlert, message: "this is message only")
+}.SPAlert(isPresent: $showAlert, message: "this is message only")
 ```
 
 or show message, title, image and other configuration:
@@ -162,51 +187,25 @@ or show message, title, image and other configuration:
 ```swift
 Button("Show alert") {
     showAlert = true
-}.spAlert(isPresent: $showAlert, 
-        title: "Alert title", 
-        message: "Alert message",
-        duration: 2.0, 
-        dismissOnTap: false, 
-        present: .custom(UIImage(systemName: "heart")!), 
-        haptic: .success, 
-        layout: .init(), 
-        completion: {
-            print("Alert is destory")
-        })
+}.SPAlert(
+    isPresent: $showAlert, 
+    title: "Alert title", 
+    message: "Alert message",
+    duration: 2.0, 
+    dismissOnTap: false, 
+    present: .custom(UIImage(systemName: "heart")!), 
+    haptic: .success, 
+    layout: .init(), 
+    completion: {
+        print("Alert is destory")
+    })
 ```
-
-## Сontribution
-
-My English is very bad. You can see this once you read the documentation. I would really like to have clean and nice documentation. If you see gramatical errors and can help fix the Readme, please contact me hello@ivanvorobei.by or make a Pull Request. Thank you in advance!
-
-## Other Projects
-
-I love being helpful. Here I have provided a list of libraries that I keep up to date. For see `video previews` of libraries without install open [opensource.ivanvorobei.by](https://opensource.ivanvorobei.by) website.<br>
-I have libraries with native interface and managing permissions. Also available pack of useful extensions for boost your development process.
-
-<p float="left">
-    <a href="https://opensource.ivanvorobei.by">
-        <img src="https://github.com/ivanvorobei/Readme/blob/main/Buttons/more-libraries.svg">
-    </a>
-        <a href="https://xcodeshop.ivanvorobei.by">
-        <img src="https://github.com/ivanvorobei/Readme/blob/main/Buttons/xcode-shop.svg">
-    </a>
-</p>
 
 ## Russian Community
 
-Подписывайся в телеграмм-канал, если хочешь получать уведомления о новых туториалах.<br>
-Со сложными и непонятными задачами помогут в чате.
+Я веду [телеграм-канал](https://sparrowcode.io/telegram), там публикую новости и туториалы.<br>
+С проблемой помогут [в чате](https://sparrowcode.io/telegram/chat).
 
-<p float="left">
-    <a href="https://tutorials.ivanvorobei.by/telegram/channel">
-        <img src="https://github.com/ivanvorobei/Readme/blob/main/Buttons/open-telegram-channel.svg">
-    </a>
-    <a href="https://tutorials.ivanvorobei.by/telegram/chat">
-        <img src="https://github.com/ivanvorobei/Readme/blob/main/Buttons/russian-community-chat.svg">
-    </a>
-</p>
+Видео-туториалы выклыдываю на [YouTube](https://ivanvorobei.by/youtube):
 
-Видео-туториалы выклыдываю на [YouTube](https://tutorials.ivanvorobei.by/youtube):
-
-[![Tutorials on YouTube](https://cdn.ivanvorobei.by/github/readme/youtube-preview.jpg)](https://tutorials.ivanvorobei.by/youtube)
+[![Tutorials on YouTube](https://cdn.ivanvorobei.by/github/readme/youtube-preview.jpg)](https://ivanvorobei.by/youtube)

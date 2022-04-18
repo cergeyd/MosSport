@@ -63,7 +63,7 @@ class MapViewController: GMClusterViewController {
     /// Выбради первую окружность
     var firstCircle: GMSCircle?
 
-    //MARK: Lifecycle
+    // MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.output.didLoadView()
@@ -77,7 +77,7 @@ class MapViewController: GMClusterViewController {
         self.addLegendView(legendInfoFeed: self.multipleLegendFeed)
     }
 
-    //MARK: Private func
+    // MARK: Private func
     @objc func didChangeDisplayMode(notification: Notification) {
         if let object = notification.object as? UISplitViewController.DisplayMode {
             self.legendView.isHidden = object == .secondaryOnly
@@ -152,7 +152,7 @@ extension MapViewController: MapViewInput {
     }
 }
 
-//MARK: Виды карт
+// MARK: Виды карт
 extension MapViewController {
     /// Тепловая карта спортивных объектов
     private func makeHeatmap(hidden: Bool) {
@@ -372,7 +372,7 @@ extension MapViewController: MenuDelegate, DetailViewDelegate, ListViewDelegate 
     }
 }
 
-//MARK: GMSMapViewDelegate
+// MARK: GMSMapViewDelegate
 extension MapViewController {
 
     /// Движем к кластерам

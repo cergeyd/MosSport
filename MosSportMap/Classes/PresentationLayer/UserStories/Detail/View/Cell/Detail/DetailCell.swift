@@ -13,7 +13,7 @@ class DetailCell: TableViewCell {
     @IBOutlet var detailSubtitle: UILabel!
     @IBOutlet var detailPlace: UILabel!
 
-    //MARK: Func
+    // MARK: Func
     func configure(with detail: Detail, indexPath: IndexPath) {
         self.detailTitle.text = detail.title
         self.detailSubtitle.text = detail.subtitle
